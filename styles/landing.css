@@ -1,0 +1,27 @@
+.landing-slot{
+    color: #fafafa;
+}
+
+.header-image{
+    padding-left: 10%;
+    height: 100%;
+    width: 100%;
+}
+
+.header-main{
+    padding-top: 5%;
+    color: white;
+    text-align: right;
+    padding-right: 5%;
+    width: 80%;
+}
+.header-main-text{
+    font-size: 64px;
+}
+.header-sub-text{
+padding-left: 40%;
+}
+.header-button{
+    margin-top: 70px;
+    padding-right: 65%;
+}
