@@ -1,9 +1,9 @@
 "use client"
 import React from 'react'
 import Image from 'next/image'
-import gradient from '@/image/Gradient.png'
-import gradient2 from '@/image/Eclipse.png'
-import gradient3 from '@/image/Vector7.png'
+import gradient from '@/image/landing/Gradient.png'
+import gradient2 from '@/image/landing/Eclipse.png'
+
 import { Button } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 

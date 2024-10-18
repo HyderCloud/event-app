@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`flex justify-center ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`flex justify-center  ${geistSans.variable} ${geistMono.variable} antialiased`} >
       <NextUIProvider className='w-full'>
         {children}
       </NextUIProvider>

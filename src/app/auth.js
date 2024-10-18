@@ -3,6 +3,12 @@ import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from 'next-auth/providers/github'
 import FacebookProvider from "next-auth/providers/facebook";
 import { redirect } from "next/navigation";
+import axios from "axios";
+import { cookies } from "next/headers";
+import jwt from 'jsonwebtoken';
+
+
+
 
 export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
     providers: [
@@ -29,18 +35,34 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
     ], 
     callbacks: {
         async signIn({ account, profile }) {
-            console.log(account, profile)
+          const postFile = {
+            email: profile.email,
+            username: '',
+            password: '',
+            pr_image: profile.picture,
+            provider: profile.provider
+          }
           if (account.provider === "google") {
-            
             if(profile.email_verified && profile.email.endsWith("@gmail.com")){
-              return true
+              try {
+                const register = await axios.post('http://localhost:9020/googleauth',postFile)
+                if( register){
+                 cookies().set('user', register?.data?.token, { secure: true })
+                 return true
+                }
+              } catch (error) {
+                console.log(error)
+              }
+
             }
           }
           if (account.provider === "github") {
             return profile.email_verified && profile.email.endsWith("@gmail.com")
           }
-          console.log("hello")
-          return redirect('/personalcloud')
+          const user = cookieStore.get('user')
+          const decoded = jwt.verify(user, process.env.JWT_SECRET)
+          console.log(decoded)
+          return redirect(`/dashbord/${'l'}`)
         },
       }
     ,secret: process.env.JWT_SECRET,
