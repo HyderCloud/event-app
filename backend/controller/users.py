@@ -46,7 +46,6 @@ def auth_user(user):
                 return jsonify({"massage": "icorrect password"}), 400
         else:
             user2 = user_api.get_user_by_email(user["email"])
-            print(user2)
             password  = bcrypt.checkpw(str(user["password"]).encode('utf-8'),user2["password"])
             if password:
                 payload = {
@@ -66,19 +65,21 @@ def user_google(user):
         new_doccument = {
             "email": user["email"],
             "username": user["username"],
-            "password": user["password"],
+            "password": '',
             "pr_image": user["pr_image"],
             "profession": '',
             "description": '',
 
         }
         user_checker = user_api.get_user_by_email(user["email"])
+        print(user_checker)
         if user_checker["email"] == user["email"]:
             payload = {
             "user_id": user_checker["_id"],
             "email": user_checker["email"],
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
             }
+            print('hello')
             token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
             return jsonify({"token": token}), 200
         else:

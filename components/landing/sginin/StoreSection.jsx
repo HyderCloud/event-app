@@ -2,11 +2,16 @@
 import React, {useState} from 'react'
 import gradient2 from '@/image/landing/vec1.svg'
 import {Button, Divider, Input} from "@nextui-org/react";
+import { useCookies } from 'react-cookie';
 import { signIn } from "next-auth/react"
+import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import axios from 'axios';
 
-const StoreSection = ({ username, id, profession}) => {
+
+const StoreSection = ({ username, id, profession, email}) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['store']);
+    const router = useRouter()
     const [isLoad, setIsLoad] = useState(false)
     const [store, setStore] = useState('')
     const handleChange = (e)=>{
@@ -14,11 +19,11 @@ const StoreSection = ({ username, id, profession}) => {
     }
     
     const handleSubmit = async ()=>{
-        const addStore = await axios.patch(`http://localhost:9020/insertstore/${id}`,{store: store, username: username, profession: profession})
-        console.log(addStore.data)
+        setIsLoad(true)
+        const addStore = await axios.patch(`http://localhost:9020/insertstore/${id}`,{store: store, username: username, profession: profession, email: email})
         if (addStore?.data?.acknowledge){
-            onRefetch( Math.floor(Math.random() * 10001))
-            setIsLoad(true)
+            setCookie('store',addStore?.data?.token)
+            router.push(`/${addStore?.data?.username}`)
         }
     }
     if (isLoad){

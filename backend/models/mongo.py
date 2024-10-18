@@ -17,6 +17,14 @@ class Store:
         result = storeCollection.insert_one(doccument)
         inserted_id = result.inserted_id
         return str(inserted_id)
+    
+    
+    def get_store_by_name(self, name):
+        documents_list = storeCollection.find_one({'name': name})
+        if documents_list is None:
+            return {"name": '123'}
+        documents_list['_id'] = str(documents_list['_id']) 
+        return documents_list
 
 class Users:
     def __init__(self):
@@ -39,10 +47,11 @@ class Users:
         documents_list['_id'] = str(documents_list['_id']) 
         return documents_list
 
-    def update_by_email(self,email,data):
+    def update_by_email(self,email,username, profession):
         new_data = {
         "$set": {
-            "username": data,  # Update the username field
+            "username": username,  
+            "profession": profession
         }
         }
         result = collectionUsers.update_one({'email':email},new_data)

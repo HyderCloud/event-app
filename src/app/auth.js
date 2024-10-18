@@ -62,7 +62,7 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
           const user = cookieStore.get('user')
           const decoded = jwt.verify(user, process.env.JWT_SECRET)
           console.log(decoded)
-          return redirect(`/dashbord/${'l'}`)
+          return redirect(`/dashbord/${decoded}`)
         },
       }
     ,secret: process.env.JWT_SECRET,
