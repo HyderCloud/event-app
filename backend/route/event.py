@@ -20,9 +20,5 @@ def get_event_store(id):
 @events_blueprint.route('/chnagemode/<string:id>', methods=['PATCH'])
 def update_event_mode(id):
     event = request.get_json()
-<<<<<<< HEAD
     print(id)
     return events_api.update_mode_by_id(id,event["mode"],)
-=======
-    return events_api.update_mode_by_event(id,event["mode"],)
->>>>>>> 00d0b214e996b35dd18ecdac70f86d19f64133c2
