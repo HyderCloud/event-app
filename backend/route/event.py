@@ -15,3 +15,9 @@ def get_events_store(id):
 @events_blueprint.route('/getevent/<string:id>', methods=['GET'])
 def get_event_store(id):
     return events_api.get_event(id)
+
+
+@events_blueprint.route('/chnagemode/<string:id>', methods=['PATCH'])
+def update_event_mode(id):
+    event = request.get_json()
+    return events_api.update_mode_by_event(id,event["mode"],)

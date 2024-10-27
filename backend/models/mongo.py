@@ -1,12 +1,9 @@
 import pymongo
 from bson import ObjectId
-import gridfs
-import base64
-import io
 mongodb_url = "mongodb://localhost:27017/eventride"
 client = pymongo.MongoClient(mongodb_url)
 db = client.get_database()
-fs = gridfs.GridFS(db)
+
 # Select a collection
 storeCollection = db.stores
 collectionUsers = db.users
@@ -14,6 +11,18 @@ eventsCollection = db.events
 class EventsDB:
     def __init__(self):
         pass
+
+    def update_mode_by_event(self,mode, _id):
+        new_data = {
+        "$set": {
+            "mode": mode,  
+        }
+        }
+        result = storeCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
 
     def insert_event(self,doccument):
         result = eventsCollection.insert_one(doccument)
@@ -42,6 +51,8 @@ class Store:
         
         pass
     
+
+
     def update_phone_by_store(self,phone, name):
         new_data = {
         "$set": {

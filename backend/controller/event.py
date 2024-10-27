@@ -38,7 +38,7 @@ class Events:
             "status": 'in progress',
             "age": '',
             "type": '',
-            "mode": 'private',
+            "mode": True,
         }
             result = api_events.insert_event(doccument)
             if result:
@@ -65,3 +65,12 @@ class Events:
                 return jsonify({"events": result}), 200
          except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
+    
+    def update_mode_by_id(self,id,mode):
+        try:
+            is_updated = api_events.update_mode_by_event(mode, id)
+            print(is_updated)
+            if is_updated:
+                return jsonify({"mode": mode}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501

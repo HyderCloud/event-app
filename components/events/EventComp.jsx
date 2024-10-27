@@ -15,7 +15,7 @@ const EventComp = ({}) => {
   const section = searchParams.get('section'); 
   const getEvents = async ()=>{
       const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
-      console.log(getAllEvents.data.events)
+
       setEvents(getAllEvents.data.events)
   }
   function getStringAfterSecondSlash(path) {

@@ -24,7 +24,8 @@ const router = useRouter()
           modules={[ Pagination, Virtual]}
           virtual
         >
-          {data.map((item, index) => (
+        
+          {data && data.map((item, index) => (
      
             <SwiperSlide key={index}>
               <Card className="" style={{ width: '340px' }}>

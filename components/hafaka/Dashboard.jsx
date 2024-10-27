@@ -14,12 +14,12 @@ const [data, setData] = useState('')
 const [linksArr, setLinksArr] = useState([])
 const getStore = async ()=>{
   const store = await axios.get(`http://localhost:9020/${storeName.slice(1)}`)
-  console.log(store.data)
+
   setData(store.data.store)
   setLinksArr(store.data.store.links)
 }
 const handleLinks = (link)=>{
-  let src = ''
+  
   if(link.startsWith('https://www.instagram.com')){
   return(
     <Link  href={link} style={{width: '70px', height: '70px', 
@@ -179,7 +179,7 @@ const handleEdit = ()=>{
 
           <div className='links-dash-container'>
           <div className='flex flex-row'>
-            {linksArr.map((element)=>{
+            { linksArr.map((element)=>{
               return(
                 handleLinks(element)
               )

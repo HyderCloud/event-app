@@ -13,11 +13,13 @@ const page =  () => {
     const router = useRouter()
     const [cookie, setCookie, removeCookie]= useCookies("store")
     const pathName = usePathname()
+    const [events, setEvents] = useState([])
     const searchParams = useSearchParams();
     const [ data, setData] = useState(null)
     const [username, setUsername] = useState('')
     const [profession, setProfessoion] = useState('')
     const { decodedToken, isExpired } = useJwt(pathName.slice(10));
+    const {decodedToken2, isExpired2} = useJwt(cookie.store)
     const usernameParam = searchParams.get('username')
     const professionParam = searchParams.get('professional')
 
@@ -38,15 +40,17 @@ const page =  () => {
         }
       };
     useEffect(() => {
+
         if (1===1) { // Ensure token is available and not expired
 
           fetchData();
         }
       }, [decodedToken ]);
     
-    if (cookie.store){
-      router.push('/home')
-    } else
+    // if (cookie.store){
+    //   console.log(cookie)
+    //   router.push('/home')
+    // } else
     if ( usernameParam === null&& professionParam === null){
         return (<UsernameSection  onUsername={handleUsername} />)
     }
