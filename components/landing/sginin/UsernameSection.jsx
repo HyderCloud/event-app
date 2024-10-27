@@ -1,6 +1,5 @@
 "use client"
 import React, {useState} from 'react'
-import gradient2 from '@/image/landing/vec1.svg'
 import {Button, Divider, Input} from "@nextui-org/react";
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image'
@@ -31,10 +30,7 @@ const UsernameSection = ({ onUsername}) => {
           <div className='flex flex-row sginin-container min-h-screen'>
           <div className='sginin1sec-container'>
               <div className='flex items-center justify-center' style={{height: "90%"}}>
-              <Image src={gradient2} className='sginin1sec-container-image'
-              height={500}
-              width={500}
-              />
+          
               </div>
           </div>
           <div className='sginin2sec-container flex flex-col space-y-12'>

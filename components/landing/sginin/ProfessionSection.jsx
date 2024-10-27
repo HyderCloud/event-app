@@ -1,6 +1,5 @@
 "use client"
 import React, {useState} from 'react'
-import gradient2 from '@/image/landing/vec1.svg'
 import {Button, Card, Divider, Input, CardHeader} from "@nextui-org/react";
 import Image from 'next/image'
 import axios from 'axios';
@@ -36,10 +35,7 @@ const ProfessionSection = ({ onProfession}) => {
         <div className='flex flex-row sginin-container min-h-screen'>
         <div className='sginin1sec-container'>
             <div className='flex items-center justify-center' style={{height: "90%"}}>
-            <Image src={gradient2} className='sginin1sec-container-image'
-            height={500}
-            width={500}
-            />
+
             </div>
         </div>
         <div className='sginin2sec-container flex flex-col space-y-12'>

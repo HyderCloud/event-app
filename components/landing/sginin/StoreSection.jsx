@@ -1,6 +1,6 @@
 "use client"
 import React, {useState} from 'react'
-import gradient2 from '@/image/landing/vec1.svg'
+
 import {Button, Divider, Input} from "@nextui-org/react";
 import { useCookies } from 'react-cookie';
 import { signIn } from "next-auth/react"
@@ -22,7 +22,10 @@ const StoreSection = ({ username, id, profession, email}) => {
         setIsLoad(true)
         const addStore = await axios.patch(`http://localhost:9020/insertstore/${id}`,{store: store, username: username, profession: profession, email: email})
         if (addStore?.data?.acknowledge){
-            setCookie('store',addStore?.data?.token)
+            setCookie('store',addStore?.data?.token,{
+                path: '/'
+            })
+            console.log(addStore?.data?.token)
             router.push(`/${addStore?.data?.username}`)
         }
     }
@@ -37,10 +40,7 @@ const StoreSection = ({ username, id, profession, email}) => {
           <div className='flex flex-row sginin-container min-h-screen'>
           <div className='sginin1sec-container'>
               <div className='flex items-center justify-center' style={{height: "90%"}}>
-              <Image src={gradient2} className='sginin1sec-container-image'
-              height={500}
-              width={500}
-              />
+
               </div>
           </div>
           <div className='sginin2sec-container flex flex-col space-y-12'>

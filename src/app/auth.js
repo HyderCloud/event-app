@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from 'next-auth/providers/github'
+import Credentials from 'next-auth/providers/credentials';
 import FacebookProvider from "next-auth/providers/facebook";
 import { redirect } from "next/navigation";
 import axios from "axios";
@@ -12,6 +13,9 @@ import jwt from 'jsonwebtoken';
 
 export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
     providers: [
+        Credentials({
+          
+        }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -34,6 +38,9 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
 
     ], 
     callbacks: {
+        async signOut({}){
+          console.log('hello')
+        },
         async signIn({ account, profile }) {
           const postFile = {
             email: profile.email,
@@ -61,12 +68,13 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
           }
           const user = cookieStore.get('user')
           const decoded = jwt.verify(user, process.env.JWT_SECRET)
-          console.log(decoded)
           return redirect(`/dashbord/${decoded}`)
+
         },
       }
     ,secret: process.env.JWT_SECRET,
     pages:{
         signIn: '/sginin',
+        signOut: '/sginout'
     }
 })

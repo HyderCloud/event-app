@@ -1,33 +1,40 @@
 "use client"
-import React from 'react'
-import gradient2 from '@/image/landing/vec1.svg'
+import React, {useState} from 'react'
+import Link from 'next/link';
 import {Button, Divider, Input} from "@nextui-org/react";
 import { signIn } from "next-auth/react"
 import Image from 'next/image'
 
 const Sginup = () => {
+    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
+   const handleOnChangePassword = (e)=>{
+        setPassword(e.target.value)
+   }
+   const [username, setUsername] = useState('')
+   const handleOnChangeUsername = (e)=>{
+       setUsername(e.target.value)
+   }
+   const handleOnChangeEmail = (e)=>{
+    setEmail(e.target.value)
+}
   return (
     <main className='sginin-container min-h-screen'>
     <div className='flex flex-row sginin-container min-h-screen'>
-    <div className='sginin1sec-container'>
-        <div className='flex items-center justify-center' style={{height: "90%"}}>
-        <Image src={gradient2} className='sginin1sec-container-image'
-        height={500}
-        width={500}
-        />
-        </div>
-    </div>
+
     <div className='sginin2sec-container flex flex-col space-y-12'>
         <form className='sginin-form-container flex flex-col'>
-    <div>אנחנו שמחים לראותכם</div>
-    <div style={{height: '60px'}}></div>
-    <Input type="email" variant={"flat"} label="Email" radius='lg'/>
+    <div>הרשמה</div>
     <div style={{height: '40px'}}></div>
-    <Input type="Password" variant={"bordered"} label="password" radius='lg'/>
-    <div style={{height: '50px'}}></div>
-    <Button color='primary' className='signin-button'>התחברות</Button>
+    <Input type="email" variant={"flat"} label="Email" onChange={handleOnChangeEmail} radius='lg'/>
     <div style={{height: '20px'}}></div>
-    <div>יצירת משתמש חדש</div>
+    <Input type="email" variant={"flat"} label="Username" onChange={handleOnChangeUsername} radius='lg'/>
+    <div style={{height: '20px'}}></div>
+    <Input type="Password" variant={"bordered"} label="Password" onChange={handleOnChangePassword} radius='lg'/>
+    <div style={{height: '30px'}}></div>
+    <Button color='primary' className='signin-button'>הרשמה</Button>
+    <div style={{height: '20px'}}></div>
+    <Link href={'/signin'}>?כבר יש לך משתמש</Link>
     <div style={{height: '20px'}}></div>
     <Divider/>
     <div>או</div>
