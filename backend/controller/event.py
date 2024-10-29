@@ -73,3 +73,36 @@ class Events:
                 return jsonify({"mode": mode}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
+
+
+    def update_detail_by_id(self,s_date,e_date, s_time, e_time, place, _id):
+        try:
+            is_updated = api_events.update_details_by_id(s_date,e_date, s_time, e_time, place, _id)
+            if is_updated:
+                return jsonify({"start_d": s_date, "end_d":e_date, "start_t": s_time, "end_t": e_time, "place": place}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_tubnail_by_id(self,id,img):
+        try:
+            is_updated = api_events.update_tubnail_by_id(img, id)
+            if is_updated:
+                return jsonify({"image": img}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_type_by_id(self,id,type):
+        try:
+            is_updated = api_events.update_type_by_id(type, id)
+            if is_updated:
+                return jsonify({"type": type}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_age_by_id(self,id,age):
+        try:
+            is_updated = api_events.update_age_by_id(age, id)
+            if is_updated:
+                return jsonify({"age": age}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501

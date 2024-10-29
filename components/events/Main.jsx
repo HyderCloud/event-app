@@ -1,14 +1,22 @@
 "use client"
-import { TimeInput, Divider, Input, Switch,Calendar, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import { TimeInput, Divider, Input, Switch,Calendar,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import React, { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
-import { today, getLocalTimeZone } from "@internationalized/date";
+import { usePathname } from 'next/navigation';
 import axios from 'axios'
-const Main = ({ data }) => {
+import DragAndDrop from '../DragImage';
+const Main = () => {
+    const icon =           <div >
+  <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="18" height="4" rx="2" fill="#FBB03B"/>
+  </svg> </div>
+    const path = usePathname()
+    const [isImage, setIsImage] = useState('')
     const [cookie, setCookie, removeCookie] = useCookies()
+    const [age, setAge] = useState('')
     const {decodedToken, isExpired} = useJwt(cookie.store)
-    const [modalType, setModalType] = useState('')
+    const [type, setType] = useState('')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [isPrivate, setIsPrivate] = useState('')
     const [events, setEvents] = useState([])
@@ -18,24 +26,30 @@ const Main = ({ data }) => {
     const [name, setName] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [tubnail, setTubnail] = useState('')
     const getEvents = async ()=>{
-        const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
-        setEvents(getAllEvents.data.events[0])
-        setIsPrivate(getAllEvents.data.events[0].mode)
-        setName(getAllEvents.data.events[0].name)
-        setEndDate(getAllEvents.data.events[0].end_date)
-        setStartDate(getAllEvents.data.events[0].start_date)
-        setStartTime(getAllEvents.data.events[0].start_time)
-        setEndTime(getAllEvents.data.events[0].end_time)
-        setPlace(getAllEvents.data.events[0].place)
+        const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
+        setEvents(getAllEvents.data.events)
+        setIsPrivate(getAllEvents.data.events.mode)
+        setName(getAllEvents.data.events.name)
+        setEndDate(getAllEvents.data.events.end_date)
+        setStartDate(getAllEvents.data.events.start_date)
+        setStartTime(getAllEvents.data.events.start_time)
+        setEndTime(getAllEvents.data.events.end_time)
+        setPlace(getAllEvents.data.events.place)
+        setType(getAllEvents.data.events.type)
+        setTubnail(getAllEvents.data.events.tubnail)
+        setAge(getAllEvents.data.events.age)
     }
     useEffect(() => {
-        if(decodedToken){
             getEvents()
-        }
-    }, [decodedToken])
+    }, [])
     const handlePlace = (e)=>{
         setPlace(e.target.value)
+    }
+    const handleIstype = async (data)=>{
+        const result =  await axios.patch(`http://localhost:9020/chnagetype/${events._id}`,{type: data})
+        setType(result.data.type)
     }
     const handleIsPrivate = async (data)=>{
         const result =  await axios.patch(`http://localhost:9020/chnagemode/${events._id}`,{mode: data})
@@ -49,9 +63,10 @@ const Main = ({ data }) => {
           const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
           setEndTime(formattedTime)
     }
-    const handleName = (e)=>{
-        setName(e.target.value)
-    }
+    function getStringAfterSecondSlash(path) {
+        const parts = path.split('/');
+        return parts[2] || null; // Returns the third part, or null if it doesn't exist
+      }
     const handleDate = (newRange)=>{
         const data = { 
             start: new Date(newRange.start), 
@@ -71,16 +86,44 @@ const Main = ({ data }) => {
           setStartDate(formattedDateStart)
         
     }
-    if(data){
+
+    const handleClose = ()=>{
+
+        setIsImage(false)
+    }
+    const handleChangeTubnail = async ()=>{
+        const result =  await axios.patch(`http://localhost:9020/chnagetubnail/${events._id}`, {image: tubnail})
+        setTubnail(result.data.image)
+    }
+    const handleChangeDetails = async ()=>{
+        const result =  await axios.patch(`http://localhost:9020/chnagdetails/${events._id}`,
+            {startDate: startDate, endDate: endDate,startTime: startTime, endTime: endTime, place: place})
+        setStartDate(result.data.start_d)
+        setEndDate(result.data.end_d)
+        setEndTime(result.data.end_t)
+        setStartTime(result.data.start_t)
+        setPlace(result.data.place)
+    }
+    const handleFileUpload = (files) => {
+        setTubnail(files)
+    }
+
+    const handleAge = (e)=>{
+        setAge(e.target.value)
+    }
+    const handleChangeAge = async ()=>{
+        const result =  await axios.patch(`http://localhost:9020/chnageage/${events._id}`, {age: age})
+        setAge(result.data.age)
+    }
         return (
             <div className='w-full h-full'>
                 <div className=' flex justify-center items-center flex-col'>
-                    <div className='event-lable font-bold'>{data.name}</div>
-                    <div className='justify-center font-bold items-center text-white'>{data.type}</div>
+                    <div className='event-lable font-bold'>{name}</div>
+                    <div className='justify-center font-bold items-center text-white'>{type}</div>
                 </div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{data.start_date} - {data.end_date}</div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{data.start_time} - {data.end_time}</div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{data.place}</div>
+                <div style={{ paddingLeft: '100px' }} className='text-white'>{endDate} - {startDate}</div>
+                <div style={{ paddingLeft: '100px' }} className='text-white'>{startTime} - {endTime}</div>
+                <div style={{ paddingLeft: '100px' }} className='text-white'>{place}</div>
                 <div className='header-main-event flex items-end flex-row justify-end '>
                     <div style={{ marginRight: '10px' }}>
                         <Button color='primary'>צפייה מוקדמת</Button>
@@ -92,14 +135,60 @@ const Main = ({ data }) => {
                 <div className='h-4'></div>
                 <Divider className='bg-white' />
                 <div className='h-10'></div>
-                <div className='flex flex-col items-center justify-center'>
-                    <div className='w-full flex flex-row justify-end'>
-                        <div className='image-event-cont'></div>
-                        <div className='flex flex-row items-center justify-center' style={{ width: '80%' }}>
-                            
+                <div className='flex flex-row items-center  justify-center' style={{gap:"20px", paddingLeft: "10%", paddingRight: "10%"}}>
+
+                <div className='w-full flex flex-row glass-background image-cont-main'>
+                        <div className='image-event-cont cursor-pointer' 
+                        style={{backgroundImage:  `url(${tubnail})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'}}
+                        onClick={()=>{
+                            setIsImage("image")
+                            onOpen()
+                        }}></div>
                         </div>
+                <div className='flex flex-col ' style={{width:'50%', gap: '20px',}}>
+                <div className='flex flex-col glass-background items-end ' style={{ borderRadius: '10px',paddingRight: '2%', paddingTop: '2%'}}>
+
+                <Button color='primary' onPress={()=>{onOpen()
+                            setIsImage("details")
+                        }}>עריכת האירוע</Button>
+        
+                </div>
+                    <div className='flex flex-col glass-background w-full age-container 'style={{paddingRight: '2%'}}>
+                        <div className='w-full flex flex-col pt-2 text-white font-semibold items-end' >
+                           <div> הגבלת גיל</div>
+                           {icon}
+                        </div>
+                <div className=' justify-center items-center flex h-full'>
+                            <Button color='primary' onClick={()=>{
+                                setIsImage("ll")
+                                onOpen()
+                            }}> יצירת הגבלה</Button>
+                            </div>
+                    </div>
+                </div>
+                {/* 
+                            <div className='h-7'></div>
+                        <Select
+                        onChange={(e)=>{
+                            handleIstype(eventTypes[e.target.value])
+                        }}
+                        items={eventTypes}
+                        label="Evet type"
+                        placeholder={type}
+                        className="max-w-xs"
+                        >
+                        {eventTypes.map((item, index) => (
+                        <SelectItem key={index}>
+                            {item}
+                        </SelectItem>
+                        ))}
+                        </Select>
+                        <div className='flex items-center justify-center flex-col' style={{ width: '80%' }}>
+                        
                         <div className='flex flex-col'>
-                        <Button color='primary' onPress={onOpen}>ערוך/י את האירוע</Button>
+
                         <div className='h-10'></div>
                         <div className='flex flex-row' style={{width: '120px'}}>
                             {console.log(isPrivate)}
@@ -110,47 +199,65 @@ const Main = ({ data }) => {
                         </div>
                         </div>
                         
-                    </div>
+                    </div> */}
     
-                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                    <Modal className='change-details' isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true}>
                         <ModalContent>
                             {(onClose) => (
                                 <>
-                                    <ModalHeader className="flex flex-col gap-1">Add an event</ModalHeader>
+                                    <ModalHeader className=" flex flex-col gap-1">
+                                        {isImage === 'image'? "העלאת תמונת נושא":isImage === "details"? "שנה את פרטי האירוע": "הגבל גיל"}
+                                    </ModalHeader>
                                     <ModalBody>
+                                        {isImage==="image"? <DragAndDrop label={"תמונת נושא"} onFileUpload={handleFileUpload}/>: isImage === "details"?
                                         <div className='flex flex-col w-full items-center gap-6'>
-    
-                                            <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
-                                                <div className='opacity-70'>שם האירוע</div>
-                                                <Input label='Event name' onChange={handleName} />
-                                            </div>
                                             <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                 <div className='opacity-70'>תאריך התחלה וסיום</div>
                                                 <DateRangePicker label='Event date' onChange={handleDate} />
                                             </div>
                                             <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                 <div className='opacity-70'>שעת התחלה</div>
-                                                <TimeInput label='Start time' onChange={handleStartTime} />
+                                                <TimeInput hourCycle={24} label='Start time' onChange={handleStartTime} />
                                             </div>
                                             <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                 <div className='opacity-70'>שעת סיום</div>
-                                                <TimeInput label='End time' onChange={handleEndTime} />
+                                                <TimeInput hourCycle={24} label='End time' onChange={handleEndTime} />
                                             </div>
                                             <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                 <div className='opacity-70'>מיקום האירוע</div>
                                                 <Input label='Event place' onChange={handlePlace} />
                                             </div>
+                                        </div>:
+                                        <div className='flex flex-col items-center'>
+                                            <Input type='number' label="age" onChange={handleAge} value={age}/>
                                         </div>
+                                        }
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button color="danger" variant="light" onPress={onClose}>
-                                            Close
+                                        <Button color="danger" variant="light" onPress={
+                                            ()=>{onClose()
+                                                handleClose()
+                                            }
+                                            
+                                        }>
+                                            סגור
                                         </Button>
                                         <Button color="primary" onPress={() => {
-                                            handleAddEvent()
-                                            onClose()
+                                            if(isImage === "image"){
+                                                handleChangeTubnail()
+                                                handleClose()
+                                                onClose()
+                                            }
+                                            else if(isImage === "details"){
+                                                handleChangeDetails()
+                                                handleClose()
+                                                onClose()
+                                            }else{
+                                                handleChangeAge()
+                                                onClose()
+                                            }
                                         }}>
-                                            Action
+                                            החל
                                         </Button>
                                     </ModalFooter>
                                 </>
@@ -161,7 +268,7 @@ const Main = ({ data }) => {
             </div>
         )
     }
-}
+
 
 export default Main
 

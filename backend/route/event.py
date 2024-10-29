@@ -22,3 +22,24 @@ def update_event_mode(id):
     event = request.get_json()
     print(id)
     return events_api.update_mode_by_id(id,event["mode"],)
+
+@events_blueprint.route('/chnagdetails/<string:id>', methods=['PATCH'])
+def update_event_details(id):
+    event = request.get_json()
+    return events_api.update_detail_by_id(event["startDate"],event["endDate"],event["startTime"],event["endTime"],event["place"],id)
+
+
+@events_blueprint.route('/chnagetubnail/<string:id>', methods=['PATCH'])
+def update_event_tubnail(id):
+    event = request.get_json()
+    return events_api.update_tubnail_by_id(id,event["image"],)
+
+@events_blueprint.route('/chnagetype/<string:id>', methods=['PATCH'])
+def update_event_type(id):
+    event = request.get_json()
+    return events_api.update_type_by_id(id,event["type"],)
+
+@events_blueprint.route('/chnageage/<string:id>', methods=['PATCH'])
+def update_event_age(id):
+    event = request.get_json()
+    return events_api.update_age_by_id(id,event["age"],)

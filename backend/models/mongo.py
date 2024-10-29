@@ -12,6 +12,58 @@ class EventsDB:
     def __init__(self):
         pass
 
+    def update_type_by_id(self,type, _id):
+        new_data = {
+        "$set": {
+            "type": type,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_tubnail_by_id(self,img, _id):
+        new_data = {
+        "$set": {
+            "tubnail": img,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_age_by_id(self,age, _id):
+        new_data = {
+        "$set": {
+            "age": age,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_details_by_id(self,s_date,e_date, s_time, e_time, place, _id):
+        new_data = {
+        "$set": {
+            "start_date": s_date,  
+            "end_date": e_date,  
+            "start_time": s_time,  
+            "end_time": e_time,
+            "place": place
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_mode_by_event(self,mode, _id):
         new_data = {
         "$set": {

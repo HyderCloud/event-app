@@ -3,6 +3,7 @@ import React,{useState, useEffect} from 'react'
 import axios from 'axios'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Main from './Main'
+import Tickets from './Tickets'
 const EventComp = ({}) => {
   const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,6 +63,7 @@ const EventComp = ({}) => {
         </div>
         <div className='w-full h-full'>
         {!section && <Main data={events}/>}
+        {section === 'tickets'&& <Tickets/>}
         </div>
     </div>
   )

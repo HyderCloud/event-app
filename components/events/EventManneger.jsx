@@ -120,11 +120,11 @@ const EventManneger = ({}) => {
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שעת התחלה</div>
-                                                    <TimeInput label='Start time' onChange={handleStartTime}/>
+                                                    <TimeInput hourCycle={24} label='Start time' onChange={handleStartTime}/>
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שעת סיום</div>
-                                                    <TimeInput label='End time' onChange={handleEndTime}/>
+                                                    <TimeInput hourCycle={24} label='End time' onChange={handleEndTime}/>
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>מיקום האירוע</div>

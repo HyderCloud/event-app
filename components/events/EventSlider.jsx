@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Divider, Image } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from "@nextui-org/react";
 import { Swiper, SwiperSlide  } from 'swiper/react';
 import 'swiper/css';
 import Link from 'next/link';
@@ -31,8 +31,6 @@ const router = useRouter()
               <Card className="" style={{ width: '340px' }}>
                 <CardHeader className="flex gap-3">
                   <div style={{width: '60px'}}>
-                    { console.log(item.key)}
-                    { console.log(store)}
                   <Image
                     alt="nextui logo"
                     height={40}
@@ -59,17 +57,26 @@ const router = useRouter()
                   </div>
                 </CardHeader>
                 <Divider />
-                <CardBody style={{height: '250px', cursor: 'pointer'}}>
-                  <div onClick={()=>{
-                    router.push(`/${item?.name}/${item?._id}`)
-                  }} className='h-full w-full'>
+                  <div style={{height: '250px', cursor: 'pointer', background: `url(${item?.tubnail})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'}} onClick={()=>{
+                    router.push(`/${item?.name}/${item?._id}`) }}
+                    alt="Woman listing to music"
+                    className="object-cover"
 
-                  </div>
-                </CardBody>
+                  ></div>
+
                 <Divider />
-                <CardFooter>
-                  
-                </CardFooter>
+                <div style={{paddingLeft: '80px'}}>
+                <CardFooter className="glass-background text-right justify-end  items-center border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large w-full  shadow-small z-10"  style={{bottom: '20px'}}>
+              <Button onClick={()=>{
+                    router.push(`/${item?.name}/${item?._id}`) }} className="text-tiny text-white "  color="primary" radius="lg" size="sm">
+                explore
+              </Button>
+              <div className='w-10'></div>
+              <div  className="text-right text-tiny w-full text-black">כותרת הפרומו</div>
+      </CardFooter>
+                </div>
               </Card>
             </SwiperSlide>
           ))}
