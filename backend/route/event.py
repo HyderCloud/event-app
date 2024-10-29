@@ -43,3 +43,13 @@ def update_event_type(id):
 def update_event_age(id):
     event = request.get_json()
     return events_api.update_age_by_id(id,event["age"],)
+
+@events_blueprint.route('/ticketset/<string:id>', methods=['PATCH'])
+def update_ticket_settings(id):
+    event = request.get_json()
+    return events_api.update_ticket_settings(id,event["settings"],)
+
+@events_blueprint.route('/rounds/<string:id>', methods=['PATCH'])
+def update_rounds(id):
+    event = request.get_json()
+    return events_api.update_rounds(id,event["rounds"],)

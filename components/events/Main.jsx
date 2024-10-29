@@ -135,8 +135,7 @@ const Main = () => {
                 <div className='h-4'></div>
                 <Divider className='bg-white' />
                 <div className='h-10'></div>
-                <div className='flex flex-row items-center  justify-center' style={{gap:"20px", paddingLeft: "10%", paddingRight: "10%"}}>
-
+                <div className='flex flex-row  h-full ' style={{gap:"20px", paddingLeft: "10%", paddingRight: "10%"}}>
                 <div className='w-full flex flex-row glass-background image-cont-main'>
                         <div className='image-event-cont cursor-pointer' 
                         style={{backgroundImage:  `url(${tubnail})`,
@@ -148,29 +147,36 @@ const Main = () => {
                         }}></div>
                         </div>
                 <div className='flex flex-col ' style={{width:'50%', gap: '20px',}}>
-                <div className='flex flex-col glass-background items-end ' style={{ borderRadius: '10px',paddingRight: '2%', paddingTop: '2%'}}>
-
+                <div className='flex flex-col glass-background items-end ' style={{ borderRadius: '10px',paddingRight: '2%', paddingTop: '2%', paddingBottom: '2%'}}>
                 <Button color='primary' onPress={()=>{onOpen()
                             setIsImage("details")
                         }}>עריכת האירוע</Button>
-        
                 </div>
                     <div className='flex flex-col glass-background w-full age-container 'style={{paddingRight: '2%'}}>
                         <div className='w-full flex flex-col pt-2 text-white font-semibold items-end' >
-                           <div> הגבלת גיל</div>
+                           <div> פרטיות</div>
                            {icon}
                         </div>
-                <div className=' justify-center items-center flex h-full'>
+                <div className=' justify-center flex-row items-center flex h-full' style={{gap: '30px'}}>
                             <Button color='primary' onClick={()=>{
                                 setIsImage("ll")
                                 onOpen()
                             }}> יצירת הגבלה</Button>
+                                                <div className='flex flex-col justify-center items-center'>
+                    <div className='text-white' >{isPrivate ? "אירוע פרטי": "אירוע ציבורי"}</div>
+                <Switch isSelected={isPrivate} onChange={()=>{
+                            handleIsPrivate(!isPrivate)
+                            setIsPrivate(!isPrivate)}}/>
+                    </div>
                             </div>
                     </div>
-                </div>
-                {/* 
-                            <div className='h-7'></div>
-                        <Select
+                    <div className='flex flex-col glass-background w-full age-container 'style={{paddingRight: '2%'}}>
+                        <div className='w-full flex flex-col pt-2 text-white font-semibold items-end' >
+                           <div>  סוג האירוע</div>
+                           {icon}
+                        </div>
+                <div className=' justify-center items-center flex h-full'>
+                <Select
                         onChange={(e)=>{
                             handleIstype(eventTypes[e.target.value])
                         }}
@@ -185,22 +191,10 @@ const Main = () => {
                         </SelectItem>
                         ))}
                         </Select>
-                        <div className='flex items-center justify-center flex-col' style={{ width: '80%' }}>
-                        
-                        <div className='flex flex-col'>
+                            </div>
+                    </div>
+                </div>
 
-                        <div className='h-10'></div>
-                        <div className='flex flex-row' style={{width: '120px'}}>
-                            {console.log(isPrivate)}
-                        <Switch isSelected={isPrivate} onChange={()=>{
-                            handleIsPrivate(!isPrivate)
-                            setIsPrivate(!isPrivate)}}/>
-                            <div className='text-white' >{isPrivate ? "אירוע פרטי": "אירוע ציבורי"}</div>
-                        </div>
-                        </div>
-                        
-                    </div> */}
-    
                     <Modal className='change-details' isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true}>
                         <ModalContent>
                             {(onClose) => (

@@ -1,27 +1,20 @@
 "use client"
-import { TimeInput, Divider, Input, Switch,Calendar,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
-import React, { useState, useEffect } from 'react'
+import { TimeInput, Divider, Input, Switch,Calendar,CheckboxGroup ,Checkbox,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
+
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import DragAndDrop from '../DragImage';
 import axios from 'axios'
 import {CalendarDate} from '@internationalized/date';
 const Tickets = () => {
-    const round = {
-        name: '',
-        startDate: false,
-        endDate: false,
-        startTime: '',
-        endTime: '',
-        price: '',
-        amount: ''
-    }
 
     const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
   </svg> </div>
+    const [groupSelected, setGroupSelected] = useState(["credit"]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [index, setIndex] = useState(null)
     const [index2, setIndex2] = useState(null)
@@ -29,12 +22,32 @@ const Tickets = () => {
     const path = usePathname()
     const [events, setEvents] = useState([])
     const [endTime, setEndTime] = useState('')
-    const [startTime, setStartTime] = useState('')
-    const [startDate, setStartDate] = useState('')
+    const [startTime, setStartTime] = useState(false)
+    const [startDate, setStartDate] = useState(false)
     const [endDate, setEndDate] = useState('')
     const [rounds, setRounds] = useState([])
     const [price, setPrice] = useState('')
     const [amount, setAmount] = useState('')
+
+    // settings states
+    const [ticketSet,SetTicketSet] = useState({})
+    const [cash, setCash] = useState(false)
+    const [payment, setPayment] = useState(false)
+    const [ID, setID] = useState(false)
+    const [isdate, setIsdate] = useState(false)
+    const [gender, setGender] = useState(false)
+    const [isInstegram, setisInstegram] = useState(false)
+    const [instegramLink, setInstegramLink] = useState(false)
+    const [facebookLink, setFacebookLink] = useState(false)
+    const ticketSettings =
+            {cash: cash,
+            payment: payment,
+            ID: ID,
+            date: isdate,
+            gender: gender,
+            isInstegram: isInstegram,
+            instegramLink: instegramLink,
+            facebookLink: facebookLink}
     const newRound = {
         name: name,
         startDate: startDate,
@@ -44,13 +57,32 @@ const Tickets = () => {
         price: price,
         amount: amount
     }
+    const round = {
+        name: '',
+        startDate: '',
+        endDate: '',
+        startTime: '',
+        endTime: '',
+        price: '',
+        amount: ''
+    }
     const getEvents = async ()=>{
         const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
         setEvents(getAllEvents.data.events)
         setRounds(getAllEvents.data.events.rounds)
+        const theSettings = getAllEvents.data.events.ticket_settings
+        setCash(theSettings.cash)
+        setPayment(theSettings.payment)
+        setID(theSettings.ID)
+        setIsdate(theSettings.date)
+        setGender(theSettings.gender)
+        setisInstegram(theSettings.isInstegram)
+        setInstegramLink(theSettings.instegramLink)
+        setFacebookLink(theSettings.facebookLink)
     }
     const handleAddRound = ()=>{
         setRounds([...rounds,round])
+        handleroundUpdate([...rounds,round])
     }
     const handleEndTime = (time)=>{
         const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
@@ -87,25 +119,71 @@ const handleDate = (newRange)=>{
         const parts = path.split('/');
         return parts[2] || null; // Returns the third part, or null if it doesn't exist
       }
+      function removeElementAtIndex(arr, index) {
+        // Check if the index is within bounds
+        if (index < 0 || index >= arr.length) {
+            console.error("Index out of bounds");
+            return arr; // Return the original array if index is invalid
+        }
+    
+        // Create a copy of the array and remove the element at the specified index
+        const newArray = [...arr];
+        newArray.splice(index, 1);
+        
+        return newArray;
+    }
+    const handleSetSettings = async (data)=>{
+        const result =  await axios.patch(`http://localhost:9020/ticketset/${events._id}`, {settings: data})
+        const theSettings = result.data.settings
+        setCash(theSettings.cash)
+        setPayment(theSettings.payment)
+        setID(theSettings.ID)
+        setIsdate(theSettings.date)
+        setGender(theSettings.gender)
+        setisInstegram(theSettings.isInstegram)
+        setInstegramLink(theSettings.instegramLink)
+        setFacebookLink(theSettings.facebookLink)
+    }
     useEffect(() => {
             getEvents()
     }, [])
+    useEffect(()=>{
+        if(events?._id?.length > 0){
+            handleSetSettings(ticketSettings)
+        }else{
+        }
+
+    },[cash,
+        payment,
+        ID,
+        isdate,
+        gender,
+        isInstegram,
+        instegramLink,
+        facebookLink,])
     const handleName = (e)=>{
         setName(e.target.value)
     }
-    const handleAddRoute = ()=>{
-
+    const handleroundUpdate = async (arr)=>{
+        const result =  await axios.patch(`http://localhost:9020/rounds/${events._id}`, {rounds: arr})
+        setRounds(result.data.rounds)
     }
   return (
     <div className='w-full h-full'>
-        {console.log(rounds)}
     <div className=' flex justify-center items-center flex-col'>
         <div><Button className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
         <div className='h-10'></div>
         <Divider className='bg-white' />
         <div className='flex flex-col items-center justify-center w-full' style={{gap: '20px'}}>
         <div className='h-10 '></div>
-        <Modal size='4xl' className='event-modal-container' isOpen={isOpen} onOpenChange={onOpenChange}>
+        <div className='flex flex-row w-full h-full justify-center' style={{gap: '20px'}}>
+        
+        <div className='flex flex-col items-center' style={{width: '50%', height: '100%', gap: '20px'}}>
+        {rounds.map((item,index)=>{
+
+        return(
+        <div className='glass-background tickets-container w-full flex flex-row'onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
+                    <Modal size='4xl' className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
                             <ModalContent>
                                 {(onClose) => (
                                     <>
@@ -115,20 +193,27 @@ const handleDate = (newRange)=>{
 
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שם הסבב</div>
-                                                    <Input label='Event name' onChange={handleName} />
+                                                    <Input placeholder={item.name} label='Event name' onChange={handleName} />
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>תאריך התחלה וסיום</div>
-                                                    <DateRangePicker value={{   start: new CalendarDate(startDate[0], startDate[1],startDate[1]),
-                                                     end: new CalendarDate(endDate[2], endDate[1],endDate[1])}}   label='Event date' onChange={handleDate}/>
+                                                    <DateRangePicker   label='Event date' onChange={handleDate}/>
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שעת התחלה</div>
-                                                    <TimeInput hourCycle={24} label='Start time' onChange={handleStartTime}/>
+                                                    <TimeInput placeholder={item.startTime} hourCycle={24} label='Start time' onChange={handleStartTime}/>
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שעת סיום</div>
-                                                    <TimeInput hourCycle={24} label='End time' onChange={handleEndTime}/>
+                                                    <TimeInput placeholder={item.endTime} hourCycle={24} label='End time' onChange={handleEndTime}/>
+                                                </div>
+                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                    <div className='opacity-70'>כמות כרטיסים</div>
+                                                    <Input placeholder={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                </div>
+                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                    <div className='opacity-70'> מחיר עבור כרטיס</div>
+                                                    <Input placeholder={item.proce}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
                                                 </div>
                                             </div>
                                         </ModalBody>
@@ -137,7 +222,10 @@ const handleDate = (newRange)=>{
                                                 Close
                                             </Button>
                                             <Button color="primary" onPress={()=>{
-
+                                                const newArr = [...rounds]
+                                                newArr[index] = newRound
+                                                setRounds(newArr)
+                                                handleroundUpdate(newArr)
                                                 onClose()
                                             }}>
                                                 Action
@@ -147,43 +235,99 @@ const handleDate = (newRange)=>{
                                 )}
                             </ModalContent>
                         </Modal>
-        {rounds.map((item,index)=>{
-
-            return(
-                <div className='glass-background tickets-container flex flex-row'onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
-
-                    {index === index2 &&
-                    <Button className='buttonfade'
-                    onClick={()=>{
-                        if(item.endDate === false||item.startDate === false ){
-                            console.log(item.endDate)
-                          
-                            setEndDate(parseDateString(events.end_date))
-                            setStartDate(parseDateString(events.start_date))
-                        }else{
-                            setEndDate(parseDateString(item.endDate))
-                            setStartDate(parseDateString(item.startDate))
-                        }
-                        setName(item.name)
-                        setPrice(item.price)
-                        setAmount(item.amount)
-                        setEndTime(item.endTime)
-                        setStartTime(item.startTime)
-                        onOpen()
-                        setIndex(index)
-                    }} color='primary'>ערוך סיבוב</Button>
-                    }
-                    <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%"}} className='flex h-full  flex-row justify-end'>
-                        <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter'}}></div>:<div></div>}</div>
-                        <div className='flex flex-col items-end'>
-                        <div>- {index + 1} סבב</div>
-                        {icon}
-                        </div>
-                     </div>
-                    
+        {index === index2 &&
+        <div className='flex flex-row' style={{gap: '5px'}}>
+            <Button color='danger' isDisabled={rounds.length > 1 ? false : true}  
+             className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onClick={()=>{
+            const removedArr = removeElementAtIndex(rounds,index)
+            setRounds(removedArr)
+            handleroundUpdate(removedArr)
+            }}>מחק</Button>
+            <Button className='buttonfade'
+            onClick={()=>{
+                setStartDate(item.startDate)
+                setEndDate(item.endDate)
+                setName(item.name)
+                setPrice(item.price)
+                setAmount(item.amount)
+                setEndTime(item.endTime)
+                setStartTime(item.startTime)
+                onOpen()
+                setIndex(index)
+            }} color='primary'>ערוך סיבוב</Button>
+        </div>
+        }
+        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%"}} className='flex h-full  flex-row justify-end'>
+            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter'}}></div>:<div></div>}</div>
+            <div className='flex flex-col items-end'>
+            <div>- {index + 1} סבב</div>
+            {icon}
+            </div>
+         </div>
+        
+    </div>
+)
+})}
+        </div>
+        <div className='flex flex-col items-center glass-background' style={{width: '20%', height: '100%', borderRadius: '10px', paddingTop: '1%',paddingRight: '1%', paddingLeft: '1%'}}>
+            <div className='text-white flex flex-col items-end' style={{width: '100%', height: '450px', fontSize: '20px', gap: '10px'}}>
+            <div className='flex flex-col items-end'>
+            <div> הגדרות כרטיסים</div>
+            {icon}
+            </div>
+            <div className='flex flex-row w-full justify-between setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+            <div className=''>
+            <Switch isSelected={cash} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
+           </div>
+           <div>:מזומן</div>
+        
                 </div>
-            )
-        })}
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+            <div>
+            <Switch isSelected={payment} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
+            
+           </div>
+           <div>:הגבלת רכישה</div></div>
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+            <div>
+            <Switch isSelected={ID} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
+           </div>
+           <div>: מילוי תז</div></div>
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                            <div>
+            <Switch isSelected={isdate} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
+           </div>
+           <div>:תאריך לידה</div></div>  
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+            <div>
+            <Switch isSelected={gender} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
+           </div>
+           <div>: מגדר</div></div>
+           <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+                <div>
+                <Switch isSelected={isInstegram} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
+               </div>
+               <div>: אינסטגרם או פייסבוק</div></div>  
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+            <div>
+            <Switch isSelected={facebookLink} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
+           </div>
+                      
+           <div>:קישור לפייסבוק</div></div>
+            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+            <div>
+            <Switch isSelected={instegramLink} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
+           </div>
+           <div>: שם משתמש לאינסטגרם</div></div>  
+            </div>
+        </div>
+        </div>
+
+
         </div>
         <div></div>
     </div>

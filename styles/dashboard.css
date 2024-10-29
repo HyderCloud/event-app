@@ -6,7 +6,7 @@
     padding-right: 3%;
     gap: 5%;
     overflow-y: auto;
-    background: radial-gradient(circle at bottom, #111111, #000000);
+    background: radial-gradient(circle at bottom, #000000e3, #000000);
 }
 
 .main-container{

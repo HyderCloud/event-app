@@ -31,7 +31,15 @@ class Events:
             "services": [],
             "images": [],
             "cuppuns": [],
-            "rounds": [],
+            "rounds": [{
+        "name": '',
+        "startDate": '',
+        "endDate": '',
+        "startTime": '',
+        "endTime": '',
+        "price": '',
+        "amount": ''
+    }],
             "workers": [],
             "security": [],
             "admin": [],
@@ -39,6 +47,15 @@ class Events:
             "age": '',
             "type": '',
             "mode": True,
+            "ticket_settings": {"cash": False, 
+                                 "payment": False,
+                                 "ID": False,
+                                 "date": False,
+                                 "gender": False,
+                                 "isInstegram": False,
+                                 "facebookLink": False,
+                                 "instegramLink": False,
+                                 }
         }
             result = api_events.insert_event(doccument)
             if result:
@@ -104,5 +121,22 @@ class Events:
             is_updated = api_events.update_age_by_id(age, id)
             if is_updated:
                 return jsonify({"age": age}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+
+    def update_ticket_settings(self, id,doccument):
+        try:
+            is_updated = api_events.update_ticket_settings_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"settings": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_rounds(self, id,doccument):
+        try:
+            is_updated = api_events.update_rounds_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"rounds": doccument}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501

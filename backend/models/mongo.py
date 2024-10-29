@@ -24,6 +24,30 @@ class EventsDB:
         else:
             print("No document found with the given email.")
 
+    def update_ticket_settings_by_id(self,ticket_settings, _id):
+        new_data = {
+        "$set": {
+            "ticket_settings": ticket_settings,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_rounds_by_id(self,rounds, _id):
+        new_data = {
+        "$set": {
+            "rounds": rounds,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_tubnail_by_id(self,img, _id):
         new_data = {
         "$set": {
