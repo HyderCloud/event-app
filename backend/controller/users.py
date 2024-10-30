@@ -72,16 +72,30 @@ def user_google(user):
 
         }
         user_checker = user_api.get_user_by_email(user["email"])
-        print(user_checker)
         if user_checker["email"] == user["email"]:
             payload = {
             "user_id": user_checker["_id"],
             "email": user_checker["email"],
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
             }
-            print('hello')
             token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-            return jsonify({"token": token}), 200
+            if len(user_checker["profession"]) > 0:
+                store_checker = store_api.get_store_by_key(user_checker["_id"])
+                print(store_checker)
+                payload2 = {
+                    "store_id": store_checker["_id"],
+                    "name": store_checker["name"],
+                    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+                    }
+                token2 = jwt.encode(payload2, SECRET_KEY, algorithm="HS256")
+                print('hi')
+                if store_checker:
+                    print('hello')
+                    return jsonify({"token": token, "store": token2}), 200
+                else:
+                    return jsonify({"message": "bug"}), 400
+            else: 
+                return jsonify({"token": token}), 200
         else:
             new_user = user_api.insert_user(new_doccument)
             if new_user:

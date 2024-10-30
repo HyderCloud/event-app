@@ -47,10 +47,10 @@ const page =  () => {
         }
       }, [decodedToken ]);
     
-    // if (cookie.store){
-    //   console.log(cookie)
-    //   router.push('/home')
-    // } else
+    if (cookie.store){
+      console.log(cookie)
+      router.push('/home')
+    } else
     if ( usernameParam === null&& professionParam === null){
         return (<UsernameSection  onUsername={handleUsername} />)
     }

@@ -1,12 +1,12 @@
 "use client"
-import { TimeInput, Divider, Input, Switch,Calendar,CheckboxGroup ,Checkbox,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import { TimeInput, Divider,DatePicker, Input, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import React, { useState, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
 
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
-import DragAndDrop from '../DragImage';
 import axios from 'axios'
+import DragAndDrop from '../DragImage';
 import {CalendarDate} from '@internationalized/date';
 const Tickets = () => {
     const isFetch = useRef(false)
@@ -15,7 +15,11 @@ const Tickets = () => {
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
   </svg> </div>
     const [groupSelected, setGroupSelected] = useState(["credit"]);
+    const [section1, setSection1] = useState(true)
+    const [section2, setSection2] = useState(false)
+    const [section3, setSection3] = useState(false)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
     const [index, setIndex] = useState(null)
     const [index2, setIndex2] = useState(null)
     const [name, setName] = useState('')
@@ -174,7 +178,12 @@ const handleDate = (newRange)=>{
   return (
     <div className='w-full h-full'>
     <div className=' flex justify-center items-center flex-col'>
+        <div className='w-full flex flex-row justify-between'style={{paddingLeft: '50%'}}>
         <div><Button className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
+        <Tooltip  className='glass-background text-white'  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
+        <div><Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button></div>
+        </Tooltip>
+        </div>
         <div className='h-10'></div>
         <Divider className='bg-white' />
         <div className='flex flex-col items-center justify-center w-full' style={{gap: '20px'}}>
@@ -212,11 +221,11 @@ const handleDate = (newRange)=>{
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>כמות כרטיסים</div>
-                                                    <Input placeholder={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                    <Input type='number' placeholder={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'> מחיר עבור כרטיס</div>
-                                                    <Input placeholder={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
+                                                    <Input type='number' placeholder={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
                                                 </div>
                                             </div>
                                         </ModalBody>
@@ -239,7 +248,7 @@ const handleDate = (newRange)=>{
                             </ModalContent>
                         </Modal>
         {index === index2 &&
-        <div className='flex flex-row absolute left-0' style={{gap: '5px'}}>
+        <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
             <Button color='danger' isDisabled={rounds.length > 1 ? false : true}  
              className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onClick={()=>{
             const removedArr = removeElementAtIndex(rounds,index)
@@ -266,15 +275,15 @@ const handleDate = (newRange)=>{
             <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
 
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
-                    <div>
+                    <div className='element-ticket'>
                 {item.startDate}  
                     </div>
                     <div> -</div>
-                    <div>
+                    <div className='element-ticket'>
                     {item.endDate} 
                     </div>
                 </div>
-                <div>
+                <div className='element-ticket'>
                 {item.name} 
                 </div>
                 </div>}</div>
@@ -286,16 +295,16 @@ const handleDate = (newRange)=>{
 
             <div className='flex   justify-end flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
             <div className='flex  flex-row ' style={{gap: '10px'}}>
-                    <div>
+                    <div className='element-ticket'>
                     {item.endTime} 
                     </div>
                     <div> -</div>
-                    <div>
+                    <div className='element-ticket'> 
                 {item.startTime}  
                     </div>
                 </div>
             <div className='flex flex-row justify-end' style={{gap: '10px'}}>
-                    <div>
+                    <div className='element-ticket'>
                 {item.amount}
                     </div>
                     <div>
@@ -303,7 +312,7 @@ const handleDate = (newRange)=>{
                     </div>
                 </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
-                    <div>
+                    <div className='element-ticket'>
                 {item.price}
                     </div>
                     <div>
@@ -379,7 +388,124 @@ const handleDate = (newRange)=>{
 
 
         </div>
-        <div></div>
+        <div>
+        <Modal size='4xl' className='event-modal-container' isOpen={isOpen2} onOpenChange={onOpenChange2} style={{background: 'black'}}>
+                            <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                        <ModalHeader className="flex  flex-col gap-1">תצוגה מוקדמת</ModalHeader>
+                                        <ModalBody  style={{gap: '10px'}} >
+                                            {section1 &&
+                                            <div className='flex flex-col w-full items-center' style={{gap: '10px'}}>
+                                            {rounds.map((item)=>{
+                                                return(
+                                            <div style={{gap: '10px'}} className='glass-background tickets-container w-full flex flex-row' onClick={()=>{
+                                                setSection1(false)
+                                                setSection2(true)
+                                            }}  onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
+                                                        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row justify-end'>
+            <div className='flex flex-col items-end w-full'>
+            <div className='flex flex-row' style={{ gap: '10px'}}>
+            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
+
+                <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div className='element-ticket'>
+                {item.startDate}  
+                    </div>
+                    <div> -</div>
+                    <div className='element-ticket'>
+                    {item.endDate} 
+                    </div>
+                </div>
+                <div className='element-ticket'>
+                {item.name} 
+                </div>
+                </div>}</div>
+                <div>
+                - {index + 1} סבב
+                </div>
+                </div>
+            {icon}
+
+            <div className='flex   justify-end flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
+            <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div className='element-ticket'>
+                    {item.endTime} 
+                    </div>
+                    <div> -</div>
+                    <div className='element-ticket'> 
+                {item.startTime}  
+                    </div>
+                </div>
+            <div className='flex flex-row justify-end' style={{gap: '10px'}}>
+                    <div className='element-ticket'>
+                {item.amount}
+                    </div>
+                    <div>
+                :כמות כרטיסים  
+                    </div>
+                </div>
+                <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div className='element-ticket'>
+                {item.price}
+                    </div>
+                    <div>
+                :מחיר  
+                    </div>
+                </div>
+
+            </div>
+            </div>
+         </div>
+                                            </div>
+                                                )
+                                            })}
+                                            </div>
+                                            }
+                                            {section2&&
+                                            <div className='flex flex-col w-full items-center' style={{gap: '10px', paddingRight: '25%',paddingLeft: '25%'}}>
+                                                <Input label="Full name"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                <Input label="Email"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                <Input label="Phone"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                {ID&&
+                                                <Input label="ID"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                }
+                                                {isdate&&
+                                                <DatePicker label="Birthday"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                }
+                                                {gender&&
+                                                        <RadioGroup
+                                                        label="Select your gender"
+                                                        orientation="horizontal"
+                                                      >
+                                                        <Radio value="hgfdh">אחר</Radio>
+                                                        <Radio value="buenos-aires">גבר</Radio>
+                                                        <Radio value="sydney">אישה</Radio>
+                                                      </RadioGroup>
+                                                }
+                                                {instegramLink&&
+                                                <Input label="Instegram link"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>}
+                                                {facebookLink&&
+                                                <Input label="Facebook link"  variant='bordered' className='input-glass-background' style={{borderRadius: '10px'}}/>
+                                                }
+                                            </div>
+                                            }
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button color="danger" variant="light" onPress={()=>{
+                                                onClose()
+                                                setSection1(true)
+                                                setSection2(false)
+                                                setSection3(false)
+                                            }}>
+                                                Close
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
+        </div>
     </div>
     </div>
   )

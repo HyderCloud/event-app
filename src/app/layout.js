@@ -4,6 +4,7 @@ import '../../styles/landing.css'
 import '../../styles/navigation.css'
 import '../../styles/dashboard.css'
 import '../../styles/events.css'
+import '../../styles/team.css'
 import {NextUIProvider} from "@nextui-org/react";
 import StoreSlide from "@/components/slidebar/StoreSlide";
 import { auth } from "./auth";

@@ -81,7 +81,6 @@ def get_store_by_username(name, user):
         decoded_store = jwt.decode(name, options={"verify_signature": False})
         decoded_user = jwt.decode(user, options={"verify_signature": False})
         get_store = store_api.get_store_by_id(decoded_store['store_id'])
-        print(get_store)
         if get_store["key"] == decoded_user['user_id']:
             return jsonify({"acknowledge": True}), 200
     except Exception as e:
@@ -115,7 +114,7 @@ def set_new_store(id ,name, username, profession, email):
                     "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
                     }
                     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-                    return jsonify({"acknowledge": True, "username": username["username"], "token": token}), 200
+                    return jsonify({"acknowledge": True, "username": name, "token": token}), 200
     except Exception as e:
         return jsonify({"message": 'error-' + str(e)}), 501
     

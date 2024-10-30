@@ -4,6 +4,12 @@
     -webkit-backdrop-filter: blur(10px); /* For Safari support */
     
   }
+  .input-glass-background {
+    background: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
+    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+    border-radius: 10px;
+  }
   .setting-tickets{
     border-radius: 10px;
     padding-right: 2%;
@@ -122,6 +128,14 @@
     animation: fadeIn 0.5s ease-in forwards;
   }
 
+    .element-ticket{
+        border-radius: 10px;
+        cursor: default;
+    }
+    .element-ticket:hover{
+        background-color: #27272A;
+    }
+
   .buttonfade2 {
     
     opacity: 20%;
@@ -172,3 +186,4 @@ input{
     text-align: right;
 
 }
+

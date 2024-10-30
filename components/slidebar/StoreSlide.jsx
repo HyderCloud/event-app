@@ -24,7 +24,7 @@ const StoreSlide = () => {
     }
     const handleOutClick = ()=>{
 
-        router.push(`/api/auth/signout`)
+        router.push(`/signout`)
     }
     if(pathName.split('/')[1] === 'dashbord'){
         return(<div>
@@ -52,9 +52,9 @@ const StoreSlide = () => {
               onMouseEnter={()=>{setIsHover('settings')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleHomeClick}
               ><p className='slot-text-nav'>הגדרות</p></Link>
               <div style={{height:'90%'}}></div>
-              <Button color='danger' className={`logout-button`} variant='bordered' onPress={handleOutClick}>
+              <Link href={'/signout'} color='danger' className={`logout-Link`} variant='bordered'>
                   <div>התנתקות</div>
-              </Button>
+              </Link>
               <div style={{height:'10%'}}></div>
           </div>
         )

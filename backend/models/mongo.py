@@ -232,6 +232,14 @@ class Store:
             return {"id": '123'}
         documents_list['_id'] = str(documents_list['_id']) 
         return documents_list
+    
+    def get_store_by_key(self, key):
+        
+        documents_list = storeCollection.find_one({'key': key})
+        if documents_list is None:
+            return {"id": '123'}
+        documents_list['_id'] = str(documents_list['_id']) 
+        return documents_list
 
 class Users:
     def __init__(self):

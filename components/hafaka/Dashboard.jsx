@@ -178,6 +178,7 @@ const handleEdit = ()=>{
         <div className='sec-main-dash flex flex-col'>
 
           <div className='links-dash-container'>
+            {linksArr &&
           <div className='flex flex-row'>
             { linksArr.map((element)=>{
               return(
@@ -185,17 +186,18 @@ const handleEdit = ()=>{
               )
             })}
           </div>
+            }
           </div>
           <div className='description-dash-container pr-10'>
             <div className='flex flex-row  gap-4'>
               
               <div className='about-slots-edit-sub '>{data?.email}</div>
-              {data?.email === ''? '':<Image  src={require('@/image/email.png')} width={20} height={20} alt='ll'/>}
+              {!data?.email? '':<Image  src={require('@/image/email.png')} width={20} height={20} alt='ll'/>}
             </div>
             <div className='h-5'></div>
             <div className='flex flex-row gap-4'>
               <div className='about-slots-edit-sub'>{data?.phone}</div>
-              {data?.email === ''? '':<Image src={require('@/image/phone.png')} width={15} height={10} alt='ll'/>}
+              {!data?.phone? '':<Image src={require('@/image/phone.png')} width={15} height={10} alt='ll'/>}
             </div>
               <div className='h-5'></div>
             <div className='flex flex-row'>

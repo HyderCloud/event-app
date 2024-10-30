@@ -32,6 +32,7 @@ def update_descrpition(name):
 @stores_blueprint.route('/update_email/<string:name>', methods=['PATCH'])
 def email_update(name):
     user = request.get_json()
+    print(name)
     return update_email_by_name(name,user["email"])
 
 @stores_blueprint.route('/update_phone/<string:name>', methods=['PATCH'])

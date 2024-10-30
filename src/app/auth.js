@@ -38,9 +38,6 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
 
     ], 
     callbacks: {
-        async signOut({}){
-          console.log('hello')
-        },
         async signIn({ account, profile }) {
           const postFile = {
             email: profile.email,
@@ -55,6 +52,9 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
                 const register = await axios.post('http://localhost:9020/googleauth',postFile)
                 if( register){
                  cookies().set('user', register?.data?.token, { secure: true })
+                 if(register?.data?.store){
+                   cookies().set('store', register?.data?.store, { secure: true })
+                 }
                  return true
                 }
               } catch (error) {
