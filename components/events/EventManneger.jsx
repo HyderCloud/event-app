@@ -102,7 +102,7 @@ const EventManneger = ({}) => {
                         <div style={{ paddingRight: '40px', width: '160px' }}>
                             <Button className='w-full' onPress={onOpen} color='primary'>אירוע חדש</Button>
                         </div>
-                        <Modal size='4xl' className='event-modal-container' isOpen={isOpen} onOpenChange={onOpenChange}>
+                        <Modal size='4xl' className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
                             <ModalContent>
                                 {(onClose) => (
                                     <>

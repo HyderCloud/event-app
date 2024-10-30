@@ -9,7 +9,7 @@ import DragAndDrop from '../DragImage';
 import axios from 'axios'
 import {CalendarDate} from '@internationalized/date';
 const Tickets = () => {
-
+    const isFetch = useRef(false)
     const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
@@ -148,9 +148,12 @@ const handleDate = (newRange)=>{
             getEvents()
     }, [])
     useEffect(()=>{
-        if(events?._id?.length > 0){
+        if(events?._id?.length > 0 && isFetch.current===true){
+                console.log("hello")
             handleSetSettings(ticketSettings)
         }else{
+        console.log("hi")
+        isFetch.current = true
         }
 
     },[cash,
@@ -182,7 +185,7 @@ const handleDate = (newRange)=>{
         {rounds.map((item,index)=>{
 
         return(
-        <div className='glass-background tickets-container w-full flex flex-row'onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
+        <div className='glass-background tickets-container w-full flex flex-row'  onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
                     <Modal size='4xl' className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
                             <ModalContent>
                                 {(onClose) => (
@@ -213,7 +216,7 @@ const handleDate = (newRange)=>{
                                                 </div>
                                                 <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'> מחיר עבור כרטיס</div>
-                                                    <Input placeholder={item.proce}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
+                                                    <Input placeholder={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
                                                 </div>
                                             </div>
                                         </ModalBody>
@@ -236,7 +239,7 @@ const handleDate = (newRange)=>{
                             </ModalContent>
                         </Modal>
         {index === index2 &&
-        <div className='flex flex-row' style={{gap: '5px'}}>
+        <div className='flex flex-row absolute left-0' style={{gap: '5px'}}>
             <Button color='danger' isDisabled={rounds.length > 1 ? false : true}  
              className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onClick={()=>{
             const removedArr = removeElementAtIndex(rounds,index)
@@ -257,11 +260,58 @@ const handleDate = (newRange)=>{
             }} color='primary'>ערוך סיבוב</Button>
         </div>
         }
-        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%"}} className='flex h-full  flex-row justify-end'>
-            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter'}}></div>:<div></div>}</div>
-            <div className='flex flex-col items-end'>
-            <div>- {index + 1} סבב</div>
+        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row justify-end'>
+            <div className='flex flex-col items-end w-full'>
+            <div className='flex flex-row' style={{ gap: '10px'}}>
+            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
+
+                <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div>
+                {item.startDate}  
+                    </div>
+                    <div> -</div>
+                    <div>
+                    {item.endDate} 
+                    </div>
+                </div>
+                <div>
+                {item.name} 
+                </div>
+                </div>}</div>
+                <div>
+                - {index + 1} סבב
+                </div>
+                </div>
             {icon}
+
+            <div className='flex   justify-end flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
+            <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div>
+                    {item.endTime} 
+                    </div>
+                    <div> -</div>
+                    <div>
+                {item.startTime}  
+                    </div>
+                </div>
+            <div className='flex flex-row justify-end' style={{gap: '10px'}}>
+                    <div>
+                {item.amount}
+                    </div>
+                    <div>
+                :כמות כרטיסים  
+                    </div>
+                </div>
+                <div className='flex  flex-row ' style={{gap: '10px'}}>
+                    <div>
+                {item.price}
+                    </div>
+                    <div>
+                :מחיר  
+                    </div>
+                </div>
+
+            </div>
             </div>
          </div>
         
