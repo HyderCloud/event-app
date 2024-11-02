@@ -20,6 +20,7 @@ const Tickets = () => {
     const [section3, setSection3] = useState(false)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
+
     const [index, setIndex] = useState(null)
     const [index2, setIndex2] = useState(null)
     const [name, setName] = useState('')
@@ -381,7 +382,7 @@ const handleDate = (newRange)=>{
             <div>
             <Switch isSelected={instegramLink} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
            </div>
-           <div>: שם משתמש לאינסטגרם</div></div>  
+           <div>:  משתמש לאינסטגרם</div></div>  
             </div>
         </div>
         </div>
@@ -478,9 +479,9 @@ const handleDate = (newRange)=>{
                                                         label="Select your gender"
                                                         orientation="horizontal"
                                                       >
-                                                        <Radio value="hgfdh">אחר</Radio>
-                                                        <Radio value="buenos-aires">גבר</Radio>
-                                                        <Radio value="sydney">אישה</Radio>
+                                                        <Radio  value="hgfdh"><div className='text-white'>גבר</div></Radio>
+                                                        <Radio  value="buenos-aires"><div className='text-white'>אישה</div></Radio>
+                                                        <Radio  value="sydney"><div className='text-white'>אחר</div></Radio>
                                                       </RadioGroup>
                                                 }
                                                 {instegramLink&&

@@ -8,6 +8,8 @@ db = client.get_database()
 storeCollection = db.stores
 collectionUsers = db.users
 eventsCollection = db.events
+requestCollection = db.request
+
 class EventsDB:
     def __init__(self):
         pass
@@ -287,3 +289,55 @@ class Users:
         else:
             print("No document found with the given email.")
 
+class Team:
+    def __init__(self):
+        pass
+
+    def get_team_by_profession(self, profession):
+        documents_cursor = eventsCollection.find({'profession': profession})
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list
+    
+    def get_team(self):
+        documents_cursor = storeCollection.find()
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list
+    
+    def update_role(self, role, _id):
+        new_data = {
+        "$set": {
+            "roles": role,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_waiting(self, waiting, _id):
+        new_data = {
+        "$set": {
+            "waiting": waiting,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def insert_job_request(self, doccument):
+        result = requestCollection.insert_one(doccument)
+        inserted_id = result.inserted_id
+        return str(inserted_id)

@@ -100,6 +100,7 @@ def set_new_store(id ,name, username, profession, email):
             "phone": "",
             "address": [],
             "folowers": [],
+            "profission": ''
         }
         updated = users_api.update_by_email(email,username, profession)
         if updated:
