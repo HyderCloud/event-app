@@ -24,3 +24,6 @@ def update_waiting(id):
 
     return team_api.workers_recruit(event["waiting"], id)
 
+@team_blueprint.route('/notification/<string:id>', methods=['GET'])
+def get_jobs(id):
+    return team_api.get_job_req(id)

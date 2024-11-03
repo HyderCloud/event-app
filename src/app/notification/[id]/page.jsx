@@ -1,9 +1,11 @@
-import Notify from '@/components/notification/Notify.jsx'
+import WebSocketComponent from '@/components/notification/Notify'
+import React from 'react'
 
 const page = () => {
   return (
-    
-    <Notify/>
+    <div className='w-full h-full'>
+        <WebSocketComponent/>
+    </div>
   )
 }
 

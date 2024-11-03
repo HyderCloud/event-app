@@ -68,17 +68,32 @@ export const Team = () => {
     );
     setMatch(filtered);
 };
-function updateRoleById( id, newRoll, index, name, email) {
+const getCurrentDateTime = () => {
+    const now = new Date();
+    const month = now.getMonth() + 1; // Months are zero-based, so we add 1
+    const day = now.getDate();
+    const year = String(now.getFullYear()).slice(-2); // Get last two digits of the year
+    const hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0'); // Pad minutes to ensure two digits
+    const formattedDateTime = `${month}/${day}/${year} ${hours}:${minutes}`;
+    return(formattedDateTime);
+};
+function updateRoleById( id, newRoll, index, name, email, key) {
 
   const waitArr = [...waiting]
-console.log(email)
    waitWorkers.map(item => {
       if (item._id === id) {
-        waitArr[index] = {key: id,name: name, role: newRoll, admin: 'none', from: events._id, email: email, fromName: events.name, owner: events.owner}
+        waitArr[index] = {key: key,name: name, role: newRoll, admin: 'none', from: events._id, email: email, fromName: events.name, owner: events.owner,date:getCurrentDateTime(), isRead: false}
         setWaiting(waitArr)
       }
   });
 }
+    const handleAddNotification = (data)=>{
+        data.map(async (item)=>{
+        await axios.post(`http://localhost:8000/notify/${item?.key}`,{message: item})
+        })
+    }
+
    const handleGetSearch = async ()=>{
       const result =  await axios.get(`http://localhost:9020/getteam`)
       const theRole = result.data.team
@@ -141,15 +156,16 @@ console.log(email)
                                                   const isUnique = isIdUnique(item._id)
                                                   if(isUnique){
                                                     setWaitWorkers([...waitWorkers,item])
-                                                    setWaiting([...waiting,{key: item._id,name: item.name, role: null, admin: 'none', email: item.email
-                                                      , fromName: events.name, owner: events.owner
+                                                    setWaiting([...waiting,{key: item.key,name: item.name, role: null, admin: 'none', email: item.email
+                                                      , fromName: events.name, owner: events.owner, date:getCurrentDateTime(),isRead: false
                                                     }])
                                                   }
                                                   if(waitWorkers.length === 0){
                                                     console.log(waitWorkers.length)
                                                     setWaitWorkers([...waitWorkers,item])
-                                                    setWaiting([...waiting,{key: item._id,name: item.name, role: null, admin: 'none',
-                                                       email: item.email, fromName: events.name, owner: events.owner}])
+                                                    setWaiting([...waiting,{key: item.key,name: item.name, role: null, admin: 'none', email: item.email
+                                                        , fromName: events.name, owner: events.owner, date:getCurrentDateTime(),isRead: false
+                                                      }])
                                                   }
                                                 }}
                                                  style={{height: '70px'}}>
@@ -183,16 +199,16 @@ console.log(email)
                                                   const isUnique = isIdUnique(item._id)
                                                   if(isUnique){
                                                     setWaitWorkers([...waitWorkers,item])
-                                                    setWaiting([...waiting,{key: item._id,name: item.name, role: null, admin: 'none', email: item.email
-                                                      , fromName: events.name, owner: events.owner
-                                                    }])
+                                                    setWaiting([...waiting,{key: item.key,name: item.name, role: null, admin: 'none', email: item.email
+                                                        , fromName: events.name, owner: events.owner,date:getCurrentDateTime(), isRead: false
+                                                      }])
                                                   }
                                                   if(waitWorkers.length === 0){
                                                     console.log(waitWorkers.length)
                                                     setWaitWorkers([...waitWorkers,item])
-                                                    setWaiting([...waiting,{key: item._id,name: item.name, role: null, admin: 'none', email: item.email
-                                                      , fromName: events.name, owner: events.owner
-                                                    }])
+                                                    setWaiting([...waiting,{key: item.key,name: item.name, role: null, admin: 'none', email: item.email
+                                                        , fromName: events.name, owner: events.owner,date:getCurrentDateTime(), isRead: false
+                                                      }])
                                                   }
                                                 }}
                                                  style={{height: '70px'}}>
@@ -270,13 +286,12 @@ console.log(email)
                                           <div style={{height: '170px'}}>
                                         <Select className='w-full'  style={{color:'black'}} label='תפקיד'
                                                       onChange={(e)=>{
-                                                        console.log(item)
-                                                     updateRoleById(item._id,role[e.target.value],index, item.name,item.email)
+                                                     updateRoleById(item._id,role[e.target.value],index, item.name,item.email, item.key)
                                                       
                                                       }}
                                                
                                                   >
-                                                    {role.map((item, index) => (
+                                                    {role?.map((item, index) => (
                                                       <SelectItem key={index}>
                                                         {item}
                                                       </SelectItem>
@@ -318,7 +333,11 @@ console.log(email)
                                                 סגור
                                             </Button>
                                             <Button color="primary" onPress={()=>{
-                                              handleUpdateWaiting(waiting)
+                                                if (waiting.length > 0){
+                                                    
+                                                    handleUpdateWaiting(waiting)
+                                                    handleAddNotification(waiting)
+                                                }
                                                 onClose()
                                                 setSearchTerm('')
                                             }}>
@@ -337,7 +356,7 @@ console.log(email)
                                         <ModalBody  style={{gap: '10px'}} >
                                          <div className='flex flex-col w-full h-full add-role-cont'>
                                           <div className='style-displaying-role flex w-full cursor-default justify-end flex-row'>
-                                          {role.map((item, index)=>{
+                                          {role?.map((item, index)=>{
                                             return(
                                               <Tooltip className='cursor-pointer text-white' color='danger' onClick={()=>{
                                                 const removedArr = removeElementAtIndex(role,index)

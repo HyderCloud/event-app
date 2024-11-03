@@ -1,8 +1,24 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from typing import Dict
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
+allowed_origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "https://yourdomain.com",
+]
 
+# Add CORS middleware to the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,       # Allows requests from these origins
+    allow_credentials=True,               # Allows cookies and authentication headers
+    allow_methods=["*"],                  # Allows all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],                  # Allows all headers
+)
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
@@ -44,6 +60,3 @@ async def send_notification_to_user(user_id: str, notification: dict):
     return {"message": f"Notification sent to user {user_id}"}
 
 
-@app.get("/")
-async def hello_worls():
-    return "hellow this is fastapi. your server is running"

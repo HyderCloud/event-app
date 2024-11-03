@@ -223,7 +223,7 @@ class Store:
     def get_store_by_name(self, name):
         documents_list = storeCollection.find_one({'name': name})
         if documents_list is None:
-            return {"id": '123'}
+            return None
         documents_list['_id'] = str(documents_list['_id']) 
         return documents_list
         
@@ -341,3 +341,13 @@ class Team:
         result = requestCollection.insert_one(doccument)
         inserted_id = result.inserted_id
         return str(inserted_id)
+    
+    def get_jobs_by_key(self, key):
+        documents_cursor = requestCollection.find({'key': key})
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list

@@ -72,7 +72,11 @@ def update_description_by_name(name,description):
 def get_store_by_storeusername(name):
     try:
         store = store_api.get_store_by_name(name)
-        return jsonify({"store": store}), 200
+        print(store)
+        if store == None:
+            return jsonify({"message": "no store"}), 200
+        else:
+            return jsonify({"store": store}), 200
     except Exception as e:
         return jsonify({"message": 'error-' + str(e)}), 501
 
@@ -80,6 +84,8 @@ def get_store_by_username(name, user):
     try:
         decoded_store = jwt.decode(name, options={"verify_signature": False})
         decoded_user = jwt.decode(user, options={"verify_signature": False})
+        print(decoded_store)
+        print(decoded_user)
         get_store = store_api.get_store_by_id(decoded_store['store_id'])
         if get_store["key"] == decoded_user['user_id']:
             return jsonify({"acknowledge": True}), 200
@@ -96,11 +102,11 @@ def set_new_store(id ,name, username, profession, email):
             "slogen":'',
             "description":'',
             "links":[],
-            "email": '',
+            "email": email,
             "phone": "",
             "address": [],
             "folowers": [],
-            "profission": ''
+            "profission": profession
         }
         updated = users_api.update_by_email(email,username, profession)
         if updated:

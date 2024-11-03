@@ -1,13 +1,25 @@
 "use client"
 import React, { useEffect, useState } from "react";
-
+import { usePathname } from "next/navigation";
+import axios from 'axios'
 const WebSocketComponent = ({ userId }) => {
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
+  const path = usePathname()
+  function getStringAfterSecondSlash(path) {
+    const parts = path.split('/');
+    return parts[2] || null; 
+}
+
+ const handleNotification = async ()=>{
+  const result = await axios.get(`http://localhost:9020/notification/${getStringAfterSecondSlash(path)}`)
+  console.log(result.data)
+  setMessages(result.data?.notify)
+ }
 
   useEffect(() => {
-    // Connect to WebSocket server
-    const ws = new WebSocket(`ws://localhost:8000/ws/notifications/user126`);
+    handleNotification()
+    const ws = new WebSocket(`ws://localhost:8000/ws/notifications/${getStringAfterSecondSlash(path)}`);
 
     // Set up the WebSocket event listeners
     ws.onopen = () => {
@@ -19,8 +31,6 @@ const WebSocketComponent = ({ userId }) => {
       // Handle incoming messages from the server
       const message = JSON.parse(event.data);
       console.log("Message from server:", message);
-
-      // Add the new message to the state
       setMessages((prevMessages) => [...prevMessages, message]);
     };
 
@@ -36,25 +46,19 @@ const WebSocketComponent = ({ userId }) => {
   }, [userId]);
 
   // Function to send a message (if needed)
-  const sendMessage = (msg) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const message = { message: msg };
-      socket.send(JSON.stringify(message));
-      console.log("Message sent to server:", message);
-    } else {
-      console.log("WebSocket connection is not open.");
-    }
-  };
+
 
   return (
-    <div>
-      <h2>WebSocket Messages</h2>
-      <button onClick={() => sendMessage("Hello from React!")}>Send Message</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{JSON.stringify(msg)}</li>
-        ))}
-      </ul>
+    <div className=' flex w-full h-full items-center flex-col' style={{paddingLeft: '15%', gap: '20px', color: 'white', paddingTop: '10%'}}>
+      <div className="notification-header">התראות</div>
+      <div className="flex flex-col w-full h-full items-center">
+        {messages?.map((item,index)=>{
+          return(
+            <div className="glass-background notification-container"></div>
+
+          )
+        })}
+      </div>
     </div>
   );
 };
