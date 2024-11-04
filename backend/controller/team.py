@@ -65,9 +65,14 @@ class TeamC:
             if event:
                 workers = event["workers"]
                 workers.append({"key": key, "role": role, "admin": "none"})
+                is_connected = event_api.get_event_by_id(fromU)
+                is_connected["connection"] = key
+                is_connected["origin"] = is_connected["_id"]
+                del is_connected["_id"]
                 is_delite = team_api.delete_request_by_id(id)
                 is_updated2 = team_api.update_workers(workers, fromU)
-                if is_updated2 and is_delite:
+                if is_updated2 and is_delite and is_connected:
+                    team_api.insert_connection(is_connected)
                     return jsonify({"link": f"/{name}/{fromU}"}), 200
                 else:
                     return jsonify({"message": 'error-'}), 200
@@ -76,7 +81,4 @@ class TeamC:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
 
-    def delete_by_key(arr, key_value):
-        # Filter out objects where 'key' matches 'key_value'
-        new_arr = [obj for obj in arr if obj.get("key") != key_value]
-        return new_arr
+

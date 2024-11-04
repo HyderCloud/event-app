@@ -9,6 +9,7 @@ storeCollection = db.stores
 collectionUsers = db.users
 eventsCollection = db.events
 requestCollection = db.request
+connectionsCollection = db.connections
 
 class EventsDB:
     def __init__(self):
@@ -123,6 +124,17 @@ class EventsDB:
         if not documents_list:
             return None
         return documents_list
+    
+    def get_events_by_connection(self, key):
+        documents_cursor = connectionsCollection.find({'connection': key})
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])  # Convert _id to a string
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list
+
 
 class Store:
     def __init__(self):
@@ -354,6 +366,11 @@ class Team:
         inserted_id = result.inserted_id
         return str(inserted_id)
     
+    def insert_connection(self, doccument):
+        result = connectionsCollection.insert_one(doccument)
+        inserted_id = result.inserted_id
+        return str(inserted_id)
+
     def get_jobs_by_key(self, key):
         documents_cursor = requestCollection.find({'key': key})
         documents_list = []

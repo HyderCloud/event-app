@@ -86,6 +86,10 @@ export const Team = () => {
         waitArr[index] = {
           key: key, name: name, role: newRoll, admin: 'none',
           from: events._id, email: email, fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false
+            ,message: `ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name}, בתפקיד ${newRoll}, 
+            אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+            לאישור השתתפותך אשר את ההצעה`,
+             title:'הצעת עבודה'
         }
         setWaiting(waitArr)
       }
@@ -131,7 +135,7 @@ export const Team = () => {
       </div>
       <div className='glass-background text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'white' }}>
         <div className=' w-full flex flex-col' style={{ padding: '2%', gap: '20px' }}>
-         {team.map((item, index)=>{
+         {team?.map((item, index)=>{
           return(
             <div className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
               padding: '15px', gap: '15px', height: '85px', borderRadius: '15px'}}>
@@ -193,7 +197,10 @@ export const Team = () => {
                               setWaitWorkers([...waitWorkers, item])
                               setWaiting([...waiting, {
                                 key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false
+                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name}, בתפקיד ${newRoll}, 
+                                אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                                לאישור השתתפותך אשר את ההצעה`,
+                                 title:'הצעת עבודה'
                               }])
                             }
                             if (waitWorkers.length === 0) {
@@ -201,7 +208,10 @@ export const Team = () => {
                               setWaitWorkers([...waitWorkers, item])
                               setWaiting([...waiting, {
                                 key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false
+                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name}, בתפקיד ${newRoll}, 
+                                אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                                לאישור השתתפותך אשר את ההצעה`,
+                                 title:'הצעת עבודה'
                               }])
                             }
                           }}
@@ -238,7 +248,10 @@ export const Team = () => {
                               setWaitWorkers([...waitWorkers, item])
                               setWaiting([...waiting, {
                                 key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false
+                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name}, בתפקיד ${newRoll}, 
+                                אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                                לאישור השתתפותך אשר את ההצעה`,
+                                 title:'הצעת עבודה'
                               }])
                             }
                             if (waitWorkers.length === 0) {
@@ -246,7 +259,10 @@ export const Team = () => {
                               setWaitWorkers([...waitWorkers, item])
                               setWaiting([...waiting, {
                                 key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false
+                                , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name}, בתפקיד ${newRoll}, 
+                                אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                                לאישור השתתפותך אשר את ההצעה`,
+                                 title:'הצעת עבודה'
                               }])
                             }
                           }}

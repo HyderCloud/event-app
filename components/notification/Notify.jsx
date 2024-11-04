@@ -4,6 +4,10 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from 'axios'
 import { Button } from "@nextui-org/react";
 const WebSocketComponent = ({ userId }) => {
+  const icon = <div >
+  <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="18" height="4" rx="2" fill="#FBB03B" />
+  </svg> </div>
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const path = usePathname()
@@ -79,6 +83,7 @@ const WebSocketComponent = ({ userId }) => {
                 <div>
                 הצעת עבודה
                 </div>
+                
                 <div className="flex flex-row" style={{gap: '10px'}}>
                 <Button color="danger">דחה</Button>
                 <Button onPress={()=>{
@@ -95,3 +100,7 @@ const WebSocketComponent = ({ userId }) => {
 };
 
 export default WebSocketComponent;
+
+const message = <div>
+
+</div>

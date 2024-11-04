@@ -77,11 +77,13 @@ class Events:
             else: 
                 print(result["workers"])
                 if len(result["workers"])  > 0:
+                    print('hello')
                     for res in result["workers"]:
                         result2 = api_store.get_store_by_key(res["key"])
                         result2["role"] = res["role"]
                         result2["admin"] = res["admin"]
                         team.append(result2)
+                    print(team)
                     return jsonify({"events": result, "team": team}), 200
                 else:
                     return jsonify({"events": result}), 200
@@ -145,3 +147,13 @@ class Events:
                 return jsonify({"rounds": doccument}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def get_events_by_connection(self,key):
+         try:
+            result = api_events.get_events_by_connection(key)
+            if result == None:
+                return jsonify({"events": []}), 200
+            else: 
+                return jsonify({"events": result}), 200
+         except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501 

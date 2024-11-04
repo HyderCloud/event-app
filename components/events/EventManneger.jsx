@@ -11,8 +11,9 @@ import EventSlider from './EventSlider';
 const EventManneger = ({}) => {
 
     const [cookie, setCookie, removeCookie] = useCookies()
-
+    const [connectionEv, setConnectionEv] = useState([])
     const {decodedToken, isExpired} = useJwt(cookie.store)
+    const {decodedToken:decodedTokens, isExpireds} = useJwt(cookie.user)
     const [endTime, setEndTime] = useState('')
     const [place, setPlace] = useState('')
     const [startTime, setStartTime] = useState('')
@@ -31,20 +32,33 @@ const EventManneger = ({}) => {
         console.log(getAllEvents.data.events)
         setEvents(getAllEvents.data.events)
     }
+    const getEventConnection = async ()=>{    
+        const getAllEvents = await axios.get(`http://localhost:9020/geteventconnection/${decodedTokens?.user_id}`)
+        setConnectionEv(getAllEvents.data.events)
+    } 
     useEffect(() => {
         getStore()
         if(decodedToken){
+            console.log(decodedTokens)
             getEvents()
+
         }
     }, [decodedToken])
+    useEffect(() => {
+   
+        if(decodedTokens){
+            getEventConnection()
+
+        }
+    }, [decodedTokens])
     const handleAddEvent = async ()=>{
         const event = await axios.post(`http://localhost:9020/addevent/${decodedToken?.store_id}/${decodedToken?.name}`, 
             {name: name, start_date: startDate, end_date: endDate, startTime: startTime,
             endTime: endTime, place: place}) 
     if(event.data.acknowledge === "allow"){
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
+     
         setEvents(getAllEvents.data.events)
-        console.log(getAllEvents.data.events)
     }
     }
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -88,9 +102,9 @@ const EventManneger = ({}) => {
                 <div className='flex flex-row w-full h-full justify-end gap-48' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>
 
                     <div style={{ width: '30%' }}></div>
-                    <div className='flex flex-col items-end '>
+                    <div className='flex flex-col items-end 'style={{height: '170px'}}>
                         <div></div>
-                        <div className='text-right header-events-maneger'>
+                        <div className='text-right header-events-maneger' >
 
                             {data?.name}  מנהל האירועים של
 
@@ -151,8 +165,25 @@ const EventManneger = ({}) => {
                 </div>
                 <Divider className='bg-white opacity-70' />
             </div>
+            <div className='flex flex-col w-full h-full0' style={{color: 'white'}}>
+            <div className='flex flex-col'>
+            <div className='w-full flex justify-end' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
+                <div>
+                    האירועים שלך
+                </div>
+            </div>
             <div className='main-container-event flex flex-row w-full h-full justify-center' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px' }}>
                 <EventSlider data={events} store={data}/>
+            </div>
+            <div className='w-full flex justify-end' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
+                <div>
+                    אירועים קשורים
+                </div>
+            </div>
+            <div className='main-container-event flex flex-row w-full h-full justify-center' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px' }}>
+                <EventSlider data={connectionEv} store={data}/>
+            </div>
+            </div>
             </div>
 
         </div>
