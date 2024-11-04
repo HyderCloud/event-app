@@ -336,6 +336,18 @@ class Team:
             return True
         else:
             print("No document found with the given email.")
+    
+    def update_workers(self, waiting, _id):
+        new_data = {
+        "$set": {
+            "workers": waiting,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
 
     def insert_job_request(self, doccument):
         result = requestCollection.insert_one(doccument)
@@ -351,3 +363,10 @@ class Team:
         if not documents_list:
             return None
         return documents_list
+    
+    def delete_request_by_id(collection, document_id):
+        result = requestCollection.delete_one({"_id": ObjectId(document_id)})
+        if result.deleted_count > 0:
+            return True
+        else:
+            False

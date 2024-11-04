@@ -5,6 +5,7 @@ import jwt
 import datetime
 SECRET_KEY = "267545f00571a7a7c4b36ec3256ddad5b0bf957dcc32dc2e9fd515a4738c2ba5"
 api_events = EventsDB()
+api_store = Store()
 class Events:
     def __init__(self):
             pass
@@ -41,7 +42,6 @@ class Events:
             "age": '',
             "type": '',
             "mode": True,
-            "waiting": [],
             "ticket_settings": {"cash": False, 
                                  "payment": False,
                                  "ID": False,
@@ -70,11 +70,21 @@ class Events:
          
     def get_event(self, id):
          try:
+            team = []
             result = api_events.get_event_by_id(id)
             if result == None:
                 return jsonify({"message": 'null'}), 200
             else: 
-                return jsonify({"events": result}), 200
+                print(result["workers"])
+                if len(result["workers"])  > 0:
+                    for res in result["workers"]:
+                        result2 = api_store.get_store_by_key(res["key"])
+                        result2["role"] = res["role"]
+                        result2["admin"] = res["admin"]
+                        team.append(result2)
+                    return jsonify({"events": result, "team": team}), 200
+                else:
+                    return jsonify({"events": result}), 200
          except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
     

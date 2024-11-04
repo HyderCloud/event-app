@@ -69,8 +69,9 @@ gap: 10px;
   }
 
   .notification-container{
-    height: 180px;
-    width: 43%;
-    gap: 20px;
+    height: 200px;
+    width: 50%;
+    gap:5%;
     border-radius: 10px;
+    padding: 10px;
   }

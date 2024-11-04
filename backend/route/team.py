@@ -21,9 +21,13 @@ def update_role(id):
 @team_blueprint.route('/waiting/<string:id>', methods=['PATCH'])
 def update_waiting(id):
     event = request.get_json()
-
-    return team_api.workers_recruit(event["waiting"], id)
+    return team_api.workers_recruit(event["waiting"])
 
 @team_blueprint.route('/notification/<string:id>', methods=['GET'])
 def get_jobs(id):
     return team_api.get_job_req(id)
+
+@team_blueprint.route('/allowjob/<string:id>', methods=['PATCH'])
+def allow_jobs(id):
+    event = request.get_json()
+    return team_api.update_job_by_id(event['id'],event["role"],event["name"],event["key"],event["from"])

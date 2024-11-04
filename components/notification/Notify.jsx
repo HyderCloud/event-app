@@ -1,11 +1,13 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from 'axios'
+import { Button } from "@nextui-org/react";
 const WebSocketComponent = ({ userId }) => {
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const path = usePathname()
+  const router = useRouter()
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
     return parts[2] || null; 
@@ -44,18 +46,47 @@ const WebSocketComponent = ({ userId }) => {
       if (ws) ws.close();
     };
   }, [userId]);
+  function removeElementAtIndex(arr, index) {
+    if (index >= 0 && index < arr.length) {
+        arr.splice(index, 1);  // Remove 1 element at the specified index
+    }
+    return arr;
+}
 
   // Function to send a message (if needed)
-
+  const handleAllowRewquest = async (index)=>{
+    const arr = messages[index]
+    const newArr = removeElementAtIndex(messages,index)
+    setMessages(newArr)
+    const result = await axios.patch(`http://localhost:9020/allowjob/${getStringAfterSecondSlash(path)}`,
+    {id: arr._id, key: arr.key, from: arr.from, role:  arr.role, name:arr.name})
+    router.push(result.data.link)
+  }
 
   return (
-    <div className=' flex w-full h-full items-center flex-col' style={{paddingLeft: '15%', gap: '20px', color: 'white', paddingTop: '10%'}}>
+    <div className=' flex w-full h-full items-center flex-col bg-black' style={{paddingLeft: '15%', gap: '5%', color: 'white', paddingTop: '10%'}}>
       <div className="notification-header">התראות</div>
-      <div className="flex flex-col w-full h-full items-center">
+      <div className="flex flex-col w-full h-full items-center" style={{gap: '20px', overflow: 'auto'}}>
         {messages?.map((item,index)=>{
           return(
-            <div className="glass-background notification-container"></div>
-
+            <div className="glass-background flex flex-row notification-container">
+              <div>
+                {item.date}
+              </div>
+              <div className="w-full">
+              </div>
+              <div className="flex flex-col justify-between">
+                <div>
+                הצעת עבודה
+                </div>
+                <div className="flex flex-row" style={{gap: '10px'}}>
+                <Button color="danger">דחה</Button>
+                <Button onPress={()=>{
+                  handleAllowRewquest(index)
+                }} color="primary">אשר</Button>
+                </div>
+              </div>
+            </div>
           )
         })}
       </div>
