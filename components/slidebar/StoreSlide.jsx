@@ -1,5 +1,5 @@
 "use client"
-import React, {useState} from 'react'
+import React, {useState,useContext, useEffect} from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCookies } from 'react-cookie'
 import { useJwt } from 'react-jwt'
@@ -7,6 +7,7 @@ import { Button } from '@nextui-org/react'
 import Link from 'next/link'
 
 const StoreSlide = () => {
+
     const [cookie, setCookie, removeCookie] = useCookies('')
     const { decodedToken, isExpired } = useJwt(cookie.store)
     const router = useRouter()
@@ -26,6 +27,7 @@ const StoreSlide = () => {
 
         router.push(`/signout`)
     }
+
     if(pathName.split('/')[1] === 'dashbord'){
         return(<div>
             

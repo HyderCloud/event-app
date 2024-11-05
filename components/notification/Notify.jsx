@@ -77,13 +77,13 @@ const WebSocketComponent = ({ userId }) => {
               <div>
                 {item.date}
               </div>
-              <div className="w-full">
-              </div>
-              <div className="flex flex-col justify-between">
-                <div>
-                הצעת עבודה
+              <div className="flex flex-col w-full h-full items-end justify-between"style={{textAlign: 'right'}}>
+                <div style={{color:'white'}}>
+                {item.title}
                 </div>
-                
+                <div>
+                {item.message}
+                </div>
                 <div className="flex flex-row" style={{gap: '10px'}}>
                 <Button color="danger">דחה</Button>
                 <Button onPress={()=>{
