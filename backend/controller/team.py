@@ -81,4 +81,13 @@ class TeamC:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
 
+    def update_admin(self, admin, id):
+        try:
+            is_updated2 = team_api.update_workers(admin, id)
+            if is_updated2:
+                    return jsonify({"team": admin}), 200
+            else:
+                return jsonify({"message": "not updated"}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501 
 

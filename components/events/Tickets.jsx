@@ -251,13 +251,13 @@ const handleDate = (newRange)=>{
         {index === index2 &&
         <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
             <Button color='danger' isDisabled={rounds.length > 1 ? false : true}  
-             className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onClick={()=>{
+             className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onPress={()=>{
             const removedArr = removeElementAtIndex(rounds,index)
             setRounds(removedArr)
             handleroundUpdate(removedArr)
             }}>מחק</Button>
             <Button className='buttonfade'
-            onClick={()=>{
+            onPress={()=>{
                 setStartDate(item.startDate)
                 setEndDate(item.endDate)
                 setName(item.name)

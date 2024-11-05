@@ -10,7 +10,7 @@ class Events:
     def __init__(self):
             pass
 
-    def add_event_for_store(self,id, owner, name, start_date,end_date, start_time, end_time, place):
+    def add_event_for_store(self,id, owner, name, start_date,end_date, start_time, end_time, place,user_id):
         try:
             doccument = {
             "key": id,
@@ -26,7 +26,7 @@ class Events:
             "tickets": '',
             "clients": [],
             "images": [],
-            "cuppuns": [],
+            "cuppons": [],
             "roles": [],
             "rounds": [{
         "name": '',
@@ -37,7 +37,7 @@ class Events:
         "price": '',
         "amount": ''
     }],
-            "workers": [],
+            "workers": [{"key": user_id, "role": 'בעלים', "admin": 'בעלים'}],
             "status": 'in progress',
             "age": '',
             "type": '',
@@ -142,9 +142,17 @@ class Events:
         
     def update_rounds(self, id,doccument):
         try:
-            is_updated = api_events.update_rounds_by_id(doccument, id)
+            is_updated = api_events.update_cuppons_by_id(doccument, id)
             if is_updated:
-                return jsonify({"rounds": doccument}), 200
+                return jsonify({"cuppons": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+    
+    def update_cuppons(self, id,doccument):
+        try:
+            is_updated = api_events.update_cuppons_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"cuppons": doccument}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
         

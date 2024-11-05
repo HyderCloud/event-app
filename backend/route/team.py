@@ -31,3 +31,8 @@ def get_jobs(id):
 def allow_jobs(id):
     event = request.get_json()
     return team_api.update_job_by_id(event['id'],event["role"],event["name"],event["key"],event["from"])
+
+@team_blueprint.route('/updateadmin/<string:id>', methods=['PATCH'])
+def admin_up(id):
+    event = request.get_json()
+    return team_api.update_admin(event['data'], id)

@@ -6,7 +6,7 @@ events_api = Events()
 @events_blueprint.route('/addevent/<string:id>/<string:owner>', methods=['POST'])
 def addEvent(id, owner):
     event = request.get_json()
-    return events_api.add_event_for_store(id,owner,event["name"],event["start_date"],event["end_date"],event["startTime"],event["endTime"],event["place"])
+    return events_api.add_event_for_store(id,owner,event["name"],event["start_date"],event["end_date"],event["startTime"],event["endTime"],event["place"],event["id"])
 
 @events_blueprint.route('/getevents/<string:id>', methods=['GET'])
 def get_events_store(id):
@@ -53,6 +53,11 @@ def update_ticket_settings(id):
 def update_rounds(id):
     event = request.get_json()
     return events_api.update_rounds(id,event["rounds"])
+
+@events_blueprint.route('/cuppons/<string:id>', methods=['PATCH'])
+def update_cupponss(id):
+    event = request.get_json()
+    return events_api.update_cuppons(id,event["cuppons"])
 
 @events_blueprint.route('/geteventconnection/<string:id>', methods=['GET'])
 def get_connection_event(id):

@@ -5,6 +5,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Main from './Main'
 import Tickets from './Tickets'
 import { Team } from './Team'
+import Cuppons from './Cuppons'
+import AdminComp from './AdminComp'
 const EventComp = ({}) => {
   const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,6 +68,8 @@ const EventComp = ({}) => {
         {!section && <Main data={events}/>}
         {section === 'tickets'&& <Tickets/>}
         {section === "team"&& <Team/>}
+        {section === "cuppons"&& <Cuppons/>}
+        {section === "admin"&& <AdminComp/>}
         </div>
     </div>
   )

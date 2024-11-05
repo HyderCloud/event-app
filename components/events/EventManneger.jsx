@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import Image from 'next/image';
 import EventSlider from './EventSlider';
+import EventConnection from './ConnectionEvent';
 const EventManneger = ({}) => {
 
     const [cookie, setCookie, removeCookie] = useCookies()
@@ -53,7 +54,7 @@ const EventManneger = ({}) => {
     }, [decodedTokens])
     const handleAddEvent = async ()=>{
         const event = await axios.post(`http://localhost:9020/addevent/${decodedToken?.store_id}/${decodedToken?.name}`, 
-            {name: name, start_date: startDate, end_date: endDate, startTime: startTime,
+            {name: name, start_date: startDate, end_date: endDate, startTime: startTime,id: decodedTokens?.user_id,
             endTime: endTime, place: place}) 
     if(event.data.acknowledge === "allow"){
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
@@ -181,7 +182,7 @@ const EventManneger = ({}) => {
                 </div>
             </div>
             <div className='main-container-event flex flex-row w-full h-full justify-center' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px' }}>
-                <EventSlider data={connectionEv} store={data}/>
+                <EventConnection  data={connectionEv} store={data}/>
             </div>
             </div>
             </div>
