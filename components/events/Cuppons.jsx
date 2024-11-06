@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
-const Cuppons = () => {
+const Cuppons = ({admin}) => {
     const path = usePathname()
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();

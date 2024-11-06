@@ -6,7 +6,7 @@ import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
 import DragAndDrop from '../DragImage';
-const Main = () => {
+const Main = ({admin}) => {
     const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
@@ -86,7 +86,9 @@ const Main = () => {
           setStartDate(formattedDateStart)
         
     }
+    const handleCheckAdmin = ()=>{
 
+    }
     const handleClose = ()=>{
 
         setIsImage(false)
@@ -129,12 +131,13 @@ const Main = () => {
                         <Button color='primary'>צפייה מוקדמת</Button>
                     </div>
                     <div className=''>
-                        <Button color='primary'>פרסם אירוע</Button>
+                        <Button isDisabled={(admin === 'בעלים'|| admin === "יוצר")?false:true} color='primary'>פרסם אירוע</Button>
                     </div>
                 </div>
                 <div className='h-4'></div>
                 <Divider className='bg-white' />
                 <div className='h-10'></div>
+                {(admin === 'מפיק'|| admin ==='בעלים'||admin === "יוצר")&&
                 <div className='flex flex-row  h-full ' style={{gap:"20px", paddingLeft: "10%", paddingRight: "10%"}}>
                 <div className='w-full flex flex-row glass-background image-cont-main'>
                         <div className='image-event-cont cursor-pointer' 
@@ -259,6 +262,7 @@ const Main = () => {
                         </ModalContent>
                     </Modal>
                 </div>
+                }
             </div>
         )
     }

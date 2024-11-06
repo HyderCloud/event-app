@@ -5,7 +5,7 @@ import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
 
-export const Team = () => {
+export const Team = ({admin}) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const { isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();

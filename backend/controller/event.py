@@ -1,3 +1,4 @@
+from traceback import print_exc
 from models.mongo import Users, Store, EventsDB
 from flask import jsonify
 import bcrypt
@@ -75,19 +76,19 @@ class Events:
             if result == None:
                 return jsonify({"message": 'null'}), 200
             else: 
-                print(result["workers"])
                 if len(result["workers"])  > 0:
-                    print('hello')
                     for res in result["workers"]:
                         result2 = api_store.get_store_by_key(res["key"])
                         result2["role"] = res["role"]
+                        
                         result2["admin"] = res["admin"]
                         team.append(result2)
-                    print(team)
+                    
                     return jsonify({"events": result, "team": team}), 200
                 else:
                     return jsonify({"events": result}), 200
          except Exception as e:
+            print_exc()
             return jsonify({"message": 'error-' + str(e)}), 501 
     
     def update_mode_by_id(self,id,mode):

@@ -4,7 +4,7 @@ import { TimeInput, Card, CardHeader, CardBody, User, Link, Spacer, CardFooter, 
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-const AdminComp = () => {
+const AdminComp = ({admin2}) => {
    const admin = ['בעלים','מפיק','יחצן',"עובד כללי","none"]
     const [team, setTeam] = useState([])
     const [events, setEvents] = useState([])
@@ -36,7 +36,7 @@ const AdminComp = () => {
         <div className=' w-full flex flex-col justify-center items-center' style={{ padding: '2%', gap: '20px' }}>
          {team?.map((item, index)=>{
           return(
-            <div className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
+            <div key={index} className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
               padding: '15px', gap: '15px', height: '85px', borderRadius: '15px'}}>
                 
               <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px',textAlign: 'right'}}  key={index}>
@@ -47,7 +47,7 @@ const AdminComp = () => {
                         onChange={(e)=>{
                             const arr = [...team]
                             const user = arr[index]
-                            user.admin = admin[e.target.value.slice(2)]
+                            user.admin = admin[e.target.value]
                             handleUpdateAdmin(arr)
                         }}
                          aria-label="Select your admin"
@@ -60,9 +60,9 @@ const AdminComp = () => {
                   placeholder='בחר הרשאה'
                   className="max-w-xs" 
                 >
-                  {admin.map((animal) => (
-                    <SelectItem style={{textAlign: 'center'}} >
-                      {animal}
+                  {admin?.map((item,index) => (
+                    <SelectItem key={index} style={{textAlign: 'center'}} >
+                      {item}
                     </SelectItem>
                   ))}
                 </Select>

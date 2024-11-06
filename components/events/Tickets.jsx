@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 import axios from 'axios'
 import DragAndDrop from '../DragImage';
 import {CalendarDate} from '@internationalized/date';
-const Tickets = () => {
+const Tickets = ({admin}) => {
     const isFetch = useRef(false)
     const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,9 +178,11 @@ const handleDate = (newRange)=>{
     }
   return (
     <div className='w-full h-full'>
+       
     <div className=' flex justify-center items-center flex-col'>
         <div className='w-full flex flex-row justify-between'style={{paddingLeft: '50%'}}>
-        <div><Button className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
+        <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
+         className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
         <Tooltip  className='glass-background text-white'  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
         <div><Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button></div>
         </Tooltip>
@@ -250,13 +252,13 @@ const handleDate = (newRange)=>{
                         </Modal>
         {index === index2 &&
         <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
-            <Button color='danger' isDisabled={rounds.length > 1 ? false : true}  
+            <Button  color='danger' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר" &&rounds.length) > 1 ? false : true}  
              className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onPress={()=>{
             const removedArr = removeElementAtIndex(rounds,index)
             setRounds(removedArr)
             handleroundUpdate(removedArr)
             }}>מחק</Button>
-            <Button className='buttonfade'
+            <Button isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} className='buttonfade'
             onPress={()=>{
                 setStartDate(item.startDate)
                 setEndDate(item.endDate)
@@ -337,50 +339,50 @@ const handleDate = (newRange)=>{
             </div>
             <div className='flex flex-row w-full justify-between setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
             <div className=''>
-            <Switch isSelected={cash} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
+            <Switch isSelected={cash} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
            </div>
            <div>:מזומן</div>
         
                 </div>
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
             <div>
-            <Switch isSelected={payment} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
+            <Switch isSelected={payment} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
             
            </div>
            <div>:הגבלת רכישה</div></div>
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
             <div>
-            <Switch isSelected={ID} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
+            <Switch isSelected={ID} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
            </div>
            <div>: מילוי תז</div></div>
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                             <div>
-            <Switch isSelected={isdate} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
+            <Switch isSelected={isdate} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
            </div>
            <div>:תאריך לידה</div></div>  
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
             <div>
-            <Switch isSelected={gender} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
+            <Switch isSelected={gender} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
            </div>
            <div>: מגדר</div></div>
            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
                 <div>
-                <Switch isSelected={isInstegram} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
+                <Switch isSelected={isInstegram} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
                </div>
                <div>: אינסטגרם או פייסבוק</div></div>  
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
             <div>
-            <Switch isSelected={facebookLink} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
+            <Switch isSelected={facebookLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
            </div>
                       
            <div>:קישור לפייסבוק</div></div>
             <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
             <div>
-            <Switch isSelected={instegramLink} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
+            <Switch isSelected={instegramLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
            </div>
            <div>:  משתמש לאינסטגרם</div></div>  
             </div>
