@@ -250,7 +250,7 @@ const handleDate = (newRange)=>{
                                 )}
                             </ModalContent>
                         </Modal>
-        {index === index2 &&
+        {index === index2 && (admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר") &&
         <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
             <Button  color='danger' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר" &&rounds.length) > 1 ? false : true}  
              className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onPress={()=>{
@@ -258,7 +258,8 @@ const handleDate = (newRange)=>{
             setRounds(removedArr)
             handleroundUpdate(removedArr)
             }}>מחק</Button>
-            <Button isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} className='buttonfade'
+
+            <Button className='buttonfade'
             onPress={()=>{
                 setStartDate(item.startDate)
                 setEndDate(item.endDate)
@@ -270,6 +271,7 @@ const handleDate = (newRange)=>{
                 onOpen()
                 setIndex(index)
             }} color='primary'>ערוך סיבוב</Button>
+
         </div>
         }
         <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row justify-end'>

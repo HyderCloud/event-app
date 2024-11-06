@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import axios from 'axios';
 const AdminComp = ({admin2}) => {
    const admin = ['בעלים','מפיק','יחצן',"עובד כללי","none"]
+   const adminM = ['יחצן',"עובד כללי","none"]
     const [team, setTeam] = useState([])
     const [events, setEvents] = useState([])
     const path = usePathname()
@@ -42,7 +43,32 @@ const AdminComp = ({admin2}) => {
               <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px',textAlign: 'right'}}  key={index}>
 
               <div className='w-full'> 
-                {item.admin === "יוצר" ? <div></div>:
+                {item.admin === "יוצר" || (admin2 === 'בעלים' && item.admin === 'בעלים') || 
+                (admin2 === 'יחצן' || admin2 === 'עובד כללי' || admin2 === 'none') || (admin2 === item.admin) ? 
+                <div></div>: admin2 === 'מפיק' ?
+                <Select 
+                onChange={(e)=>{
+                    const arr = [...team]
+                    const user = arr[index]
+                    user.admin = admin[e.target.value]
+                    handleUpdateAdmin(arr)
+                }}
+                 aria-label="Select your admin"
+                value={item.admin}
+                  classNames={{
+                      trigger: "justify-center",
+                      value: "text-center",
+                    }}
+          style={{position: 'absolute', textAlign: 'center'}}
+          placeholder='בחר הרשאה'
+          className="max-w-xs" 
+        >
+          {adminM?.map((item,index) => (
+            <SelectItem key={index} style={{textAlign: 'center'}} >
+              {item}
+            </SelectItem>
+          ))}
+        </Select>:
                         <Select 
                         onChange={(e)=>{
                             const arr = [...team]

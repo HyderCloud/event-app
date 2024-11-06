@@ -6,12 +6,20 @@ import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
 import DragAndDrop from '../DragImage';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const Main = ({admin}) => {
     const icon =           <div >
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
   </svg> </div>
     const path = usePathname()
+    const [content, setContent] = useState('');
+
+    const handleChange = (value) => {
+        setContent(value); // Save the formatted content (HTML) to state
+    };
+
     const [isImage, setIsImage] = useState('')
     const [cookie, setCookie, removeCookie] = useCookies()
     const [age, setAge] = useState('')
@@ -118,28 +126,45 @@ const Main = ({admin}) => {
         setAge(result.data.age)
     }
         return (
-            <div className='w-full h-full'>
-                <div className=' flex justify-center items-center flex-col'>
-                    <div className='event-lable font-bold'>{name}</div>
-                    <div className='justify-center font-bold items-center text-white'>{type}</div>
-                </div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{endDate} - {startDate}</div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{startTime} - {endTime}</div>
-                <div style={{ paddingLeft: '100px' }} className='text-white'>{place}</div>
-                <div className='header-main-event flex items-end flex-row justify-end '>
-                    <div style={{ marginRight: '10px' }}>
+
+                <div className=' flex justify-center items-center flex-col w-full h-full' style={{ gap: '10px', paddingLeft: "15%" }}>
+
+                <div className='flex flex-row justify-end w-full' style={{ gap: '10px' }}>
+                    <div >
                         <Button color='primary'>צפייה מוקדמת</Button>
                     </div>
                     <div className=''>
                         <Button isDisabled={(admin === 'בעלים'|| admin === "יוצר")?false:true} color='primary'>פרסם אירוע</Button>
                     </div>
                 </div>
-                <div className='h-4'></div>
-                <Divider className='bg-white' />
-                <div className='h-10'></div>
+
+
+                <div className='flex flex-col w-full h-full glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px'}}>
+                    <div className='flex flex-row justify-between' >
+                <div className='text-white flex flex-col glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
+                <div>
+                    {startDate} - {endDate}
+                </div>
+                <div>
+                {startTime} - {endTime}
+                </div>
+                <div>
+                {place}
+                </div>
+                </div>
+                <div className='event-lable font-bold flex flex-col' style={{gap: '0px', paddingRight: '5%'}}>{name}
+                    <div style={{paddingRight: '15px'}}>
+                {icon}
+                </div>
+                <div className='w-full flex justify-end font-bold type-string text-white' style={{paddingRight: '2%'}}>
+                {type}
+                    </div>
+                </div>
+                    </div>
+                <div className='w-full' style={{height: '300px'}}></div>
                 {(admin === 'מפיק'|| admin ==='בעלים'||admin === "יוצר")&&
-                <div className='flex flex-row  h-full ' style={{gap:"20px", paddingLeft: "10%", paddingRight: "10%"}}>
-                <div className='w-full flex flex-row glass-background image-cont-main'>
+                <div className='flex flex-row w-full h-full' style={{gap: '25px'}}>
+                <div className=' flex flex-col glass-background image-cont-main ' >
                         <div className='image-event-cont cursor-pointer' 
                         style={{backgroundImage:  `url(${tubnail})`,
                         backgroundSize: 'cover',
@@ -148,15 +173,46 @@ const Main = ({admin}) => {
                             setIsImage("image")
                             onOpen()
                         }}></div>
+                        <div className='w-full h-full flex justify-center items-center'>
+                            <Button color='primary'> AI עשה זאת עם </Button>
                         </div>
-                <div className='flex flex-col ' style={{width:'50%', gap: '20px',}}>
-                <div className='flex flex-col glass-background items-end ' style={{ borderRadius: '10px',paddingRight: '2%', paddingTop: '2%', paddingBottom: '2%'}}>
+                        </div>
+                <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
+                <div className='w-full flex flex-col  text-white font-semibold items-end' >
+                           <div> תיאור האירוע</div>
+                           {icon}
+                        </div>
+                        <div className='w-full h-full'>
+                        <ReactQuill
+                        className='bg-white quil'
+                        style={{height: '100%', paddingBottom: '18%', paddingLeft: '3%', paddingRight: '3%', paddingTop: '3%', borderRadius: '15px'}}
+                        
+                value={content}           
+                onChange={handleChange}    
+                theme="snow"                
+                placeholder="Type here..."
+                modules={{
+                    toolbar: [
+                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']                                         // remove formatting button
+                    ]
+                }}
+            />
+                        </div>
+                </div>
+                <div className='flex flex-col ' style={{gap: '20px',width: '60%'}}>
+                <div className='flex flex-col  items-end ' style={{ borderRadius: '10px',padding: '2%'}}>
                 <Button color='primary' onPress={()=>{onOpen()
                             setIsImage("details")
                         }}>עריכת האירוע</Button>
                 </div>
-                    <div className='flex flex-col glass-background w-full age-container 'style={{paddingRight: '2%'}}>
-                        <div className='w-full flex flex-col pt-2 text-white font-semibold items-end' >
+                    <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
+                        <div className='w-full flex flex-col  text-white font-semibold items-end' >
                            <div> פרטיות</div>
                            {icon}
                         </div>
@@ -173,8 +229,8 @@ const Main = ({admin}) => {
                     </div>
                             </div>
                     </div>
-                    <div className='flex flex-col glass-background w-full age-container 'style={{paddingRight: '2%'}}>
-                        <div className='w-full flex flex-col pt-2 text-white font-semibold items-end' >
+                    <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
+                        <div className='w-full flex flex-col  text-white font-semibold items-end' >
                            <div>  סוג האירוע</div>
                            {icon}
                         </div>
@@ -263,7 +319,8 @@ const Main = ({admin}) => {
                     </Modal>
                 </div>
                 }
-            </div>
+                </div>
+                </div>
         )
     }
 

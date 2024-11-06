@@ -141,7 +141,7 @@ const Cuppons = ({admin}) => {
                                 )}
                             </ModalContent>
                         </Modal>
-    <Button className='text-white' onClick={onOpen} color='primary'>הוסף קופון</Button>
+    <Button className='text-white' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true } onClick={onOpen} color='primary'>הוסף קופון</Button>
     <div className='h-10'></div>
     <Divider className='bg-white' />
     <div className='w-full flex flex-col items-center' style={{paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%', gap: '20px'}}>
@@ -199,7 +199,7 @@ const Cuppons = ({admin}) => {
                                 )}
                             </ModalContent>
                         </Modal>
-            {index === index2 &&
+            {index === index2 && (admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר") &&
             <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
                 <Button className='buttonfade' onPress={()=>{
                     handleAddCuppon(removeElementAtIndex(cuppons,index))
