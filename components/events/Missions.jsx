@@ -1,170 +1,469 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Button } from '@nextui-org/react';
-const Missions = ({admin}) => {
+import { TimeInput, Card, CardHeader, CardBody, User, Link, Textarea,Spacer, CardFooter, Image, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import Draggable from 'react-draggable';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useJwt } from 'react-jwt';
+import { usePathname } from 'next/navigation';
+const Missions = ({ admin }) => {
+  const [cookie, setCookie, removeCookie] = useCookies('')
+  const {decodedToken, isExpired} = useJwt(cookie.store)
+  const [match, setMatch] = useState([])
+  const [filterBy, setFilterBy] = useState('')
+  const path = usePathname()
+  const [section1, setSection1] = useState(false)
+  const [team, setTeam] = useState([])
+  const [events, setEvents] = useState([])
+  const [waiting, setWaiting] = useState([])
+  const [waitWorkers, setWaitWorkers] = useState([])
+  const [role, setRole] = useState([])
+  const [searchTem, setSearchTerm] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [participent, setParticipent] = useState([])
 
-  const canvasRef = useRef(null);
-  const [context, setContext] = useState(null);
+  const addMissionDoc = {
+    title: title,
+    description: description,
+    startDate: startDate,
+    endDate: endDate,
+    endTime: endTime,
+    participent: participent,
+    from: decodedToken?.nameh
+  }
+
+  const handleEndTime = (time)=>{
+      const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
+      setEndTime(formattedTime)
+  }
+  
+  const handleTitle = (e)=>{
+    setTitle(e.target.value)
+    console.log(decodedToken)
+  }
+
+  const handleDescription = (e)=>{
+    setDescription(e.target.value)
+  }
+
+  const handleDate = (newRange)=>{
+      const data = { 
+          start: new Date(newRange.start), 
+          end: new Date(newRange.end) 
+        };
+        const formattedDateStart = data.start.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+        const formattedDateEnd = data.end.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+        setEndDate(formattedDateEnd)
+        setStartDate(formattedDateStart)
+      
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'h' || event.key === 'H') {
+      setIsMode(true);
+    }
+  };
+
+  const handleKeyDown2 = (event) => {
+    if (event.key === 'v' || event.key === 'V') {
+      setIsMode(false);
+    }
+  };
+
+  useEffect(() => {
+    // Attach the keydown event listener
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown2);
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown2);
+    };
+  }, []);
+
+  function isIdUnique(id) {
+    const exists = waitWorkers?.some(item => item._id === id);
+    return !exists; // Returns true if id is unique, false if it exists
+  }
+ const getEvents = async () => {
+    const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
+    setEvents(getAllEvents.data.events)
+    setTeam(getAllEvents.data?.team)
+    console.log(getAllEvents.data?.team)
+    setRole(getAllEvents.data.events.roles)
+
+  }
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    const filtered = team.filter(item =>
+      item.name.toLowerCase().startsWith(term.toLowerCase())
+    );
+    setMatch(filtered);
+  };
+    function getStringAfterSecondSlash(path) {
+      const parts = path.split('/');
+      return parts[2] || null;
+    }
+  useEffect(() => {
+      getEvents()
+    }, [])
+    // Filter data by names that start with the search term
+    function removeElementAtIndex(arr, index) {
+      // Check if the index is within bounds
+      if (index < 0 || index >= arr.length) {
+        return arr; // Return the original array if index is invalid
+      }
+      const newArray = [...arr];
+      newArray.splice(index, 1);
+  
+      return newArray;}
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const containerRef = useRef(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
   const [items, setItems] = useState([
-    { id: 1, x: 50, y: 50, width: 100, height: 100, color: 'red' },
+    { id: 1, x: 50, y: 50, width: 400, height: 200, title: 'Mooksha', status: 'in-progress', content: 'להעמיד תאורה באירוע בצור X Y Z' },
+    { id: 2, x: 50, y: 50, width: 400, height: 200, title: 'Mooksha', status: 'in-progress', content: 'להעמיד תאורה באירוע בצור X Y Z jfjfmc dfkjvn kdd'  },
   ]);
   const [isPanning, setIsPanning] = useState(false);
-  const [isDraggingItem, setIsDraggingItem] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [startDragOffset, setStartDragOffset] = useState({ x: 0, y: 0 });
   const [isMode, setIsMode] = useState(false);
-  
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    setContext(canvas.getContext('2d'));
-  }, []);
-  
-  useEffect(() => {
-    const canvas = canvasRef.current;
-  
-    const handleMouseDown = (e) => {
-      const x = (e.clientX - offset.x) / scale;
-      const y = (e.clientY - offset.y) / scale;
-  
-      // Check if an item is clicked
-      const item = items.find(
-        (item) => x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height
-      );
-  
-      if (item && isMode) {
-        // Start dragging the specific item only if isMode is true
-        setSelectedItem(item);
-        setIsDraggingItem(true);
-        setStartDragOffset({ x: e.clientX - item.x * scale, y: e.clientY - item.y * scale });
-      } else if (!item && isMode) {
-        // Start panning the entire canvas
-        setIsPanning(true);
-        setStartDragOffset({ x: e.clientX - offset.x, y: e.clientY - offset.y });
-      }
-    };
-  
-    const handleMouseMove = (e) => {
-      if (isMode) {
-        if (isDraggingItem && selectedItem) {
-          // Update position of only the selected item based on the initial drag offset
-          const dx = (e.clientX - startDragOffset.x) / scale;
-          const dy = (e.clientY - startDragOffset.y) / scale;
-  
-          setItems((prevItems) =>
-            prevItems.map((item) =>
-              item.id === selectedItem.id ? { ...item, x: dx, y: dy } : item
-            )
-          );
-        } else if (isPanning) {
-          // Update canvas offset for panning
-          setOffset({
-            x: e.clientX - startDragOffset.x,
-            y: e.clientY - startDragOffset.y,
-          });
-        }
-      }
-    };
-  
-    const handleMouseUp = () => {
-      setIsPanning(false);
-      setIsDraggingItem(false);
-      setSelectedItem(null);
-    };
-  
-    const handleWheel = (e) => {
-      e.preventDefault();
-      if (e.ctrlKey) {
-        // Only apply zoom if the Ctrl key is held
-        const zoomFactor = 0.1;
-        setScale((prevScale) => (e.deltaY > 0 ? Math.max(prevScale - zoomFactor, 0.1) : prevScale + zoomFactor));
-      }
-    };
-  
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
-    canvas.addEventListener('wheel', handleWheel);
-  
-    return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
-      canvas.removeEventListener('wheel', handleWheel);
-    };
-  }, [isDraggingItem, isPanning, offset, scale, selectedItem, items, startDragOffset, isMode]);
-  
-  const draw = () => {
-    if (context) {
-      context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      context.save();
-      context.translate(offset.x, offset.y);
-      context.scale(scale, scale);
-  
-      items.forEach((item) => {
-        context.fillStyle = item.color;
-        context.fillRect(item.x, item.y, item.width, item.height);
-      });
-  
-      context.restore();
+
+  const handleDrag = (e, data, item) => {
+    const { x, y } = data;
+    setItems((prevItems) =>
+      prevItems.map((i) => (i.id === item.id ? { ...i, x: x / scale, y: y / scale } : i))
+    );
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    if (e.ctrlKey) {
+      const zoomFactor = 0.1;
+      setScale((prevScale) => (e.deltaY > 0 ? Math.max(prevScale - zoomFactor, 0.1) : prevScale + zoomFactor));
     }
   };
-  
-  useEffect(() => {
-    draw();
-  }, [context, offset, scale, items]);
-  
-  
-    return (
-        <div style={{height: '900px'}}>
-        <div className='flex justify-center items-center' style={{ position: 'relative', width: '100%', height: '80vh' }}>
-      {/* Canvas element */}
-      <canvas
-        className="w-full h-full"
-        ref={canvasRef}
-        style={{
-          backgroundColor: '#18181B',
-          borderRadius: '15px',
-          border: '1px solid white',
-          cursor: (isPanning || isDraggingItem && isMode)? 'grabbing' : 'default',
-        }}
-      />
-      
-      <div
-        className="absolute w-full flex justify-end items-center px-4"
-        style={{
-          height: '70px',
-          top: '0',
-          left: '0',
-          color: 'white',
-          zIndex: 1, // Ensure it's above the canvas
-        }}
-      >
-        <Button
-        color='primary'
-          style={{
-            color: 'white',
 
+  useEffect(() => {
+    const container = containerRef.current;
+    container.addEventListener('wheel', handleWheel);
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [scale]);
+
+  return (
+    <div style={{ height: '900px' }}>
+      <div className='flex justify-center items-center' style={{ position: 'relative', width: '100%', height: '80vh' }}>
+        {/* Container for items */}
+        <div
+          ref={containerRef}
+          className="w-full h-full"
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            backgroundColor: '#18181B',
+            borderRadius: '15px',
+            border: '1px solid white',
           }}
         >
-          הוסף משימה
-        </Button>
+      <Modal size='5xl' style={{ width: '80%' }} className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
+
+<ModalContent>
+  {(onClose) => (
+    <>
+      <ModalHeader className="flex flex-col gap-1">הוסף משימה</ModalHeader>
+  {section1?
+      <div className='flex flex-row' style={{ paddingLeft: '20px' }}>
+
+        <div className='searchResult flex flex-col'>
+
+          {match.length > 0 ? match.map((item, index) => {
+
+            return (
+              <Tooltip placement='right' showArrow key={item._id} content={'הוספה לצוות'}
+                color="primary">
+                <Button key={item._id} className='w-full user-match glass-background '
+                  onPress={() => {
+                    const isUnique = isIdUnique(item._id)
+                    if (isUnique) {
+                      setWaitWorkers([...waitWorkers, item])
+                      setWaiting([...waiting, {
+                        key: item.key, name: item.name, role: null, admin: 'none', email: item.email
+                        , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `בתפקיד ${null} ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name},
+                        אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                        לאישור השתתפותך אשר את ההצעה`,
+                         title:'הצעת עבודה'
+                      }])
+                    }
+                    if (waitWorkers.length === 0) {
+                      console.log(waitWorkers.length)
+                      setWaitWorkers([...waitWorkers, item])
+                      setWaiting([...waiting, {
+                        key: item.key, name: item.name, role: null, admin: 'none', email: item.email
+                        , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `בתפקיד ${null} ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name},
+                        אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
+                        לאישור השתתפותך אשר את ההצעה`,
+                         title:'הצעת עבודה'
+                      }])
+                    }
+                  }}
+                  style={{ height: '70px' }}>
+                  <User className='w-full flex  justify-start items-center'
+                    name={<div className="w-full text-white flex flex-row justify-between" style={{ gap: '100%' }}>
+                      <div className="flex"> {item.name}</div>
+                      <div className="flex text-white opacity-70">{item.profession}</div>
+                    </div>}
+                    description={(
+                      <div className='w-full flex flex-col'>
+                        <Link href={`/${item.name}`} size="sm" color='primary' isExternal>
+                          {item.email}
+                        </Link>
+                      </div>
+                    )}
+                    avatarProps={{
+                      src: item.profile_img
+                    }}
+                  />
+
+                </Button>
+              </Tooltip>
+            )
+          }) : team.map((item, index) => {
+
+            return (
+              <Tooltip placement='right' showArrow key={item._id} content={'הוספה לצוות'}
+                color="primary">
+                <Button key={item._id} className='w-full user-match glass-background '
+                  onPress={() => {
+                    const isUnique = isIdUnique(item._id)
+                    if (isUnique) {
+                      setWaitWorkers([...waitWorkers, item])
+
+                    }
+                    if (waitWorkers.length === 0) {
+                      console.log(waitWorkers.length)
+                      setWaitWorkers([...waitWorkers, item])
+
+                    }
+                  }}
+                  style={{ height: '70px' }}>
+                  <User className='w-full flex  justify-start items-center'
+                    name={<div className="w-full text-white flex flex-row justify-between" style={{ gap: '100%' }}>
+                      <div className="flex"> {item.name}</div>
+                      <div className="flex text-white opacity-70">{item.profession}</div>
+                    </div>}
+                    description={(
+                      <div className='w-full flex flex-col'>
+                        <Link href={`/${item.name}`} size="sm" color='primary' isExternal>
+                          {item.email}
+                        </Link>
+                      </div>
+                    )}
+                    avatarProps={{
+                      src: item.profile_img
+                    }}
+                  />
+
+                </Button>
+              </Tooltip>
+            )
+          })}
+        </div>
+        <ModalBody style={{ gap: '10px' }}>
+          <div className='flex flex-col w-full h-full add-partner-cont'>
+            <div className='style-displaying-role flex w-full justify-end flex-row'>
+              {role?.map((item, index) => {
+                return (
+                  <Tooltip showArrow className=' text-white' color='primary' content="סנן לפי">
+                    <div onClick={() => {
+                      setFilterBy(item)
+                    }} className='role-style glass-background cursor-pointer' style={{ background: filterBy === item && '#006FEE' }}>
+                      {item}
+                    </div>
+                  </Tooltip>
+                )
+              })}
+            </div>
+            <div className='class-result-output flex flex-row justify-end overflow-x-auto'>
+
+              {waitWorkers?.map((item, index) => {
+                return (
+                  <div className='flex items-center justify-center flex-col' style={{ width: '70px' }}>
+                    <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
+                      const removedArr = removeElementAtIndex(waitWorkers, index)
+                      setWaitWorkers(removedArr)
+                    }} content="מחק">
+                      <div className='img-user-added'>
+                        <Image className='cursor-pointer'  style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} isBlurred radius='full'
+                          borderRadius="full" width={40} height={40}
+                          alt="NextUI hero Image"
+                          src={item.profile_img?.length === 0 ? `https://app.requestly.io/delay/5000/https` : `${item.profile_img}`} />
+                      </div>
+                    </Tooltip>
+                    <div>
+                      {item.name}
+                    </div>
+
+                    <div className='w-full justify-center flex glass-background2'>
+                      {waiting[index]?.role}
+                    </div>
+                    <div className='w-full'>
+
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <div style={{ paddingLeft: '20%' }}>
+              <Input label='Search for' onChange={handleSearch} placeholder='חפש חבר צוות' />
+
+            </div>
+
+          </div>
+
+        </ModalBody>
+      </div>: 
+      <div className='flex flex-col justify-center items-end w-full'
+       style={{paddingLeft: '30%', height: '400px', paddingRight: '30%', color: 'white', gap: '15px'}}>
+        <div className='flex flex-col w-full items-end'>
+        <div className='opacity-70'>כותרת המשימה</div>
+        <Input onChange={handleTitle} label='Mission title'/>
+        </div>
+        <div className='flex flex-col w-full items-end'>
+        <div className='opacity-70'>תיאור המשימה</div>
+        <Textarea
+        onChange={handleDescription}
+      label="Description"
+      placeholder="...פרט על המשימה"
+      style={{textAlign: 'right'}}
+    />
+        </div>
+        <div className='flex flex-col w-full items-end'>
+        <div className='opacity-70'>תאריך התחלה וסיום</div>
+        <DateRangePicker   label='Event date' onChange={handleDate}/>
+        </div>
+        <div className='flex flex-col w-full items-end'>
+        <div className='opacity-70'>שעת סיום</div>
+        <TimeInput  hourCycle={24} label='End time' onChange={handleEndTime}/>
+        </div>
       </div>
-      <div     className="absolute justify-center flex  items-center  "
-        style={{
-            width: '30%',
-          height: '40px',
-          bottom: '40px',
-          color: 'white',
-          zIndex: 1, // Ensure it's above the canvas
+  }
+      <ModalFooter>
+        <Button color="danger" variant="light" onPress={() => {
+          setSection1(false)
+          onClose()
+          setSearchTerm('')
         }}>
-            <div className='w-full flex flex-row shadow-examp' style={{borderRadius: '25px', height: '45px', backgroundColor: 'black'}}>
-            
-                <Button className='h-full glass-background' color='none' radius='none' isIconOnly onPress={()=>{setIsMode(!isMode)}}
-                 style={{width: '70px', borderBottomLeftRadius: '25px',borderTopLeftRadius: '25px', borderRight: '1px solid white'}}>
-                {isMode ?
+          סגור
+        </Button>
+        <Button color="primary" onPress={() => {
+          if(section1){
+            onClose()
+            setSearchTerm('')
+            setSection1(false)
+          }else{
+            setSection1(true)
+          }
+          if (waiting.length > 0) {
+            console.log(waiting)
+            handleUpdateWaiting(waiting)
+            handleAddNotification(waiting)
+ 
+          }
+        }}>
+          {section1? 
+         " הוסף לצוות":
+          'לשלב הבא'
+          }
+        </Button>
+      </ModalFooter>
+    </>
+  )}
+</ModalContent>
+</Modal>
+          {items.map((item) => (
+           
+            <Draggable
+              key={item.id}
+              position={{ x: item.x * scale + offset.x, y: item.y * scale + offset.y }}
+              onDrag={(e, data) => handleDrag(e, data, item)}
+              disabled={!isMode} // Enable dragging only if isMode is true
+              
+            >
+              <div className='box-shadow-mission' style={{backgroundColor: 'black', width: `${item.width * scale}px`,
+                  height: `${item.height * scale}px`,borderRadius: '8px'}}>
+                     <Tooltip color='primary' placement='right' showArrow content={item.content}>
+
+              <div
+              className='glass-background w-full h-full flex flex-col'
+                style={{
+                  borderRadius: '8px',
+                  cursor: isMode ? 'grab' : 'default',
+                  position: 'absolute',
+                }}
+              >
+                <div 
+                className='w-full glass-background flex flex-row justify-between items-center' 
+                style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px'}}>
+                  <div></div>
+                  <div className=''>
+                    {item.title}
+                  </div>
+                </div>
+              </div>
+                     </Tooltip>
+              </div>
+            </Draggable>
+          ))}
+        </div>
+
+        <div
+          className="absolute w-full flex justify-end items-center px-4"
+          style={{
+            height: '70px',
+            top: '0',
+            left: '0',
+            color: 'white',
+            zIndex: 1, // Ensure it's above the canvas
+          }}
+        >
+          <Button color='primary' onPress={onOpen} style={{ color: 'white' }}>
+            הוסף משימה
+          </Button>
+        </div>
+
+        <div className="absolute justify-center flex items-center"
+          style={{
+            width: '30%',
+            height: '40px',
+            bottom: '40px',
+            color: 'white',
+            zIndex: 1, // Ensure it's above the canvas
+          }}
+        >
+          <div className='w-full flex flex-row shadow-examp' style={{ borderRadius: '25px', height: '45px', backgroundColor: 'black' }}>
+            <Button
+              className='h-full glass-background'
+              color='none'
+              radius='none'
+              isIconOnly
+              onPress={() => { setIsMode(!isMode) }}
+              style={{ width: '70px', borderBottomLeftRadius: '25px', borderTopLeftRadius: '25px', borderRight: '1px solid white' }}
+            >
+                 {isMode ?
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M5.55463 20.3261L3.01942 12.9463C3.02823 12.9903 3.03999 13.0337 3.05463 13.0761L5.55463 20.3261ZM2 7.64419L2.04018 8.05008C2.01346 7.91645 2 7.78049 2 7.64419Z" fill="#4285F4"/>
               <path d="M19.0026 20.6586C19.0491 20.6055 19.0898 20.5475 19.1242 20.4858L21.0078 17.0952C21.5465 16.1255 21.6099 14.9263 21.0723 13.8999C20.814 13.4067 20.4866 12.8171 20.1556 12.3218C19.991 12.0756 19.8102 11.8294 19.6228 11.6239C19.4646 11.4505 19.1882 11.1754 18.8163 11.0515C18.5979 10.9787 18.4031 10.7916 18.2381 10.495C18.1039 10.2535 18.031 10.0116 18 9.88995V3.5796C18 2.94334 17.7472 2.33317 17.2974 1.88329C16.601 1.18697 15.4925 1.12556 14.7235 1.74072L14.6203 1.82329C14.0929 2.24521 13.7587 2.86261 13.6936 3.53464L13.5644 4.8695L13.3294 3.41207C13.2306 2.79946 12.9075 2.24547 12.423 1.8579L12.2527 1.72171C11.4973 1.11737 10.4082 1.1777 9.72416 1.86174C9.24676 2.33921 8.99786 2.99922 9.04132 3.67314L9.14048 5.21005L8.82364 4.29471C8.67453 3.86394 8.39998 3.48765 8.03541 3.21419L7.96886 3.16427C7.1853 2.57661 6.07358 2.73533 5.48589 3.51893C5.14494 3.97362 4.99677 4.54449 5.07376 5.1077L5.34893 7.11985L5.24748 6.90003C5.20587 6.80991 5.15761 6.72269 5.1031 6.63935C4.18411 5.23427 2 5.88467 2 7.56374V7.64419L2.04018 8.05008L3.01942 12.9463L5.55463 20.3261C5.56893 20.3676 5.58596 20.4081 5.60559 20.4474C5.91718 21.0705 6.652 21.7001 7.72628 22.1672C8.83437 22.649 10.3916 23.0001 12.5 23.0001C14.6744 23.0001 16.2726 22.4548 17.3456 21.8825C17.8795 21.5977 18.2787 21.3089 18.5516 21.083L18.8678 20.7994L19.0026 20.6586Z" fill="#4285F4"/>
@@ -179,17 +478,14 @@ const Missions = ({admin}) => {
 <path d="M0.75 7H3.67C4.08421 7 4.42 7.33579 4.42 7.75C4.42 8.16421 4.08421 8.5 3.67 8.5H0.75C0.335786 8.5 0 8.16421 0 7.75C0 7.33579 0.335786 7 0.75 7Z" fill="#4285F4"/>
                 </svg>
               }
-                </Button>
-                <Button className='h-full glass-background' color='none' radius='none' isIconOnly  style={{width: '70px', borderRight: '1px solid white'}}>
-
-                </Button>
-            </div>
+            </Button>
+            <Button className='h-full glass-background' color='none' radius='none' isIconOnly style={{ width: '70px', borderRight: '1px solid white' }}>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
-        </div>
-    );
-  };
-  
+  );
+};
 
-
-export default Missions
+export default Missions;

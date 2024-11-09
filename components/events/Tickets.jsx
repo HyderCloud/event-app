@@ -27,8 +27,8 @@ const Tickets = ({admin}) => {
     const path = usePathname()
     const [events, setEvents] = useState([])
     const [endTime, setEndTime] = useState('')
-    const [startTime, setStartTime] = useState(false)
-    const [startDate, setStartDate] = useState(false)
+    const [startTime, setStartTime] = useState('')
+    const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [rounds, setRounds] = useState([])
     const [price, setPrice] = useState('')
@@ -194,7 +194,7 @@ const handleDate = (newRange)=>{
         <div className='flex flex-row w-full h-full justify-center' style={{gap: '20px'}}>
         
         <div className='flex flex-col items-center' style={{width: '50%', height: '100%', gap: '20px'}}>
-        {rounds.map((item,index)=>{
+        {rounds?.map((item,index)=>{
 
         return(
         <div className='glass-background tickets-container w-full flex flex-row'  onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>

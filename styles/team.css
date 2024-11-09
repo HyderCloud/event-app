@@ -88,3 +88,8 @@ gap: 10px;
     backdrop-filter: blur(10px); /* Apply blur to the backdrop */
     -webkit-backdrop-filter: blur(10px); /* For Safari support */
   }
+
+
+  .box-shadow-mission{
+    box-shadow: rgba(255, 255, 255, 0.476) 0px 1px 3px 0px, rgb(255, 255, 255) 0px 0px 0px 1px;
+  }
