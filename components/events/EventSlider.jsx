@@ -28,7 +28,7 @@ const router = useRouter()
           {data && data.map((item, index) => (
      
             <SwiperSlide key={index}>
-              <Card className="" style={{ width: '340px' }}>
+              <Card className="glass-background" style={{ width: '340px' }}>
                 <CardHeader className="flex gap-3">
                   <div style={{width: '60px'}}>
                   <Image

@@ -51,6 +51,18 @@ class EventsDB:
         else:
             print("No document found with the given email.")
 
+    def update_description_by_id(self,rounds, _id):
+        new_data = {
+        "$set": {
+            "description": rounds,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_cuppons_by_id(self,cuppons, _id):
         new_data = {
         "$set": {

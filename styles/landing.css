@@ -120,3 +120,27 @@ padding-left: 40%;
     cursor: pointer;
     color: white;
   }
+
+ .full-screen-div {
+    width: 100vw; /* Full width of viewport */
+    height: 100vh; /* Full height of viewport */
+    overflow-y: hidden; /* Prevents vertical scrolling */
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    background-color: #0000004b; /* Example background color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .shadow-examp{
+    border-radius: 25px;
+
+
+    /* Complex layered shadow */
+    box-shadow: 
+      rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,  /* Large, soft shadow */
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,       /* Medium shadow */
+      rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; /* Inner shadow */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  }

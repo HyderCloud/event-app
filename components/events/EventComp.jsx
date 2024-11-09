@@ -9,6 +9,8 @@ import Cuppons from './Cuppons'
 import AdminComp from './AdminComp'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
+import Adds from './Adds'
+import Missions from './Missions'
 const EventComp = ({}) => {
   const [cookie, setCookie, removeCookie] = useCookies()
   const {decodedToken, isExpired} = useJwt(cookie.user)
@@ -57,8 +59,8 @@ const EventComp = ({}) => {
   },[decodedToken, admin, team2])
 
   return (
-    <div className='dashboard-container flex flex-col'>
-        <div className='w-full navbar-event flex flex-row items-center justify-end '>
+    <div className='dashboard-container  flex flex-col'>
+        <div className='w-full navbar-event flex flex-row items-center  justify-end '>
           {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
         <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=scanner`)}}>
         <div className='navbar-event-slot-1' style={{opacity: section=== 'scanner' && '100%'}}>סורק</div>
@@ -88,25 +90,27 @@ const EventComp = ({}) => {
           </div>
           }
           <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=team`)}}>            
-            <div className='navbar-event-slot-1' style={{opacity: section=== 'team'&& '100%'}}>צוות</div>
-          {section=== 'team' && icon}</div>
+            <div className='navbar-event-slot-1' style={{opacity: (section === 'mission' || section=== 'team')&& '100%'}}>צוות</div>
+          {(section === 'mission' || section=== 'team') && icon}</div>
           {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
           <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=tickets`)}}>
           <div className='navbar-event-slot-1' style={{opacity: section=== 'tickets'&& '100%'}}>כרטיסים</div>
           {section=== 'tickets' && icon}
           </div>
-          }
+          } 
           <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}`)}}>
             <div className='navbar-event-slot-1' style={{opacity: !section && '100%'}}>ראשי</div>
             {!section && icon}
             </div>
-        </div>
+        </div> 
         <div className='w-full h-full'>
         {!section && <Main data={events} admin={admin}/>}
         {section === 'tickets'&& <Tickets admin={admin}/>}
         {section === "team"&& <Team admin={admin}/>}
         {section === "cuppons"&& <Cuppons admin={admin}/>}
         {section === "admin"&& <AdminComp admin2={admin}/>}
+        {section === "add"&& <Adds admin2={admin}/>}
+        {section === "mission" && <Missions admin={admin}/>}
         </div>
     </div>
   )

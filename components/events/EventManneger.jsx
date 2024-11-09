@@ -30,7 +30,6 @@ const EventManneger = ({}) => {
     }
     const getEvents = async ()=>{
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
-        console.log(getAllEvents.data.events)
         setEvents(getAllEvents.data.events)
     }
     const getEventConnection = async ()=>{    

@@ -15,15 +15,43 @@ def post_user(user):
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password_bytes, salt)
         doccument = {
-            "username": user["username"],
             "email": user["email"],
-            "password": hashed_password
+            "username": user["username"],
+            "password": hashed_password,
+            "pr_image": "",
+            "profession": '',
+            "description": '',
         }
         if hashed_password:
-           print(hashed_password)
            result = user_api.insert_user(doccument)
            if result:
-               return jsonify({'message': 'Acknowledged'}), 200
+               get_user = user_api.get_user_by_email(user["email"])
+               if get_user:
+                    store = {
+                            "key": get_user["_id"],
+                            "name": user["username"],
+                            'profile_img': '',
+                            "bunner": '',
+                            "slogen":'',
+                            "description":'',
+                            "links":[],
+                            "email": user["email"],
+                            "phone": "",
+                            "address": [],
+                            "folowers": [],
+                            "profession": ""
+                        }
+                    store2 = store_api.insert_store(store)
+                    if store2:
+                        return jsonify({'message': True}), 200
+                    else:
+                        return jsonify({"messege": "wrong"})
+               else:
+                return jsonify({"messege": "wrong"})
+           else:
+               return jsonify({"messege": "wrong"})
+        else:
+               return jsonify({"messege": "wrong"})
     except Exception as e:
         return jsonify({"message": 'error-' + str(e)}), 501
     
@@ -32,7 +60,6 @@ def auth_user(user):
         condition = user["email"]
         if "@" in condition:
             user2 = user_api.get_user_by_email(user["email"])
-            print(user2)
             password  = bcrypt.checkpw(str(user["password"]).encode('utf-8'),user2["password"])
             if password:
                 payload = {
@@ -41,7 +68,22 @@ def auth_user(user):
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
             }
                 token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-                return jsonify({"token": token}), 200
+                if user2:
+                    store_checker = store_api.get_store_by_key(user2["_id"])
+                    payload2 = {
+                    "store_id": store_checker["_id"],
+                    "name": store_checker["name"],
+                    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+                    }
+                    token2 = jwt.encode(payload2, SECRET_KEY, algorithm="HS256")
+
+                    if store_checker:
+
+                        return jsonify({"token": token, "store": token2,"id": user2['_id'],"email": user['email'], "name": user2["username"]}), 200
+                    else:
+                        return jsonify({"message": "bug"}), 400
+                else: 
+                    return jsonify({"token": token}), 200
             else:
                 return jsonify({"massage": "icorrect password"}), 400
         else:
@@ -111,7 +153,10 @@ def user_google(user):
     
 def get_user_by_email(email):
     try:
-        return jsonify(user_api.get_user_by_email(email)), 200
+        user_data = user_api.get_user_by_email(email)
+        if 'password' in user_data:
+            del user_data['password']
+        return jsonify(user_data), 200
     except Exception as e:
         return jsonify({"message": 'error-' + str(e)}), 501
     

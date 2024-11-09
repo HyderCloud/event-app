@@ -4,8 +4,10 @@ import Link from 'next/link';
 import {Button, Divider, Input} from "@nextui-org/react";
 import { signIn } from "next-auth/react"
 import Image from 'next/image'
-
+import axios from "axios"
+import { useRouter } from 'next/navigation';
 const Sginup = () => {
+    const router = useRouter()
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
    const handleOnChangePassword = (e)=>{
@@ -18,6 +20,15 @@ const Sginup = () => {
    const handleOnChangeEmail = (e)=>{
     setEmail(e.target.value)
 }
+
+const handleSubmit = async (e)=>{
+    const result = await axios.post("http://localhost:9020/register",{email: email, username: username, password: password})
+    console.log(result)
+    if(result?.data?.message === true){
+        router.push('/signin')
+    }
+}
+
   return (
     <main className='sginin-container min-h-screen'>
     <div className='flex flex-row sginin-container min-h-screen'>
@@ -32,7 +43,7 @@ const Sginup = () => {
     <div style={{height: '20px'}}></div>
     <Input type="Password" variant={"bordered"} label="Password" onChange={handleOnChangePassword} radius='lg'/>
     <div style={{height: '30px'}}></div>
-    <Button color='primary' className='signin-button'>הרשמה</Button>
+    <Button onPress={handleSubmit} color='primary' className='signin-button'>הרשמה</Button>
     <div style={{height: '20px'}}></div>
     <Link href={'/signin'}>?כבר יש לך משתמש</Link>
     <div style={{height: '20px'}}></div>

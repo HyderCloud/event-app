@@ -75,3 +75,16 @@ gap: 10px;
     border-radius: 10px;
     padding: 10px;
   }
+
+  .team-slot-hover{
+    border-radius: 10px;
+    display: inline-block;
+    cursor: default;
+    padding: 2px;
+  }
+
+  .team-slot-hover:hover{
+    background: rgba(223, 72, 72, 0.2); /* White background with 20% opacity */
+    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  }

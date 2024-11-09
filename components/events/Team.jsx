@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from 'react'
 import { TimeInput, Card, CardHeader, CardBody, User, Link, Spacer, CardFooter, Image, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import { useJwt } from 'react-jwt';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios'
 
 export const Team = ({admin}) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const { isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [team, setTeam] = useState([])
   const [role, setRole] = useState([])
   const [filterBy, setFilterBy] = useState('')
@@ -142,6 +144,14 @@ export const Team = ({admin}) => {
 </svg>
 
     </Button>
+    <Tooltip showArrow color='primary' content={'משימות'}>
+    <Button variant='ffe' onPress={()=>{router.push(`${path}?section=mission`)}} isIconOnly><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.62012 14.75C1.62012 13.5074 2.62748 12.5 3.87012 12.5H7.37012C8.61276 12.5 9.62012 13.5074 9.62012 14.75V18.25C9.62012 19.4926 8.61276 20.5 7.37012 20.5H3.87012C2.62748 20.5 1.62012 19.4926 1.62012 18.25V14.75Z" fill="white"/>
+<path d="M13.6201 13.75C13.2059 13.75 12.8701 14.0858 12.8701 14.5C12.8701 14.9142 13.2059 15.25 13.6201 15.25H18.6201C19.0343 15.25 19.3701 14.9142 19.3701 14.5C19.3701 14.0858 19.0343 13.75 18.6201 13.75H13.6201Z" fill="white"/>
+<path d="M21.6201 17.75H13.6201C13.2059 17.75 12.8701 18.0858 12.8701 18.5C12.8701 18.9142 13.2059 19.25 13.6201 19.25H21.6201C22.0343 19.25 22.3701 18.9142 22.3701 18.5C22.3701 18.0858 22.0343 17.75 21.6201 17.75Z" fill="white"/>
+<path d="M1.62012 5.5C1.62012 4.39543 2.51555 3.5 3.62012 3.5H19.6201C20.7247 3.5 21.6201 4.39543 21.6201 5.5V8.5C21.6201 9.60457 20.7247 10.5 19.6201 10.5H3.62012C2.51555 10.5 1.62012 9.60457 1.62012 8.5V5.5Z" fill="white"/>
+</svg></Button>
+    </Tooltip>
         <div className='flex flex-row justify-end w-full'style={{gap: '20px'}}>
         <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen() }}>הוספת חברי צוות</Button>
         <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen2() }}>הוספת תפקיד </Button>
@@ -183,11 +193,26 @@ export const Team = ({admin}) => {
 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
 </svg></div>
             <div className='w-full'></div>
-            <div className='w-full'>{item.admin}</div>
-              <div className='w-full'>{item.role}</div>
-              <div className='w-full'>{item.profession}</div>
-           
-              <div className='w-full'>{item.name}</div>
+            <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.admin}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.role}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.profession}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.name}
+              </div>
+              </div>
               <div className='w-full flex justify-end '>
               <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
                       backgroundPosition: 'center'}}></div>
@@ -365,7 +390,7 @@ export const Team = ({admin}) => {
                                     <>
                                       <ModalHeader className="flex flex-col gap-1 text-white">{item.name} - הוספת תפקיד ל</ModalHeader>
                                       <ModalBody >
-                                        <div style={{ height: '170px' }}>
+                                        <div className='flex flex-col justify-center items-center' style={{ height: '170px', gap: '20px' }}>
                                           <Select className='w-full' style={{ color: 'black' }} label='תפקיד'
                                             onChange={(e) => {
                                               updateRoleById(item._id, role[e.target.value], index, item.name, item.email, item.key)
@@ -379,14 +404,17 @@ export const Team = ({admin}) => {
                                               </SelectItem>
                                             ))}
                                           </Select>
+                                          <div style={{height: '30px', width: '50px'}}>
+                                          <Button onPress={onOpen2} color='primary'>הוסף תפקיד</Button>
+                                          </div>
                                         </div>
                                       </ModalBody>
                                       <ModalFooter>
                                         <Button color="danger" variant="light" onPress={onClose}>
-                                          Close
+                                          סגור
                                         </Button>
                                         <Button color="primary" onPress={onClose}>
-                                          Action
+                                          שמור
                                         </Button>
                                       </ModalFooter>
                                     </>

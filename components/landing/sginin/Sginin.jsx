@@ -5,6 +5,7 @@ import {Button, Divider, Input} from "@nextui-org/react";
 import { signIn } from "next-auth/react"
 import Image from 'next/image'
 import axios from 'axios';
+import { loginAction } from '@/components/action';
 
 const Sginin = () => {
     const [password, setPassword] = useState('')
@@ -13,7 +14,11 @@ const Sginin = () => {
    const handleOnChangePassword = (e)=>{
         setPassword(e.target.value)
    }
-
+   const onSubmit = async (data)=>{
+    const res = await loginAction(data)
+    console.log("res:", res)
+  }
+  
    const handleOnChangeEmail = (e)=>{
     setEmail(e.target.value)
 }
@@ -33,7 +38,7 @@ const Sginin = () => {
 
         <Input type="Password" variant={"bordered"} label="Password" onChange={handleOnChangePassword} radius='lg'/>
         <div style={{height: '50px'}}></div>
-        <Button color='primary' className='signin-button'>התחברות</Button>
+        <Button onPress={()=>{onSubmit({username: email, password: password})}} color='primary' className='signin-button'>התחברות</Button>
         <div style={{height: '20px'}}></div>
         <Link href={'/signup'}>יצירת משתמש חדש</Link>
         <div style={{height: '20px'}}></div>

@@ -5,14 +5,13 @@ users_blueprint = Blueprint('users', __name__)
 @users_blueprint.route('/register', methods=['POST'])
 def register():
     user = request.get_json()
-    print(user)
     return post_user(user)
     
-# @users_blueprint.route('/auth', methods=['POST'])
-# def auth():
-#     user = request.get_json()
-#     print(user)
-#     return auth_user(user)  
+@users_blueprint.route('/auth', methods=['POST'])
+def auth():
+    user = request.get_json()
+    print(user)
+    return auth_user(user)  
 
 @users_blueprint.route('/googleauth', methods=['POST'])
 def auth_google():
@@ -21,6 +20,7 @@ def auth_google():
 
 @users_blueprint.route('/getuser/<string:email>', methods=['GET'])
 def get_user(email):
+    print(email)
     return get_user_by_email(email)
 
 

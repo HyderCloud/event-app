@@ -108,11 +108,26 @@ const AdminComp = ({admin2}) => {
 
             <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px', textAlign: 'right'}}  key={index}>
             <div className='w-full'></div>
-            <div className='w-full'>{item.admin}</div>
-              <div className='w-full'>{item.role}</div>
-              <div className='w-full'>{item.profession}</div>
-           
-              <div className='w-full'>{item.name}</div>
+            <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.admin}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.role}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.profession}
+              </div>
+              </div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.name}
+              </div>
+              </div>
               <div className='w-full flex justify-end '>
               <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
                       backgroundPosition: 'center'}}></div>

@@ -143,12 +143,20 @@ class Events:
         
     def update_rounds(self, id,doccument):
         try:
-            is_updated = api_events.update_cuppons_by_id(doccument, id)
+            is_updated = api_events.update_rounds_by_id(doccument, id)
             if is_updated:
                 return jsonify({"cuppons": doccument}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
     
+    def update_description(self, id,doccument):
+        try:
+            is_updated = api_events.update_description_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"description": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+
     def update_cuppons(self, id,doccument):
         try:
             is_updated = api_events.update_cuppons_by_id(doccument, id)

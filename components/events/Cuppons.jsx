@@ -187,6 +187,7 @@ const Cuppons = ({admin}) => {
                                                 if(cuppons.length > 0){
                                                     const newCuppon = [...cuppons]
                                                     newCuppon[index] = cupponDoc
+                                                    console.log(newCuppon)
                                                     SetCuppons(newCuppon)
                                                     handleAddCuppon(newCuppon)
                                                 }

@@ -17,7 +17,8 @@ const Main = ({admin}) => {
     const [content, setContent] = useState('');
 
     const handleChange = (value) => {
-        setContent(value); // Save the formatted content (HTML) to state
+        console.log(value)
+        setContent(value); 
     };
 
     const [isImage, setIsImage] = useState('')
@@ -48,6 +49,7 @@ const Main = ({admin}) => {
         setType(getAllEvents.data.events.type)
         setTubnail(getAllEvents.data.events.tubnail)
         setAge(getAllEvents.data.events.age)
+        setContent(getAllEvents.data.events.description)
     }
     useEffect(() => {
             getEvents()
@@ -94,8 +96,9 @@ const Main = ({admin}) => {
           setStartDate(formattedDateStart)
         
     }
-    const handleCheckAdmin = ()=>{
-
+    const handleSaveDescription = async ()=>{
+        const result =  await axios.patch(`http://localhost:9020/description/${events._id}`,{description: content})
+        setContent(result.data.description)
     }
     const handleClose = ()=>{
 
@@ -128,7 +131,7 @@ const Main = ({admin}) => {
         return (
 
                 <div className=' flex justify-center items-center flex-col w-full h-full' style={{ gap: '10px', paddingLeft: "15%" }}>
-
+                    <div className='h-4'></div>
                 <div className='flex flex-row justify-end w-full' style={{ gap: '10px' }}>
                     <div >
                         <Button color='primary'>צפייה מוקדמת</Button>
@@ -139,9 +142,10 @@ const Main = ({admin}) => {
                 </div>
 
 
-                <div className='flex flex-col w-full h-full glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px'}}>
+                <div className='flex flex-col w-full h-screen glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px', overflowY: 'scroll'
+                }}>
                     <div className='flex flex-row justify-between' >
-                <div className='text-white flex flex-col glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
+                <div className='text-white flex flex-col justify-center glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
                 <div>
                     {startDate} - {endDate}
                 </div>
@@ -156,12 +160,28 @@ const Main = ({admin}) => {
                     <div style={{paddingRight: '15px'}}>
                 {icon}
                 </div>
-                <div className='w-full flex justify-end font-bold type-string text-white' style={{paddingRight: '2%'}}>
+                <div className='flex justify-end font-bold type-string text-white' style={{paddingRight: '2%'}}>
                 {type}
                     </div>
                 </div>
                     </div>
-                <div className='w-full' style={{height: '300px'}}></div>
+                <div className='flex flex-row justify-between' style={{gap: '10px'}}>
+                <div   style={{backgroundImage:  `url(${tubnail})`,
+                        borderRadius: '15px',
+                        backgroundSize: 'cover',
+                        height: "450px",
+                        width: '350px',
+                        backgroundPosition: 'center'}}></div>
+                <div className=' text-white '   style={{
+    
+    textAlign: 'right',
+    width: '50%',
+    wordBreak: 'break-word', // Ensures long words wrap to the next line
+    whiteSpace: 'normal'     // Allows wrapping to the next line when content overflows
+  }} dangerouslySetInnerHTML={{ __html: content }}>
+                </div>
+                    
+                </div>
                 {(admin === 'מפיק'|| admin ==='בעלים'||admin === "יוצר")&&
                 <div className='flex flex-row w-full h-full' style={{gap: '25px'}}>
                 <div className=' flex flex-col glass-background image-cont-main ' >
@@ -178,16 +198,18 @@ const Main = ({admin}) => {
                         </div>
                         </div>
                 <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
+               <div className='flex flex-row w-full'>
+                        <div><Button onPress={handleSaveDescription} color='primary'>שמור</Button></div>
                 <div className='w-full flex flex-col  text-white font-semibold items-end' >
                            <div> תיאור האירוע</div>
                            {icon}
                         </div>
+               </div>
                         <div className='w-full h-full'>
                         <ReactQuill
+                        value={content}
                         className='bg-white quil'
-                        style={{height: '100%', paddingBottom: '18%', paddingLeft: '3%', paddingRight: '3%', paddingTop: '3%', borderRadius: '15px'}}
-                        
-                value={content}           
+                        style={{position: 'static' ,height: '100%', paddingBottom: '35%', paddingLeft: '3%',width: '350px', paddingRight: '3%', paddingTop: '3%', borderRadius: '15px'}}       
                 onChange={handleChange}    
                 theme="snow"                
                 placeholder="Type here..."
@@ -196,7 +218,7 @@ const Main = ({admin}) => {
                         [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
                         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                        // [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
                         [{ 'align': [] }],
                         ['link', 'image'],
                         ['clean']                                         // remove formatting button

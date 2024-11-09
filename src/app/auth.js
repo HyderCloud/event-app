@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from 'next-auth/providers/github'
-import Credentials from 'next-auth/providers/credentials';
+import Credentials from "next-auth/providers/credentials"
 import FacebookProvider from "next-auth/providers/facebook";
 import { redirect } from "next/navigation";
 import axios from "axios";
@@ -11,11 +11,13 @@ import jwt from 'jsonwebtoken';
 
 
 
+
 export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
     providers: [
-        Credentials({
-          
-        }),
+
+     
+      
+      
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -38,6 +40,7 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
 
     ], 
     callbacks: {
+      
         async signIn({ account, profile }) {
           const postFile = {
             email: profile.email,
@@ -71,8 +74,8 @@ export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
           return redirect(`/dashbord/${decoded}`)
 
         },
-      }
-    ,secret: process.env.JWT_SECRET,
+      },
+    secret: process.env.JWT_SECRET,
     pages:{
         signIn: '/sginin',
         signOut: '/sginout'

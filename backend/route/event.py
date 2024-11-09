@@ -62,3 +62,8 @@ def update_cupponss(id):
 @events_blueprint.route('/geteventconnection/<string:id>', methods=['GET'])
 def get_connection_event(id):
     return events_api.get_events_by_connection(id)
+
+@events_blueprint.route('/description/<string:id>', methods=['PATCH'])
+def update_description(id):
+    event = request.get_json()
+    return events_api.update_description(id,event["description"])
