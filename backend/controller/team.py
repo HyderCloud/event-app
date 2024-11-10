@@ -15,10 +15,18 @@ class TeamC:
     def __init__(self):
         pass
 
-    def get_team_by_profession(profession):
+    def get_team_by_profession(self,profession):
         try:
             team = team_api.get_team_by_profession(profession)
             return jsonify({"team": team}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def get_mission_by_key(self, key):
+        try:
+            mission = team_api.get_missions_by_key(key)
+            if mission:
+                return jsonify({"missions": mission}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
 
@@ -34,6 +42,21 @@ class TeamC:
             is_updated = team_api.update_role(role, id)
             if is_updated:
                 return jsonify({"role": role}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def add_mission(self,doc, req):
+        try:
+            for req in req:
+                team = team_api.insert_job_request(req)
+
+            for part in doc['participent']:
+                for status in part:
+                    status["status"] = "בהמתנה"
+
+            is_inserted = team_api.insert_mission(doc)
+            if is_inserted and team:
+                return jsonify({"acknowledge": True}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
 
@@ -58,6 +81,8 @@ class TeamC:
                 return jsonify({"message": 'error-'}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
+        
+    
 
     def update_job_by_id(self, id, role, name, key, fromU):
         try:

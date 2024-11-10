@@ -5,6 +5,7 @@ client = pymongo.MongoClient(mongodb_url)
 db = client.get_database()
 
 # Select a collection
+missionCollection = db.missions
 storeCollection = db.stores
 collectionUsers = db.users
 eventsCollection = db.events
@@ -390,6 +391,11 @@ class Team:
         inserted_id = result.inserted_id
         return str(inserted_id)
     
+    def insert_mission(self, doccument):
+        result = missionCollection.insert_one(doccument)
+        inserted_id = result.inserted_id
+        return str(inserted_id)
+
     def insert_connection(self, doccument):
         result = connectionsCollection.insert_one(doccument)
         inserted_id = result.inserted_id
@@ -397,6 +403,16 @@ class Team:
 
     def get_jobs_by_key(self, key):
         documents_cursor = requestCollection.find({'key': key})
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list
+    
+    def get_missions_by_key(self, key):
+        documents_cursor = missionCollection.find({'key': key})
         documents_list = []
         for document in documents_cursor:
             document['_id'] = str(document['_id'])

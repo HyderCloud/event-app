@@ -174,3 +174,4 @@ class Events:
                 return jsonify({"events": result}), 200
          except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
+         

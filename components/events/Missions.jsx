@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 const Missions = ({ admin }) => {
+  const status_u = ["בתהליך","בהמתנה","סיום","ביטולי"]
   const [cookie, setCookie, removeCookie] = useCookies('')
   const {decodedToken, isExpired} = useJwt(cookie.store)
   const [match, setMatch] = useState([])
@@ -23,16 +24,43 @@ const Missions = ({ admin }) => {
   const [endTime, setEndTime] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [participent, setParticipent] = useState([])
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const containerRef = useRef(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
+  const [items, setItems] = useState([
+    
+  ]);
+  const [isPanning, setIsPanning] = useState(false);
+  const [isMode, setIsMode] = useState(false);
+  
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const month = now.getMonth() + 1; // Months are zero-based, so we add 1
+    const day = now.getDate();
+    const year = String(now.getFullYear()).slice(-2); // Get last two digits of the year
+    const hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0'); // Pad minutes to ensure two digits
+    const formattedDateTime = `${month}/${day}/${year} ${hours}:${minutes}`;
+    return (formattedDateTime);
+  };
 
   const addMissionDoc = {
     title: title,
-    description: description,
+    key: getStringAfterSecondSlash(path),
+    content: description,
     startDate: startDate,
     endDate: endDate,
     endTime: endTime,
-    participent: participent,
-    from: decodedToken?.nameh
+    participent: waitWorkers,
+    when: getCurrentDateTime(),
+    from: decodedToken?.name,
+    x: 50, 
+    y: 50,
+     width: 400, 
+     height: 200,
+     status: 0
   }
 
   const handleEndTime = (time)=>{
@@ -104,6 +132,13 @@ const Missions = ({ admin }) => {
     setRole(getAllEvents.data.events.roles)
 
   }
+  const gethandleMission = async () => {
+    const getAllMissions = await axios.get(`http://localhost:9020/missions/${getStringAfterSecondSlash(path)}`)
+    setItems(getAllMissions?.data?.missions)
+    console.log(getAllMissions?.data?.missions)
+  }
+
+
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -118,6 +153,7 @@ const Missions = ({ admin }) => {
     }
   useEffect(() => {
       getEvents()
+      gethandleMission()
     }, [])
     // Filter data by names that start with the search term
     function removeElementAtIndex(arr, index) {
@@ -129,21 +165,13 @@ const Missions = ({ admin }) => {
       newArray.splice(index, 1);
   
       return newArray;}
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const containerRef = useRef(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState(1);
-  const [items, setItems] = useState([
-    { id: 1, x: 50, y: 50, width: 400, height: 200, title: 'Mooksha', status: 'in-progress', content: 'להעמיד תאורה באירוע בצור X Y Z' },
-    { id: 2, x: 50, y: 50, width: 400, height: 200, title: 'Mooksha', status: 'in-progress', content: 'להעמיד תאורה באירוע בצור X Y Z jfjfmc dfkjvn kdd'  },
-  ]);
-  const [isPanning, setIsPanning] = useState(false);
-  const [isMode, setIsMode] = useState(false);
+
 
   const handleDrag = (e, data, item) => {
     const { x, y } = data;
+    console.log(item)
     setItems((prevItems) =>
-      prevItems.map((i) => (i.id === item.id ? { ...i, x: x / scale, y: y / scale } : i))
+      prevItems.map((i) => (i._id === item._id ? { ...i, x: x / scale, y: y / scale } : i))
     );
   };
 
@@ -154,7 +182,17 @@ const Missions = ({ admin }) => {
       setScale((prevScale) => (e.deltaY > 0 ? Math.max(prevScale - zoomFactor, 0.1) : prevScale + zoomFactor));
     }
   };
-
+  const handleAddNotification = (data) => {
+    data.map(async (item) => {
+      await axios.post(`http://localhost:8000/notify/${item?.key}`, { message: item })
+    })
+  }
+  const handleAddMisiion = async (data)=>{
+   const result = await axios.post(`http://localhost:9020/addmission/${getStringAfterSecondSlash(path)}`, { data: data, request: waiting })
+    if(result?.data?.acknowledge){
+     await gethandleMission()
+    }
+  }
   useEffect(() => {
     const container = containerRef.current;
     container.addEventListener('wheel', handleWheel);
@@ -201,22 +239,22 @@ const Missions = ({ admin }) => {
                     if (isUnique) {
                       setWaitWorkers([...waitWorkers, item])
                       setWaiting([...waiting, {
-                        key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                        , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `בתפקיד ${null} ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name},
-                        אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
-                        לאישור השתתפותך אשר את ההצעה`,
-                         title:'הצעת עבודה'
+                        key: item.key, name: item.name
+                        , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
+                         title:'הצעת עבודה',
+                         link: `/${path}?section=mission`,
+                         btn: 'לפרטים'
                       }])
                     }
                     if (waitWorkers.length === 0) {
                       console.log(waitWorkers.length)
                       setWaitWorkers([...waitWorkers, item])
                       setWaiting([...waiting, {
-                        key: item.key, name: item.name, role: null, admin: 'none', email: item.email
-                        , fromName: events.name, owner: events.owner, date: getCurrentDateTime(), isRead: false            ,message: `בתפקיד ${null} ברכות! שמחים להודיעך שהוזמנת לעבוד באירוע ${events.name},
-                        אנו נרגשים להוסיף אותך לצוות שלנו ומשוכנעים כי כישוריך יתרמו רבות להצלחת האירוע
-                        לאישור השתתפותך אשר את ההצעה`,
-                         title:'הצעת עבודה'
+                        key: item.key, name: item.name
+                        , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
+                         title:'הצעת עבודה',
+                         link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
+                         btn: 'לפרטים'
                       }])
                     }
                   }}
@@ -251,12 +289,24 @@ const Missions = ({ admin }) => {
                     const isUnique = isIdUnique(item._id)
                     if (isUnique) {
                       setWaitWorkers([...waitWorkers, item])
-
+                      setWaiting([...waiting, {
+                        key: item.key, name: item.name
+                        , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
+                         title:'הצעת עבודה',
+                         link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
+                         btn: 'לפרטים'
+                      }])
                     }
                     if (waitWorkers.length === 0) {
                       console.log(waitWorkers.length)
                       setWaitWorkers([...waitWorkers, item])
-
+                      setWaiting([...waiting, {
+                        key: item.key, name: item.name
+                        , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
+                         title:'הצעת עבודה',
+                         link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
+                         btn: 'לפרטים'
+                      }])
                     }
                   }}
                   style={{ height: '70px' }}>
@@ -378,10 +428,9 @@ const Missions = ({ admin }) => {
             setSection1(true)
           }
           if (waiting.length > 0) {
-            console.log(waiting)
-            handleUpdateWaiting(waiting)
             handleAddNotification(waiting)
- 
+            setItems([...items,addMissionDoc])
+            handleAddMisiion(addMissionDoc)
           }
         }}>
           {section1? 
@@ -394,10 +443,10 @@ const Missions = ({ admin }) => {
   )}
 </ModalContent>
 </Modal>
-          {items.map((item) => (
+          {items.map((item,index) => (
            
             <Draggable
-              key={item.id}
+              key={item._id}
               position={{ x: item.x * scale + offset.x, y: item.y * scale + offset.y }}
               onDrag={(e, data) => handleDrag(e, data, item)}
               disabled={!isMode} // Enable dragging only if isMode is true
@@ -418,11 +467,35 @@ const Missions = ({ admin }) => {
                 <div 
                 className='w-full glass-background flex flex-row justify-between items-center' 
                 style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px'}}>
-                  <div></div>
+                  <div>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
+<path d="M11.79 10.92C11.5903 10.9173 11.3979 10.9954 11.2567 11.1367C11.1154 11.2779 11.0373 11.4703 11.04 11.67V14.79C11.04 15.2042 11.3758 15.54 11.79 15.54C12.2042 15.54 12.54 15.2042 12.54 14.79V11.69C12.5454 11.4876 12.4688 11.2917 12.3275 11.1467C12.1863 11.0017 11.9924 10.9199 11.79 10.92Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
+</svg>
+                  </div>
                   <div className=''>
                     {item.title}
                   </div>
                 </div>
+                {item?.participent.map((item, index)=>{
+                  return(
+                    
+                    <div className='w-full  flex flex-row justify-end items-center' style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px', paddingLeft: '5px'}}>
+                <div className='w-full flex items-center'>הוסף תגובה</div>
+                <div className='w-full flex items-center' style={{color: 'white' }}>{item.role}</div>
+                <div className='w-full flex items-center' 
+                     >
+                                          <div style={{color: 'white' }}>{item.name}</div>
+                                        </div>
+                    <div className=' flex items-center justify-end' style={{width: '40px'}}
+                     >
+                      <div style={{ backgroundImage: `url(${item.profile_img})`, borderRadius: '100px', height: '35px', width: '35px', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+                    </div>
+                                 
+                </div>
+                  )
+                })}
               </div>
                      </Tooltip>
               </div>
