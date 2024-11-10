@@ -6,7 +6,9 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 const Missions = ({ admin }) => {
-  const status_u = ["בתהליך","בהמתנה","סיום","ביטולי"]
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "מבוטל", color: '#ae4335'}]
   const [cookie, setCookie, removeCookie] = useCookies('')
   const {decodedToken, isExpired} = useJwt(cookie.store)
   const [match, setMatch] = useState([])
@@ -60,7 +62,8 @@ const Missions = ({ admin }) => {
     y: 50,
      width: 400, 
      height: 200,
-     status: 0
+     status: status_u[1],
+     connections: []
   }
 
   const handleEndTime = (time)=>{
@@ -70,7 +73,7 @@ const Missions = ({ admin }) => {
   
   const handleTitle = (e)=>{
     setTitle(e.target.value)
-    console.log(decodedToken)
+
   }
 
   const handleDescription = (e)=>{
@@ -137,7 +140,12 @@ const Missions = ({ admin }) => {
     setItems(getAllMissions?.data?.missions)
     console.log(getAllMissions?.data?.missions)
   }
+  const handleUpdatemission = async () => {
+      await axios.post(`http://localhost:8000/notify/event/${getStringAfterSecondSlash(path)}`, {
+        message: 'Hello, Event!'
+      })
 
+  }
 
   const handleSearch = (e) => {
     const term = e.target.value;
@@ -152,8 +160,36 @@ const Missions = ({ admin }) => {
       return parts[2] || null;
     }
   useEffect(() => {
-      getEvents()
-      gethandleMission()
+    getEvents()
+    gethandleMission()
+
+      const ws = new WebSocket(`ws://localhost:8000/ws/notification/${getStringAfterSecondSlash(path)}`);
+
+      ws.onopen = () => {
+        console.log(`Connected to WebSocket server as ${getStringAfterSecondSlash(path)}`);
+        setSocket(ws);
+      };
+  
+      ws.onmessage = (event) => {
+        // Handle incoming messages from the server
+        const message = JSON.parse(event.data);
+        console.log(message)
+        getEvents()
+        gethandleMission()
+        setMessages((prevMessages) => [...prevMessages, message]);
+      };
+  
+      ws.onclose = () => {
+        console.log("WebSocket connection closed");
+        setSocket(null);
+      };
+  
+      // Cleanup function to close the WebSocket connection when the component unmounts
+      return () => {
+        if (ws) ws.close();
+      };
+
+      // Set up the WebSocket event listeners
     }, [])
     // Filter data by names that start with the search term
     function removeElementAtIndex(arr, index) {
@@ -169,7 +205,6 @@ const Missions = ({ admin }) => {
 
   const handleDrag = (e, data, item) => {
     const { x, y } = data;
-    console.log(item)
     setItems((prevItems) =>
       prevItems.map((i) => (i._id === item._id ? { ...i, x: x / scale, y: y / scale } : i))
     );
@@ -188,11 +223,20 @@ const Missions = ({ admin }) => {
     })
   }
   const handleAddMisiion = async (data)=>{
+
    const result = await axios.post(`http://localhost:9020/addmission/${getStringAfterSecondSlash(path)}`, { data: data, request: waiting })
     if(result?.data?.acknowledge){
      await gethandleMission()
     }
   }
+ 
+  const handleUpdatePlace = async ( id,x,y)=>{
+    const result = await axios.patch(`http://localhost:9020/updatemissions/${getStringAfterSecondSlash(path)}`, {  id: id, x: x, y:y })
+    if(result?.data?.acknowledge){
+     await gethandleMission()
+    }
+  }
+
   useEffect(() => {
     const container = containerRef.current;
     container.addEventListener('wheel', handleWheel);
@@ -241,7 +285,7 @@ const Missions = ({ admin }) => {
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
-                         title:'הצעת עבודה',
+                         title:title,
                          link: `/${path}?section=mission`,
                          btn: 'לפרטים'
                       }])
@@ -252,7 +296,7 @@ const Missions = ({ admin }) => {
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
-                         title:'הצעת עבודה',
+                         title:title,
                          link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
                          btn: 'לפרטים'
                       }])
@@ -292,7 +336,7 @@ const Missions = ({ admin }) => {
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
-                         title:'הצעת עבודה',
+                         title:title,
                          link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
                          btn: 'לפרטים'
                       }])
@@ -303,7 +347,7 @@ const Missions = ({ admin }) => {
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
-                         title:'הצעת עבודה',
+                         title:title,
                          link: `/${decodedToken.name}/${getStringAfterSecondSlash(path)}?section=mission`,
                          btn: 'לפרטים'
                       }])
@@ -431,6 +475,7 @@ const Missions = ({ admin }) => {
             handleAddNotification(waiting)
             setItems([...items,addMissionDoc])
             handleAddMisiion(addMissionDoc)
+            handleUpdatemission()
           }
         }}>
           {section1? 
@@ -444,17 +489,24 @@ const Missions = ({ admin }) => {
 </ModalContent>
 </Modal>
           {items.map((item,index) => (
-           
             <Draggable
+            onStop={()=>{handleUpdatePlace(item._id,item.x * scale + offset.x,item.y * scale + offset.y)
+              handleUpdatemission()
+            }}
               key={item._id}
               position={{ x: item.x * scale + offset.x, y: item.y * scale + offset.y }}
               onDrag={(e, data) => handleDrag(e, data, item)}
-              disabled={!isMode} // Enable dragging only if isMode is true
+              disabled={!isMode} 
               
             >
               <div className='box-shadow-mission' style={{backgroundColor: 'black', width: `${item.width * scale}px`,
-                  height: `${item.height * scale}px`,borderRadius: '8px'}}>
-                     <Tooltip color='primary' placement='right' showArrow content={item.content}>
+                  height: `${item.height * scale}px`,borderRadius: '8px', }}>
+                     <Tooltip color='primary' placement='right' showArrow content={<div>
+                      <div>{item.from}</div>
+                      <div>
+                      {item.content}
+                      </div>
+                      </div>}>
 
               <div
               className='glass-background w-full h-full flex flex-col'
@@ -462,37 +514,39 @@ const Missions = ({ admin }) => {
                   borderRadius: '8px',
                   cursor: isMode ? 'grab' : 'default',
                   position: 'absolute',
+
                 }}
               >
                 <div 
                 className='w-full glass-background flex flex-row justify-between items-center' 
-                style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px'}}>
+                style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px', borderBottom: '1px solid white'}}>
                   <div>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
 <path d="M11.79 10.92C11.5903 10.9173 11.3979 10.9954 11.2567 11.1367C11.1154 11.2779 11.0373 11.4703 11.04 11.67V14.79C11.04 15.2042 11.3758 15.54 11.79 15.54C12.2042 15.54 12.54 15.2042 12.54 14.79V11.69C12.5454 11.4876 12.4688 11.2917 12.3275 11.1467C12.1863 11.0017 11.9924 10.9199 11.79 10.92Z" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
-</svg>
+                </svg>
                   </div>
                   <div className=''>
                     {item.title}
                   </div>
                 </div>
-                {item?.participent.map((item, index)=>{
+                {item?.participent.map((item2, index)=>{
                   return(
-                    
-                    <div className='w-full  flex flex-row justify-end items-center' style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px', paddingLeft: '5px'}}>
-                <div className='w-full flex items-center'>הוסף תגובה</div>
-                <div className='w-full flex items-center' style={{color: 'white' }}>{item.role}</div>
-                <div className='w-full flex items-center' 
+                    <div className='w-full  flex flex-row justify-end items-center'
+                     style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px',  }}>
+                <div className='w-full flex items-center text-center justify-center h-full' 
+                style={{backgroundColor: item.status?.color, color: 'white', borderRight: '1px solid white'}}>
+                  {item?.status?.text} </div>
+                <div className='w-full flex items-center  text-center justify-center h-full' style={{color: 'white', borderRight: '1px solid white' }}>{item2.role}</div>
+                <div className='w-full flex items-center text-center justify-center h-full' 
                      >
-                                          <div style={{color: 'white' }}>{item.name}</div>
+                                          <div style={{color: 'white' }}>{item2.name}</div>
                                         </div>
                     <div className=' flex items-center justify-end' style={{width: '40px'}}
                      >
-                      <div style={{ backgroundImage: `url(${item.profile_img})`, borderRadius: '100px', height: '35px', width: '35px', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+                      <div style={{ backgroundImage: `url(${item2.profile_img})`, borderRadius: '100px', height: '35px', width: '35px', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
                     </div>
-                                 
                 </div>
                   )
                 })}
@@ -510,12 +564,14 @@ const Missions = ({ admin }) => {
             top: '0',
             left: '0',
             color: 'white',
-            zIndex: 1, // Ensure it's above the canvas
+            zIndex: 1,
           }}
         >
+          {(admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר')&&
           <Button color='primary' onPress={onOpen} style={{ color: 'white' }}>
             הוסף משימה
           </Button>
+          }
         </div>
 
         <div className="absolute justify-center flex items-center"

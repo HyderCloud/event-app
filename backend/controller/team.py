@@ -49,11 +49,6 @@ class TeamC:
         try:
             for req in req:
                 team = team_api.insert_job_request(req)
-
-            for part in doc['participent']:
-                for status in part:
-                    status["status"] = "בהמתנה"
-
             is_inserted = team_api.insert_mission(doc)
             if is_inserted and team:
                 return jsonify({"acknowledge": True}), 200
@@ -116,3 +111,12 @@ class TeamC:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
 
+    def update_missions_place(self, x,y, id):
+        try:
+            is_updated2 = team_api.update_missions(x,y, id)
+            if is_updated2:
+                    return jsonify({"acknowledge": True}), 200
+            else:
+                return jsonify({"message": "not updated"}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501     

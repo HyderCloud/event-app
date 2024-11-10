@@ -374,13 +374,14 @@ class Team:
         else:
             print("No document found with the given email.")
     
-    def update_workers(self, waiting, _id):
+    def update_missions(self, x,y, _id):
         new_data = {
         "$set": {
-            "workers": waiting,  
+            "x": x,  
+            "y":y,
         }
         }
-        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        result = missionCollection.update_one({'_id': ObjectId(_id)},new_data)
         if result.matched_count > 0:
             return True
         else:
