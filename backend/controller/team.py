@@ -112,6 +112,17 @@ class TeamC:
                 return jsonify({"message": "not updated"}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
+        
+    def update_mission_status(self, status, id):
+        try:
+            print(status)
+            is_updated2 = team_api.update_mission_status(status, id)
+            if is_updated2:
+                    return jsonify({"acknowledge": True}), 200
+            else:
+                return jsonify({"message": "not updated"}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501 
 
     def update_missions_place(self, x,y, id):
         try:

@@ -52,3 +52,8 @@ def get_missions(id):
 def update_position_mission(id):
     event = request.get_json()
     return team_api.update_missions_place(event['x'], event['y'], event["id"])
+
+@team_blueprint.route('/updatestatus/<string:id>', methods=['PATCH'])
+def update_mission_status(id):
+    event = request.get_json()
+    return team_api.update_mission_status(event['status'], event["id"])

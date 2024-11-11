@@ -5,11 +5,12 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
+import { color } from 'framer-motion';
 const Missions = ({ admin }) => {
 
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
-  const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "מבוטל", color: '#ae4335'}]
+  const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "ביטול", color: '#ae4335'}]
   const [cookie, setCookie, removeCookie] = useCookies('')
   const {decodedToken, isExpired} = useJwt(cookie.store)
   const [match, setMatch] = useState([])
@@ -63,7 +64,6 @@ const Missions = ({ admin }) => {
     y: 50,
      width: 400, 
      height: 200,
-     status: status_u[1],
      connections: []
   }
 
@@ -203,14 +203,12 @@ const Missions = ({ admin }) => {
   
       return newArray;}
 
-  const handleStatusChange = ()=>{
 
-  }
 
-  const handleUpdateStatus = async (status)=>{
-    const result = await axios.patch(`http://localhost:9020/updatestatus/${getStringAfterSecondSlash(path)}`, {status: status})
+  const handleUpdateStatus = async (status, id)=>{
+    const result = await axios.patch(`http://localhost:9020/updatestatus/${getStringAfterSecondSlash(path)}`, {status: status, id: id})
     if(result?.data?.acknowledge){
-      await gethandleMission()
+      await handleUpdatemission()
      }
   }
 
@@ -292,7 +290,9 @@ const Missions = ({ admin }) => {
                   onPress={() => {
                     const isUnique = isIdUnique(item._id)
                     if (isUnique) {
-                      setWaitWorkers([...waitWorkers, item])
+                      let arr = item
+                      arr["status"] = status_u[1]
+                      setWaitWorkers([...waitWorkers, arr])
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
@@ -302,8 +302,9 @@ const Missions = ({ admin }) => {
                       }])
                     }
                     if (waitWorkers.length === 0) {
-                      console.log(waitWorkers.length)
-                      setWaitWorkers([...waitWorkers, item])
+                      let arr = item
+                      arr["status"] = status_u[1]
+                      setWaitWorkers([...waitWorkers, arr])
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
@@ -343,7 +344,9 @@ const Missions = ({ admin }) => {
                   onPress={() => {
                     const isUnique = isIdUnique(item._id)
                     if (isUnique) {
-                      setWaitWorkers([...waitWorkers, item])
+                      let arr = item
+                      arr["status"] = status_u[1]
+                      setWaitWorkers([...waitWorkers, arr])
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
@@ -353,8 +356,9 @@ const Missions = ({ admin }) => {
                       }])
                     }
                     if (waitWorkers.length === 0) {
-                      console.log(waitWorkers.length)
-                      setWaitWorkers([...waitWorkers, item])
+                      let arr = item
+                      arr["status"] = status_u[1]
+                      setWaitWorkers([...waitWorkers, arr])
                       setWaiting([...waiting, {
                         key: item.key, name: item.name
                         , fromName: decodedToken.name,  date: getCurrentDateTime(), isRead: false            ,message: "ברכות קיבלת משימה חדשה",
@@ -531,6 +535,15 @@ const Missions = ({ admin }) => {
                 <div 
                 className='w-full glass-background flex flex-row justify-between items-center' 
                 style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px', borderBottom: '1px solid white'}}>
+                 <Tooltip  className='glass-background ' content={<div className='flex flex-col'  style={{height: '100px', color: 'white'}}>
+                  <div></div>
+                  <div>
+                  {item.endDate} - {item.startDate}
+                    </div>
+                    <div>
+                  {item.endTime}
+                  </div>
+                 </div>}>
                   <div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
@@ -538,6 +551,7 @@ const Missions = ({ admin }) => {
 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
                 </svg>
                   </div>
+                 </Tooltip>
                   <div className=''>
                     {item.title}
                   </div>
@@ -547,44 +561,43 @@ const Missions = ({ admin }) => {
                     <div className='w-full h-full flex flex-row justify-end items-center'
                      style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px',  }}>
                 {(item2._id === decodedToken?.store_id )?
-                <div className='w-full flex items-center text-center justify-center h-full' style={{backgroundColor: item.status.color, color: 'white', height: '100%',borderRight: '1px solid white'}}>
+                <div className='w-full flex items-center text-center justify-center h-full' style={{backgroundColor: item2.status.color, color: 'white', height: '100%',borderRight: '1px solid white'}}>
 
                  <Select 
                   onChange={async (e)=>{
                     
                     if(e.target.value === status_u[0].text){
-                      items[index].status.text = e.target.value
-                      items[index].status.color = status_u[0].color
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[0].color
                     }else if(e.target.value === status_u[1].text){
-                      items[index].status.text = e.target.value
-                      items[index].status.color = status_u[1].color
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[1].color
                     }else if(e.target.value === status_u[2].text){
-                      items[index].status.text = e.target.value
-                      items[index].status.color = status_u[2].color
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[2].color
                     }else if(e.target.value === status_u[3].text){
-                      items[index].status.text = e.target.value
-                      items[index].status.color = status_u[3].color
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[3].color
                     }
-                  await  handleUpdatemission()
+                  await  handleUpdateStatus(items[index].participent,item._id)
+                
                   }}
-                 value={item.status.text}
+                  startContent={item2.status.text}
                  radius='none'
                  className='w-full flex items-center text-center justify-center h-full'
-                 style={{backgroundColor: item.status.color, height: '100%'}}
-                 classNames={{
-                  value: "text-blue-500"
-                }}
+                 style={{backgroundColor: item2.status.color, height: '100%'}}
+          
                >
                  {status_u.map((status) => (
                    <SelectItem  key={status.text}  className='text-center' style={{color: 'white', backgroundColor: status.color}}>
-                     {status.text}
+                    <div>{status.text}</div>
                    </SelectItem>
                  ))}
                </Select>
                 </div>:
                 <div className='w-full flex items-center text-center justify-center h-full' 
-                style={{backgroundColor: item.status?.color, color: 'white', borderRight: '1px solid white'}}>
-                  {item?.status?.text} </div>
+                style={{backgroundColor: item2.status?.color, color: 'white', borderRight: '1px solid white'}}>
+                  {item2?.status?.text} </div>
                 }
                 <div className='w-full flex items-center  text-center justify-center h-full' style={{color: 'white', borderRight: '1px solid white' }}>{item2.role}</div>
                 <div className='w-full flex items-center text-center justify-center h-full' 
