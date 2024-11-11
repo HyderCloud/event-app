@@ -28,7 +28,7 @@ const NavBar = () => {
   return (
     <div className='nav-bar flex flex-row items-center text-white ' style={{gap: '10px', paddingTop: '0.5%', width: '100%', paddingLeft: '7%'}}>
       <div style={{width: '20%'}}>
-        <div  >
+        <div>
       <svg style={{cursor: 'pointer'}} onClick={()=>{router.push('/')}} version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 935 346" width="154" height="65">
 	<title></title>
 	<defs>

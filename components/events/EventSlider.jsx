@@ -42,7 +42,7 @@ const router = useRouter()
                   />
                   </div>
                   <div className="flex flex-col w-full">
-                    <p className="text-md " style={{fontWeight:'700'}}>{item?.name}</p>
+                    <p className="text-md " style={{fontWeight:'700', color: 'white' }}>{item?.name}</p>
                     <div>
                     <Link href={`/${store?.name}`} className="text-small inline-block"  style={{color:'#006FEE'}}>@{store?.name}</Link>
                     </div>
