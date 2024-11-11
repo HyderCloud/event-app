@@ -70,6 +70,7 @@ class TeamC:
     def get_job_req(self, key):
         try:
             team = team_api.get_jobs_by_key(key)
+            print(team)
             if team:
                 return jsonify({"notify": team}), 200
             else:
@@ -90,6 +91,7 @@ class TeamC:
                 is_connected["origin"] = is_connected["_id"]
                 del is_connected["_id"]
                 is_delite = team_api.delete_request_by_id(id)
+                print(fromU)
                 is_updated2 = team_api.update_workers(workers, fromU)
                 if is_updated2 and is_delite and is_connected:
                     team_api.insert_connection(is_connected)

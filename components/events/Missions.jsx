@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 const Missions = ({ admin }) => {
+
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "מבוטל", color: '#ae4335'}]
@@ -202,6 +203,16 @@ const Missions = ({ admin }) => {
   
       return newArray;}
 
+  const handleStatusChange = ()=>{
+
+  }
+
+  const handleUpdateStatus = async (status)=>{
+    const result = await axios.patch(`http://localhost:9020/updatestatus/${getStringAfterSecondSlash(path)}`, {status: status})
+    if(result?.data?.acknowledge){
+      await gethandleMission()
+     }
+  }
 
   const handleDrag = (e, data, item) => {
     const { x, y } = data;
@@ -531,13 +542,50 @@ const Missions = ({ admin }) => {
                     {item.title}
                   </div>
                 </div>
-                {item?.participent.map((item2, index)=>{
+                {item?.participent.map((item2, index2)=>{
                   return(
-                    <div className='w-full  flex flex-row justify-end items-center'
+                    <div className='w-full h-full flex flex-row justify-end items-center'
                      style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px',  }}>
+                {(item2._id === decodedToken?.store_id )?
+                <div className='w-full flex items-center text-center justify-center h-full' style={{backgroundColor: item.status.color, color: 'white', height: '100%',borderRight: '1px solid white'}}>
+
+                 <Select 
+                  onChange={async (e)=>{
+                    
+                    if(e.target.value === status_u[0].text){
+                      items[index].status.text = e.target.value
+                      items[index].status.color = status_u[0].color
+                    }else if(e.target.value === status_u[1].text){
+                      items[index].status.text = e.target.value
+                      items[index].status.color = status_u[1].color
+                    }else if(e.target.value === status_u[2].text){
+                      items[index].status.text = e.target.value
+                      items[index].status.color = status_u[2].color
+                    }else if(e.target.value === status_u[3].text){
+                      items[index].status.text = e.target.value
+                      items[index].status.color = status_u[3].color
+                    }
+                  await  handleUpdatemission()
+                  }}
+                 value={item.status.text}
+                 radius='none'
+                 className='w-full flex items-center text-center justify-center h-full'
+                 style={{backgroundColor: item.status.color, height: '100%'}}
+                 classNames={{
+                  value: "text-blue-500"
+                }}
+               >
+                 {status_u.map((status) => (
+                   <SelectItem  key={status.text}  className='text-center' style={{color: 'white', backgroundColor: status.color}}>
+                     {status.text}
+                   </SelectItem>
+                 ))}
+               </Select>
+                </div>:
                 <div className='w-full flex items-center text-center justify-center h-full' 
                 style={{backgroundColor: item.status?.color, color: 'white', borderRight: '1px solid white'}}>
                   {item?.status?.text} </div>
+                }
                 <div className='w-full flex items-center  text-center justify-center h-full' style={{color: 'white', borderRight: '1px solid white' }}>{item2.role}</div>
                 <div className='w-full flex items-center text-center justify-center h-full' 
                      >
