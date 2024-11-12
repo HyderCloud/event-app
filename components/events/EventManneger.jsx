@@ -51,6 +51,9 @@ const EventManneger = ({}) => {
 
         }
     }, [decodedTokens])
+
+
+
     const handleAddEvent = async ()=>{
         const event = await axios.post(`http://localhost:9020/addevent/${decodedToken?.store_id}/${decodedToken?.name}`, 
             {name: name, start_date: startDate, end_date: endDate, startTime: startTime,id: decodedTokens?.user_id,

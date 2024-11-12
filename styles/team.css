@@ -78,9 +78,20 @@ gap: 10px;
 
   .team-slot-hover{
     border-radius: 10px;
-    display: inline-block;
+    display: block;          
+    white-space: nowrap;      
     cursor: default;
     padding: 2px;
+    width: 100%;
+    max-width: 300px;          
+    box-sizing: border-box; 
+  }
+
+  .scroll-wrapper {
+    width: 400px;             
+    max-width: 400px;        
+      
+    white-space: nowrap;     
   }
 
   .team-slot-hover:hover{
