@@ -30,6 +30,14 @@ export default async function RootLayout({ children }) {
   const session = await auth()
   return (
     <html lang="en">
+               <head>
+          <script
+            async
+            defer
+            crossOrigin="anonymous"
+            src="https://connect.facebook.net/en_US/sdk.js"
+          ></script>
+        </head>
       <body className={`flex justify-center  ${nunito_v.variable} ${nunito.variable}  antialiased`}>
       <NextUIProvider className='w-full'>
         <div className="flex flex-row w-full">
