@@ -99,7 +99,7 @@ const EventManneger = ({}) => {
         
     }
     return (
-        <div className='dashboard-container flex flex-col ' style={{ background: 'radial-gradient(circle, #001731, #000000);' }}>
+        <div className='dashboard-container flex flex-col ' >
             <div className='add-event-container flex flex-col '>
 
                 <div className='flex flex-row w-full h-full justify-end gap-48' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>

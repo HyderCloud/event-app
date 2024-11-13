@@ -1,5 +1,4 @@
 .dashboard-container{
-    background: radial-gradient(circle closest-corner at left top, #1d3960,#000000);
     height: 100vh;
     width: 100%;
     align-items: center;
@@ -7,7 +6,7 @@
     padding-right: 3%;
     gap: 5%;
     overflow-y: auto;
-    background: rgb(0, 0, 0)
+    background: radial-gradient(circle, #001731, #000000);
 }
 
 .main-container{

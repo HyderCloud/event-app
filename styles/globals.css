@@ -5,7 +5,7 @@
 
 
 body {
-  
+  background-color: black;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -17,4 +17,74 @@ body {
 
 ::-webkit-scrollbar{
   width: 1px;
+}
+
+.events-promo{
+  min-height: 300px;
+  height: 300px;
+  border-radius: 25px;
+}
+
+.text-search-home{
+  font-size: 34px;
+
+}
+
+.text-search-home-events{
+  color: #ffffff6b;
+  cursor: default;
+
+}
+.text-search-home-events:hover{
+  color: #fbbc05;
+
+}
+
+.text-search-home-kenes{
+  color: #ffffff6b;
+  cursor: default;
+
+}
+.text-search-home-kenes:hover{
+  color: #34a853;
+
+}
+
+.text-search-home-party{
+  color: #ffffff6b;
+  cursor: default;
+
+}
+.text-search-home-party:hover{
+  color: #4285f4;
+
+}
+
+.sr-input{
+
+}
+
+.sr-input::placeholder{
+  padding-right: 20px;
+  color: white;
+
+}
+
+.promos-text-slider{
+  font-size: 24px;
+  font-weight: bold;
+  align-items: center;
+}
+
+.promo-patches{
+  font-family: var(--italic-nunito);
+  width: 45px;
+  height: 30px;
+  border-radius: 20px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
 }

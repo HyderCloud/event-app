@@ -65,7 +65,7 @@ const NavBar = () => {
 </Link>
     <div className='w-full'></div>
     <div className='flex' style={{width: '350px', height: '30px'}}>
-    <Input label='Search ...' className='glass-background'/>
+    <Input label='Search ...' />
     </div>
       </div>
     </div>
