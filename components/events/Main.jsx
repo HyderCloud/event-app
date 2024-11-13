@@ -130,7 +130,7 @@ const Main = ({admin}) => {
     }
         return (
 
-                <div className=' flex justify-center items-center flex-col w-full h-full' style={{ gap: '10px', paddingLeft: "15%" }}>
+                <div className=' flex justify-center items-center flex-col w-full h-full ' style={{ gap: '10px', paddingLeft: "15%" }}>
                     <div className='h-4'></div>
                 <div className='flex flex-row justify-end w-full' style={{ gap: '10px' }}>
                     <div >

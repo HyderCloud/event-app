@@ -54,8 +54,8 @@ const StoreSlide = () => {
               onMouseEnter={()=>{setIsHover('settings')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleHomeClick}
               ><p className='slot-text-nav'>הגדרות</p></Link>
               <div style={{height:'90%'}}></div>
-              <Link href={'/signout'} color='danger' className={`logout-Link`} variant='bordered'>
-                  <div>התנתקות</div>
+              <Link href={'/signout'} className={`logout-Link`} variant='bordered'>
+                  <div className='w-full' style={{ paddingRight: '5px'}}>התנתקות</div>
               </Link>
               <div style={{height:'10%'}}></div>
           </div>
