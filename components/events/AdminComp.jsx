@@ -31,7 +31,7 @@ const AdminComp = ({admin2}) => {
     getEvents()
   },[])
   return (
-    <div className=' flex justify-center w-full h-full items-center flex-col' style={{ paddingLeft: '15%', gap: '20px' }}>
+    <div className=' flex justify-center w-full h-full items-center flex-col' style={{  gap: '20px' }}>
         <div className='flex flex-row w-full' style={{height: '20%'}}></div>
         <div className='glass-background text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'white' }}>
         <div className=' w-full flex flex-col justify-center items-center' style={{ padding: '2%', gap: '20px' }}>
@@ -40,8 +40,15 @@ const AdminComp = ({admin2}) => {
             <div key={index} className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
               padding: '15px', gap: '15px', height: '85px', borderRadius: '15px'}}>
                 
-              <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px',textAlign: 'right'}}  key={index}>
-
+              <div className=' w-full flex flex-row items-center ' style={{gap: '15px',textAlign: 'right'}}  key={index}>
+              <div style={{width: '270px'}}>ID</div>
+              <div className='w-full' style={{textAlign: 'right'}}>
+                פרופיל
+              </div>
+              <div className='w-full'>התמחות</div>
+              <div className='w-full'>שם</div>
+              <div className='w-full'>תפקיד</div>
+              <div className='w-full'>הרשאה</div>
               <div className='w-full'> 
                 {item.admin === "יוצר" || (admin2 === 'בעלים' && item.admin === 'בעלים') || 
                 (admin2 === 'יחצן' || admin2 === 'עובד כללי' || admin2 === 'none') || (admin2 === item.admin) ? 
@@ -95,27 +102,19 @@ const AdminComp = ({admin2}) => {
                 }           
       
            </div>
-              <div className='w-full'>הרשאה</div>
-              <div className='w-full'>תפקיד</div>
-              <div className='w-full'>התמחות</div>
-  
-              <div className='w-full'>שם</div>
-              <div className='w-full' style={{textAlign: 'right'}}>
-                פרופיל
-              </div>
-              <div style={{width: '270px'}}>ID</div>
             </div>
 
-            <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px', textAlign: 'right'}}  key={index}>
-            <div className='w-full'></div>
-            <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.admin}
+            <div className=' w-full flex flex-row items-center ' style={{gap: '15px', textAlign: 'right'}}  key={index}>
+            <div style={{width: '270px'}}>
+                {index+1}
               </div>
+              <div className='w-full flex  '>
+              <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
+                      backgroundPosition: 'center'}}></div>
               </div>
               <div className='w-full '>
               <div className='team-slot-hover'>
-              {item.role}
+              {item.name}
               </div>
               </div>
               <div className='w-full '>
@@ -125,16 +124,20 @@ const AdminComp = ({admin2}) => {
               </div>
               <div className='w-full '>
               <div className='team-slot-hover'>
-              {item.name}
+              {item.role}
               </div>
               </div>
-              <div className='w-full flex justify-end '>
-              <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
-                      backgroundPosition: 'center'}}></div>
+            <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.admin}
               </div>
-              <div style={{width: '270px'}}>
-                {index+1}
               </div>
+            <div className='w-full'></div>
+
+
+
+
+
             </div>
             </div>
           )

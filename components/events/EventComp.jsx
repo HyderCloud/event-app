@@ -11,7 +11,9 @@ import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import Adds from './Adds'
 import Missions from './Missions'
+import Budgets from './Budgets'
 const EventComp = ({}) => {
+  
   const [cookie, setCookie, removeCookie] = useCookies()
   const {decodedToken, isExpired} = useJwt(cookie.user)
   const [team2, setTeam2] = useState([])
@@ -60,48 +62,70 @@ const EventComp = ({}) => {
 
   return (
     <div className='dashboard-container  flex flex-col'>
-        <div className='w-full navbar-event flex flex-row items-center  justify-end '>
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
-        <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=scanner`)}}>
-        <div className='navbar-event-slot-1' style={{opacity: section=== 'scanner' && '100%'}}>סורק</div>
-        {section=== 'scanner' && icon}
-        </div>
-          }
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=admin`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'admin'&& '100%'}}>הרשאות</div>
-          {section=== 'admin' && icon}
-          </div>
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=add`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'add'&& '100%'}}>פרסום</div>
-          {section=== 'add' && icon}
-          </div>
-          }
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=cuppons`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'cuppons'&& '100%'}}>קופונים</div>
-          {section=== 'cuppons' && icon}
-          </div>
-          }
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=statistics`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'statistics'&& '100%'}}>סטטיסטיקה</div>
-          {section=== 'statistics' && icon}
-          </div>
-          }
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=team`)}}>            
-            <div className='navbar-event-slot-1' style={{opacity: (section === 'mission' || section=== 'team')&& '100%'}}>צוות</div>
-          {(section === 'mission' || section=== 'team') && icon}</div>
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}?section=tickets`)}}>
+        <div className='w-full navbar-event flex flex-row items-center   '>
+        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}`)}}>
+            <div className='navbar-event-slot-1' style={{opacity: !section && '100%'}}>ראשי</div>
+            {!section && icon}
+            </div>
+            {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=tickets`)}}>
           <div className='navbar-event-slot-1' style={{opacity: section=== 'tickets'&& '100%'}}>כרטיסים</div>
           {section=== 'tickets' && icon}
           </div>
           } 
-          <div className='navbar-event-slot flex flex-col items-end' onClick={()=>{router.push(`${path}`)}}>
-            <div className='navbar-event-slot-1' style={{opacity: !section && '100%'}}>ראשי</div>
-            {!section && icon}
-            </div>
+                              {(admin === 'בעלים'||admin === 'יוצר') &&
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=budget`)}}>
+          <div className='navbar-event-slot-1' style={{opacity: section=== 'budget'&& '100%'}}>תקציבים</div>
+          {section=== 'budget' && icon}
+          </div>
+          }
+                    {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=statistics`)}}>
+          <div className='navbar-event-slot-1' style={{opacity: section=== 'statistics'&& '100%'}}>סטטיסטיקה</div>
+          {section=== 'statistics' && icon}
+          </div>
+          }
+          
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=team`)}}>            
+            <div className='navbar-event-slot-1' style={{opacity: (section === 'mission' || section=== 'team')&& '100%'}}>צוות</div>
+          {(section === 'mission' || section=== 'team') && icon}</div>
+
+          {( admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
+        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=client`)}}>
+        <div className='navbar-event-slot-1' style={{opacity: section=== 'client' && '100%'}}>לקוחות</div>
+        {section=== 'client' && icon}
+        </div>
+          }
+          
+          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=add`)}}>
+          <div className='navbar-event-slot-1' style={{opacity: section=== 'add'&& '100%'}}>פרסום</div>
+          {section=== 'add' && icon}
+          </div>
+          }
+          
+          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
+          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=cuppons`)}}>
+          <div className='navbar-event-slot-1' style={{opacity: section=== 'cuppons'&& '100%'}}>קופונים</div>
+          {section=== 'cuppons' && icon}
+          </div>
+          }
+                    <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=admin`)}}>
+          <div className='navbar-event-slot-1' style={{opacity: section=== 'admin'&& '100%'}}>הרשאות</div>
+          {section=== 'admin' && icon}
+          </div>
+          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
+        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=scanner`)}}>
+        <div className='navbar-event-slot-1' style={{opacity: section=== 'scanner' && '100%'}}>סורק</div>
+        {section=== 'scanner' && icon}
+        </div>
+          }
+  
+
+
+
+
+
         </div> 
         <div className='w-full h-full'>
         {!section && <Main data={events} admin={admin}/>}
@@ -111,6 +135,7 @@ const EventComp = ({}) => {
         {section === "admin"&& <AdminComp admin2={admin}/>}
         {section === "add"&& <Adds admin2={admin}/>}
         {section === "mission" && <Missions admin={admin}/>}
+        {section === "budget" && <Budgets admin={admin}/>}
         </div>
     </div>
   )

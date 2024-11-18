@@ -124,8 +124,12 @@ export const Team = ({admin}) => {
 
   return (
     
-    <div className=' flex justify-center w-full h-full items-center flex-col' style={{ paddingLeft: '15%', gap: '20px' }}>
+    <div className=' flex justify-center w-full h-full items-center flex-col' style={{  gap: '20px' }}>
       <div className='flex flex-row justify-between w-full'style={{gap: '20px', paddingRight: '5%', paddingLeft: '5%'}}>
+      <div className='flex flex-row  w-full'style={{gap: '20px'}}>
+        <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen() }}>הוספת חברי צוות</Button>
+        <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen2() }}>הוספת תפקיד </Button>
+        </div>
         <Button isIconOnly variant='kff'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M9.49994 2.22024C10.1802 2.07399 10.8741 2.00025 11.5699 2.00024C14.3518 1.98663 17.0031 3.1792 18.8385 5.26971C20.6739 7.36021 21.5134 10.1435 21.1399 12.9002C20.5399 17.5002 15.9999 21.2202 11.3599 21.2202H4.69994C4.13381 21.2205 3.60916 20.9233 3.31819 20.4377C3.02722 19.9521 3.0127 19.3493 3.27994 18.8502L3.54994 18.3302C3.81866 17.8294 3.79959 17.2232 3.49994 16.7402C1.82164 14.1018 1.53349 10.8114 2.72768 7.92145C3.92187 5.03152 6.44873 2.90429 9.49994 2.22024ZM11.2799 19.7102C15.3566 19.6459 18.8235 16.7185 19.5699 12.7102C19.909 10.3873 19.2106 8.03269 17.6599 6.27024C16.1239 4.51251 13.9042 3.50291 11.5699 3.50024C10.9787 3.50137 10.3891 3.56167 9.80993 3.68024C7.23508 4.25314 5.09972 6.04251 4.08517 8.47742C3.07063 10.9123 3.30366 13.6885 4.70993 15.9202C5.30823 16.8601 5.35032 18.0504 4.81993 19.0302L4.54993 19.5402C4.52795 19.5736 4.52795 19.6169 4.54993 19.6502C4.58993 19.7102 4.64993 19.7102 4.64993 19.7102H11.2799Z" fill="white"/>
 </svg></Button>
@@ -146,10 +150,7 @@ export const Team = ({admin}) => {
 <path d="M1.62012 5.5C1.62012 4.39543 2.51555 3.5 3.62012 3.5H19.6201C20.7247 3.5 21.6201 4.39543 21.6201 5.5V8.5C21.6201 9.60457 20.7247 10.5 19.6201 10.5H3.62012C2.51555 10.5 1.62012 9.60457 1.62012 8.5V5.5Z" fill="white"/>
 </svg></Button>
     </Tooltip>
-        <div className='flex flex-row justify-end w-full'style={{gap: '20px'}}>
-        <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen() }}>הוספת חברי צוות</Button>
-        <Button color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onClick={() => { onOpen2() }}>הוספת תפקיד </Button>
-        </div>
+
       </div>
       <div className='glass-background text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'white' }}>
         <div className=' w-full flex flex-col' style={{ padding: '2%', gap: '20px' }}>
@@ -157,7 +158,18 @@ export const Team = ({admin}) => {
           return(
             <div className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
               padding: '15px', gap: '15px', height: '85px', borderRadius: '15px'}}>
-              <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px',textAlign: 'right'}}  key={index}>
+              <div className=' w-full flex flex-row items-center ' style={{gap: '15px',textAlign: 'right'}}  key={index}>
+       
+              <div style={{width: '270px'}}>ID</div>
+              <div className='w-full' style={{textAlign: 'right'}}>
+                פרופיל
+              </div>
+              <div className='w-full'>שם</div>
+              <div className='w-full'>התמחות</div>
+              <div className='w-full'>תפקיד</div>
+              <div className='w-full'>הרשאה</div>
+              <div className='w-full'></div>
+  
               <div className='w-full h-full items-start flex justify-center'> 
                 {(admin === 'יחצן'||admin ==='עובד כללי'||admin === "none")|| (admin === item.admin)|| (item.admin === 'יוצר') ||
                 (admin === 'בעלים' && item.admin === 'בעלים')             
@@ -168,33 +180,19 @@ export const Team = ({admin}) => {
                 </svg>
                 }
               </div>
-              <div className='w-full'></div>
-              <div className='w-full'>הרשאה</div>
-              <div className='w-full'>תפקיד</div>
-              <div className='w-full'>התמחות</div>
-  
-              <div className='w-full'>שם</div>
-              <div className='w-full' style={{textAlign: 'right'}}>
-                פרופיל
-              </div>
-              <div style={{width: '270px'}}>ID</div>
             </div>
 
-            <div className=' w-full flex flex-row items-center justify-end' style={{gap: '15px', textAlign: 'right'}}  key={index}>
-            <div className='w-full h-full items-start flex justify-center'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
-<path d="M11.79 10.92C11.5903 10.9173 11.3979 10.9954 11.2567 11.1367C11.1154 11.2779 11.0373 11.4703 11.04 11.67V14.79C11.04 15.2042 11.3758 15.54 11.79 15.54C12.2042 15.54 12.54 15.2042 12.54 14.79V11.69C12.5454 11.4876 12.4688 11.2917 12.3275 11.1467C12.1863 11.0017 11.9924 10.9199 11.79 10.92Z" fill="white"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
-</svg></div>
-            <div className='w-full'></div>
-            <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.admin}
+            <div className=' w-full flex flex-row items-center ' style={{gap: '15px', textAlign: 'right'}}  key={index}>
+            <div style={{width: '270px'}}>
+                {index+1}
               </div>
+              <div className='w-full flex  '>
+              <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
+                      backgroundPosition: 'center'}}></div>
               </div>
               <div className='w-full '>
               <div className='team-slot-hover'>
-              {item.role}
+              {item.name}
               </div>
               </div>
               <div className='w-full '>
@@ -204,16 +202,27 @@ export const Team = ({admin}) => {
               </div>
               <div className='w-full '>
               <div className='team-slot-hover'>
-              {item.name}
+              {item.role}
               </div>
               </div>
-              <div className='w-full flex justify-end '>
-              <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
-                      backgroundPosition: 'center'}}></div>
+              <div className='w-full '>
+              <div className='team-slot-hover'>
+              {item.admin}
               </div>
-              <div style={{width: '270px'}}>
-                {index+1}
               </div>
+              <div className='w-full'></div>
+            <div className='w-full h-full items-start flex justify-center'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
+<path d="M11.79 10.92C11.5903 10.9173 11.3979 10.9954 11.2567 11.1367C11.1154 11.2779 11.0373 11.4703 11.04 11.67V14.79C11.04 15.2042 11.3758 15.54 11.79 15.54C12.2042 15.54 12.54 15.2042 12.54 14.79V11.69C12.5454 11.4876 12.4688 11.2917 12.3275 11.1467C12.1863 11.0017 11.9924 10.9199 11.79 10.92Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
+</svg></div>
+
+
+
+
+
+
+
             </div>
             </div>
           )
@@ -228,7 +237,99 @@ export const Team = ({admin}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">הוסף חבר צוות</ModalHeader>
               <div className='flex flex-row' style={{ paddingLeft: '20px' }}>
+              <ModalBody style={{ gap: '10px' }}>
+                  <div className='flex flex-col w-full h-full add-partner-cont'>
+                    <div className='style-displaying-role flex w-full  flex-row'>
+                      {professionList.map((item, index) => {
+                        return (
+                          <Tooltip showArrow className=' text-white' color='primary' content="סנן לפי">
+                            <div onClick={() => {
+                              setFilterBy(item)
+                            }} className='role-style glass-background cursor-pointer' style={{ background: filterBy === item && '#006FEE' }}>
+                              {item}
+                            </div>
+                          </Tooltip>
+                        )
+                      })}
+                    </div>
+                    <div className='class-result-output flex flex-row  overflow-x-auto'>
 
+                      {waitWorkers.map((item, index) => {
+                        return (
+                          <div className='flex items-center justify-center flex-col' style={{ width: '70px' }}>
+                            <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
+                              const removedArr = removeElementAtIndex(waitWorkers, index)
+                              const removeWait = removeElementAtIndex(waiting, index)
+                              setWaiting(removeWait)
+                              setWaitWorkers(removedArr)
+                            }} content="מחק">
+                              <div className='img-user-added'>
+                                <Image className='cursor-pointer' onClick={() => {
+                                  onOpen3()
+                                }} style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} isBlurred radius='full'
+                                  borderRadius="full" width={40} height={40}
+                                  alt="NextUI hero Image"
+                                  src={item.profile_img?.length === 0 ? `https://app.requestly.io/delay/5000/https` : `${item.profile_img}`} />
+                              </div>
+                            </Tooltip>
+                            <div>
+                              {item.name}
+                            </div>
+
+                            <div className='w-full justify-center flex glass-background2'>
+                              {waiting[index]?.role}
+                            </div>
+                            <div className='w-full'>
+                              <Modal size='md' style={{ background: '#27272A' }} isOpen={isOpen3} onOpenChange={onOpenChange3}>
+                                <ModalContent>
+                                  {(onClose) => (
+                                    <>
+                                      <ModalHeader className="flex flex-col gap-1 text-white">{item.name} - הוספת תפקיד ל</ModalHeader>
+                                      <ModalBody >
+                                        <div className='flex flex-col justify-center items-center' style={{ height: '170px', gap: '20px' }}>
+                                          <Select className='w-full' style={{ color: 'black' }} label='תפקיד'
+                                            onChange={(e) => {
+                                              updateRoleById(item._id, role[e.target.value], index, item.name, item.email, item.key)
+
+                                            }}
+
+                                          >
+                                            {role?.map((item, index) => (
+                                              <SelectItem key={index}>
+                                                {item}
+                                              </SelectItem>
+                                            ))}
+                                          </Select>
+                                          <div style={{height: '30px', width: '50px'}}>
+                                          <Button onPress={onOpen2} color='primary'>הוסף תפקיד</Button>
+                                          </div>
+                                        </div>
+                                      </ModalBody>
+                                      <ModalFooter>
+                                        <Button color="danger" variant="light" onPress={onClose}>
+                                          סגור
+                                        </Button>
+                                        <Button color="primary" onPress={onClose}>
+                                          שמור
+                                        </Button>
+                                      </ModalFooter>
+                                    </>
+                                  )}
+                                </ModalContent>
+                              </Modal>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <div style={{ paddingLeft: '20%' }}>
+                      <Input label='Search for' onChange={handleSearch} placeholder='חפש חבר צוות' />
+
+                    </div>
+
+                  </div>
+
+                </ModalBody>
                 <div className='searchResult flex flex-col'>
 
                   {match.length > 0 ? match.map((item, index) => {
@@ -335,99 +436,7 @@ export const Team = ({admin}) => {
                     )
                   })}
                 </div>
-                <ModalBody style={{ gap: '10px' }}>
-                  <div className='flex flex-col w-full h-full add-partner-cont'>
-                    <div className='style-displaying-role flex w-full justify-end flex-row'>
-                      {professionList.map((item, index) => {
-                        return (
-                          <Tooltip showArrow className=' text-white' color='primary' content="סנן לפי">
-                            <div onClick={() => {
-                              setFilterBy(item)
-                            }} className='role-style glass-background cursor-pointer' style={{ background: filterBy === item && '#006FEE' }}>
-                              {item}
-                            </div>
-                          </Tooltip>
-                        )
-                      })}
-                    </div>
-                    <div className='class-result-output flex flex-row justify-end overflow-x-auto'>
 
-                      {waitWorkers.map((item, index) => {
-                        return (
-                          <div className='flex items-center justify-center flex-col' style={{ width: '70px' }}>
-                            <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
-                              const removedArr = removeElementAtIndex(waitWorkers, index)
-                              const removeWait = removeElementAtIndex(waiting, index)
-                              setWaiting(removeWait)
-                              setWaitWorkers(removedArr)
-                            }} content="מחק">
-                              <div className='img-user-added'>
-                                <Image className='cursor-pointer' onClick={() => {
-                                  onOpen3()
-                                }} style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} isBlurred radius='full'
-                                  borderRadius="full" width={40} height={40}
-                                  alt="NextUI hero Image"
-                                  src={item.profile_img?.length === 0 ? `https://app.requestly.io/delay/5000/https` : `${item.profile_img}`} />
-                              </div>
-                            </Tooltip>
-                            <div>
-                              {item.name}
-                            </div>
-
-                            <div className='w-full justify-center flex glass-background2'>
-                              {waiting[index]?.role}
-                            </div>
-                            <div className='w-full'>
-                              <Modal size='md' style={{ background: '#27272A' }} isOpen={isOpen3} onOpenChange={onOpenChange3}>
-                                <ModalContent>
-                                  {(onClose) => (
-                                    <>
-                                      <ModalHeader className="flex flex-col gap-1 text-white">{item.name} - הוספת תפקיד ל</ModalHeader>
-                                      <ModalBody >
-                                        <div className='flex flex-col justify-center items-center' style={{ height: '170px', gap: '20px' }}>
-                                          <Select className='w-full' style={{ color: 'black' }} label='תפקיד'
-                                            onChange={(e) => {
-                                              updateRoleById(item._id, role[e.target.value], index, item.name, item.email, item.key)
-
-                                            }}
-
-                                          >
-                                            {role?.map((item, index) => (
-                                              <SelectItem key={index}>
-                                                {item}
-                                              </SelectItem>
-                                            ))}
-                                          </Select>
-                                          <div style={{height: '30px', width: '50px'}}>
-                                          <Button onPress={onOpen2} color='primary'>הוסף תפקיד</Button>
-                                          </div>
-                                        </div>
-                                      </ModalBody>
-                                      <ModalFooter>
-                                        <Button color="danger" variant="light" onPress={onClose}>
-                                          סגור
-                                        </Button>
-                                        <Button color="primary" onPress={onClose}>
-                                          שמור
-                                        </Button>
-                                      </ModalFooter>
-                                    </>
-                                  )}
-                                </ModalContent>
-                              </Modal>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                    <div style={{ paddingLeft: '20%' }}>
-                      <Input label='Search for' onChange={handleSearch} placeholder='חפש חבר צוות' />
-
-                    </div>
-
-                  </div>
-
-                </ModalBody>
               </div>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={() => {
@@ -459,7 +468,7 @@ export const Team = ({admin}) => {
               <ModalHeader className="flex  flex-col gap-1">הוסף תפקיד בצוות</ModalHeader>
               <ModalBody style={{ gap: '10px' }} >
                 <div className='flex flex-col w-full h-full add-role-cont'>
-                  <div className='style-displaying-role flex w-full cursor-default justify-end flex-row'>
+                  <div className='style-displaying-role flex w-full cursor-default  flex-row'>
                     {role?.map((item, index) => {
                       return (
                         <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
@@ -479,7 +488,7 @@ export const Team = ({admin}) => {
                       setRoleChange(e.target.value)
                     }} placeholder='הוסף תפקיד' />
                   </div>
-                  <div className='w-full flex flex-row justify-end'>
+                  <div className='w-full flex flex-row '>
 
                     <Button color='primary' onPress={() => {
                       if (roleChnage.length > 0) {
@@ -508,6 +517,7 @@ export const Team = ({admin}) => {
           )}
         </ModalContent>
       </Modal>
+      
     </div>
 
   )

@@ -7,6 +7,7 @@
 body {
   background-color: black;
   font-family: Arial, Helvetica, sans-serif;
+  direction: rtl;
 }
 
 @layer utilities {
@@ -15,9 +16,18 @@ body {
   }
 }
 
-::-webkit-scrollbar{
-  width: 1px;
+::-webkit-scrollbar-thumb {
+  background-color: #007bff; /* Blue color */
+  border-radius: 20px; /* Rounded corners */
+  border: 3px solid #f0f0f0; /* Space between the thumb and the track */
 }
+
+/* Style for the scrollbar corner */
+::-webkit-scrollbar-corner {
+  background-color: transparent; /* Optional if you want to hide the corner */
+  
+}
+
 
 .events-promo{
   min-height: 300px;

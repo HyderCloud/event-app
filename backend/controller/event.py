@@ -38,7 +38,8 @@ class Events:
         "price": '',
         "amount": ''
     }],
-            "workers": [{"key": user_id, "role": 'בעלים', "admin": 'בעלים'}],
+            "budget": [{ "name": 'תקציב', "y": 0, "dataLabels": { "style": { "color": '#ffff', "fontSize": '16px' } } }],
+            "workers": [{"key": user_id, "role": 'בעלים', "admin": 'יוצר'}],
             "status": 'in progress',
             "age": '',
             "type": '',
@@ -124,6 +125,15 @@ class Events:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
         
+    def update_budget_by_id(self,id,budget):
+        try:
+            is_updated = api_events.update_budget_by_id(budget, id)
+            if is_updated:
+                return jsonify({"acknowledge": True}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+
     def update_age_by_id(self,id,age):
         try:
             is_updated = api_events.update_age_by_id(age, id)
@@ -145,7 +155,7 @@ class Events:
         try:
             is_updated = api_events.update_rounds_by_id(doccument, id)
             if is_updated:
-                return jsonify({"cuppons": doccument}), 200
+                return jsonify({"rounds": doccument}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
     

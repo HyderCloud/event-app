@@ -21,7 +21,7 @@ const Tickets = ({admin}) => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
 
-    const [index, setIndex] = useState(null)
+    const [index1, setIndex1] = useState(null)
     const [index2, setIndex2] = useState(null)
     const [name, setName] = useState('')
     const path = usePathname()
@@ -116,10 +116,7 @@ const handleDate = (newRange)=>{
           setStartDate(formattedDateStart)
         
     }
-    function parseDateString(dateString) {
-        console.log(dateString.split("/").map(part => parseInt(part, 10)))
-        return dateString.split("/").map(part => parseInt(part, 10));
-      }
+
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
         return parts[2] || null; // Returns the third part, or null if it doesn't exist
@@ -181,18 +178,75 @@ const handleDate = (newRange)=>{
        
     <div className=' flex justify-center items-center flex-col'>
         <div className='w-full flex flex-row justify-between'style={{paddingLeft: '50%'}}>
-        <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
-         className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
         <Tooltip  className='glass-background text-white'  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
         <div><Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button></div>
         </Tooltip>
+        <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
+         className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
+   
         </div>
         <div className='h-10'></div>
         <Divider className='bg-white' />
         <div className='flex flex-col items-center justify-center w-full' style={{gap: '20px'}}>
         <div className='h-10 '></div>
         <div className='flex flex-row w-full h-full justify-center' style={{gap: '20px'}}>
+        <div className='flex flex-col items-center glass-background' style={{width: '20%', height: '100%', borderRadius: '10px', paddingTop: '1%',paddingRight: '1%', paddingLeft: '1%'}}>
+            <div className='text-white flex flex-col ' style={{width: '100%', height: '450px', fontSize: '20px', gap: '10px'}}>
+            <div className='flex flex-col '>
+            <div> הגדרות כרטיסים</div>
+            {icon}
+            </div>
+            <div className='flex flex-row w-full justify-between setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+         
+           <div>מזומן:</div>
+            <Switch isSelected={cash} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
+     
         
+                </div>
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+            <div>
+           <div>הגבלת רכישה:</div></div>
+            <Switch isSelected={payment} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
+            
+           </div>
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+            <div>
+           <div>מילוי ת"ז:</div></div>
+            <Switch isSelected={ID} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
+           </div>
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                            <div>
+           <div>תאריך לידה:</div></div>  
+            <Switch isSelected={isdate} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
+           </div>
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+            <div>
+           <div>מגדר:</div></div>
+            <Switch isSelected={gender} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
+           </div>
+           <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+                <div>
+               <div>אינסטגרם או פייסבוק:</div></div>  
+                <Switch isSelected={isInstegram} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
+               </div>
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+                      
+            <div>
+            <div>קישור לפייסבוק:</div></div>
+            <Switch isSelected={facebookLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
+           </div>
+         
+            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
+                
+            <div>
+           <div>משתמש לאינסטגרם:</div></div>  
+            <Switch isSelected={instegramLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
+           </div>
+            </div>
+        </div>
         <div className='flex flex-col items-center' style={{width: '50%', height: '100%', gap: '20px'}}>
         {rounds?.map((item,index)=>{
 
@@ -206,27 +260,27 @@ const handleDate = (newRange)=>{
                                         <ModalBody>
                                             <div className='flex flex-col w-full items-center gap-6'>
 
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שם הסבב</div>
                                                     <Input placeholder={item.name} label='Event name' onChange={handleName} />
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr'  }}>
                                                     <div className='opacity-70'>תאריך התחלה וסיום</div>
                                                     <DateRangePicker   label='Event date' onChange={handleDate}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr' }}>
                                                     <div className='opacity-70'>שעת התחלה</div>
                                                     <TimeInput placeholder={item.startTime} hourCycle={24} label='Start time' onChange={handleStartTime}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr'  }}>
                                                     <div className='opacity-70'>שעת סיום</div>
                                                     <TimeInput placeholder={item.endTime} hourCycle={24} label='End time' onChange={handleEndTime}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>כמות כרטיסים</div>
                                                     <Input type='number' placeholder={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'> מחיר עבור כרטיס</div>
                                                     <Input type='number' placeholder={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
                                                 </div>
@@ -238,7 +292,8 @@ const handleDate = (newRange)=>{
                                             </Button>
                                             <Button color="primary" onPress={()=>{
                                                 const newArr = [...rounds]
-                                                newArr[index] = newRound
+                                                newArr[index1] = newRound
+                                                console.log(index1)
                                                 setRounds(newArr)
                                                 handleroundUpdate(newArr)
                                                 onClose()
@@ -252,14 +307,7 @@ const handleDate = (newRange)=>{
                         </Modal>
         {index === index2 && (admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר") &&
         <div className='flex flex-row absolute ' style={{gap: '5px', left: '10px'}}>
-            <Button  color='danger' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר" &&rounds.length) > 1 ? false : true}  
-             className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onPress={()=>{
-            const removedArr = removeElementAtIndex(rounds,index)
-            setRounds(removedArr)
-            handleroundUpdate(removedArr)
-            }}>מחק</Button>
-
-            <Button className='buttonfade'
+                     <Button className='buttonfade'
             onPress={()=>{
                 setStartDate(item.startDate)
                 setEndDate(item.endDate)
@@ -269,16 +317,32 @@ const handleDate = (newRange)=>{
                 setEndTime(item.endTime)
                 setStartTime(item.startTime)
                 onOpen()
-                setIndex(index)
+                setIndex1(index)
             }} color='primary'>ערוך סיבוב</Button>
+            <Button  color='danger' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר" ) &&rounds.length > 1 ? false : true}  
+             className={`${rounds.length > 1 ?"buttonfade":"buttonfade2"}`} onPress={()=>{
+            const removedArr = removeElementAtIndex(rounds,index)
+            setRounds(removedArr)
+            handleroundUpdate(removedArr)
+            }}>מחק</Button>
+
+   
 
         </div>
         }
-        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row justify-end'>
-            <div className='flex flex-col items-end w-full'>
+        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row '>
+            <div className='flex flex-col  w-full'>
+                
             <div className='flex flex-row' style={{ gap: '10px'}}>
-            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
-
+            <div>
+               סבב {index+1} -
+                </div>
+            <div>
+                {item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>
+                :<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
+                <div className='element-ticket'>
+                {item.name} 
+                </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
                 {item.startDate}  
@@ -288,40 +352,41 @@ const handleDate = (newRange)=>{
                     {item.endDate} 
                     </div>
                 </div>
-                <div className='element-ticket'>
-                {item.name} 
+                
+                </div>}
                 </div>
-                </div>}</div>
-                <div>
-                - {index + 1} סבב
-                </div>
+
                 </div>
             {icon}
 
-            <div className='flex   justify-end flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
+            <div className='flex    flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
             <div className='flex  flex-row ' style={{gap: '10px'}}>
-                    <div className='element-ticket'>
-                    {item.endTime} 
+      
+                    <div>
+                מחיר: 
                     </div>
-                    <div> -</div>
-                    <div className='element-ticket'> 
-                {item.startTime}  
+                    <div className='element-ticket'>
+                {item.price}
                     </div>
                 </div>
-            <div className='flex flex-row justify-end' style={{gap: '10px'}}>
+
+            <div className='flex flex-row ' style={{gap: '10px'}}>
+  
+                    <div>
+              כמות כרטיסים
+                    </div>
                     <div className='element-ticket'>
                 {item.amount}
-                    </div>
-                    <div>
-                :כמות כרטיסים  
                     </div>
                 </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
-                {item.price}
+                    {item.startTime} 
+          
                     </div>
-                    <div>
-                :מחיר  
+                    <div> -</div>
+                    <div className='element-ticket'> 
+                    {item.endTime} 
                     </div>
                 </div>
 
@@ -333,62 +398,7 @@ const handleDate = (newRange)=>{
 )
 })}
         </div>
-        <div className='flex flex-col items-center glass-background' style={{width: '20%', height: '100%', borderRadius: '10px', paddingTop: '1%',paddingRight: '1%', paddingLeft: '1%'}}>
-            <div className='text-white flex flex-col items-end' style={{width: '100%', height: '450px', fontSize: '20px', gap: '10px'}}>
-            <div className='flex flex-col items-end'>
-            <div> הגדרות כרטיסים</div>
-            {icon}
-            </div>
-            <div className='flex flex-row w-full justify-between setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-            <div className=''>
-            <Switch isSelected={cash} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
-           </div>
-           <div>:מזומן</div>
-        
-                </div>
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-            <div>
-            <Switch isSelected={payment} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
-            
-           </div>
-           <div>:הגבלת רכישה</div></div>
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-            <div>
-            <Switch isSelected={ID} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
-           </div>
-           <div>: מילוי תז</div></div>
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-                            <div>
-            <Switch isSelected={isdate} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
-           </div>
-           <div>:תאריך לידה</div></div>  
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-                
-            <div>
-            <Switch isSelected={gender} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
-           </div>
-           <div>: מגדר</div></div>
-           <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-                
-                <div>
-                <Switch isSelected={isInstegram} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
-               </div>
-               <div>: אינסטגרם או פייסבוק</div></div>  
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-                
-            <div>
-            <Switch isSelected={facebookLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
-           </div>
-                      
-           <div>:קישור לפייסבוק</div></div>
-            <div className='flex flex-row w-full justify-between items-end setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
-                
-            <div>
-            <Switch isSelected={instegramLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
-           </div>
-           <div>:  משתמש לאינסטגרם</div></div>  
-            </div>
-        </div>
+
         </div>
 
 
@@ -402,14 +412,14 @@ const handleDate = (newRange)=>{
                                         <ModalBody  style={{gap: '10px'}} >
                                             {section1 &&
                                             <div className='flex flex-col w-full items-center' style={{gap: '10px'}}>
-                                            {rounds.map((item)=>{
+                                            {rounds.map((item, index4)=>{
                                                 return(
                                             <div style={{gap: '10px'}} className='glass-background tickets-container w-full flex flex-row' onClick={()=>{
                                                 setSection1(false)
                                                 setSection2(true)
-                                            }}  onMouseEnter={()=>{setIndex2(index)}} onMouseLeave={()=>{setIndex2(null)}}>
-                                                        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row justify-end'>
-            <div className='flex flex-col items-end w-full'>
+                                            }}  onMouseEnter={()=>{setIndex2(index4)}} onMouseLeave={()=>{setIndex2(null)}}>
+                                                        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row '>
+            <div className='flex flex-col  w-full'>
             <div className='flex flex-row' style={{ gap: '10px'}}>
             <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
 
@@ -427,12 +437,12 @@ const handleDate = (newRange)=>{
                 </div>
                 </div>}</div>
                 <div>
-                - {index + 1} סבב
+                - {index2 + 1} סבב
                 </div>
                 </div>
             {icon}
 
-            <div className='flex   justify-end flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
+            <div className='flex    flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
             <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
                     {item.endTime} 
@@ -442,7 +452,7 @@ const handleDate = (newRange)=>{
                 {item.startTime}  
                     </div>
                 </div>
-            <div className='flex flex-row justify-end' style={{gap: '10px'}}>
+            <div className='flex flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
                 {item.amount}
                     </div>
@@ -512,6 +522,7 @@ const handleDate = (newRange)=>{
                         </Modal>
         </div>
     </div>
+    <div style={{height: '200px'}}></div>
     </div>
   )
 }

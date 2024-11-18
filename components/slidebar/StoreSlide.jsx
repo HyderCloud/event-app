@@ -36,12 +36,12 @@ const StoreSlide = () => {
 
         return (
             
-          <div className='nav-slide-bar flex flex-col'>
+          <div className='nav-slide-bar flex flex-col' style={{gap: '10px'}}>
               <div className='nav-header'><p></p></div>
               <Tooltip  style={{background: '#3E3E61', borderRadius: '20px'}}   content='בית' placement='left' classNames={{
   content: "bg-blue-500 text-white",
 }}>
-              <div>
+              <div className='w-full flex justify-center items-center' style={{borderRight:( isHover === 'home'|| pathName === '/') ? '5px solid #2E2E48': '5px solid #000', borderRadius: '8px' }}>
               <Link  href={`/`}  className={` ${ 'nav-slot-bar'}`}  style={{background: 'linear-gradient(to right, #3E3E61, #2E2E48)'}} 
               onMouseEnter={()=>{setIsHover('home')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleHomeClick}
               ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,19 +52,19 @@ const StoreSlide = () => {
               <Tooltip  style={{background: '#4285F4', borderRadius: '20px'}}  placement='left' content='פרופיל' classNames={{
   content: "bg-blue-500 text-white",
 }}>
-              <div>
+              <div className='w-full flex justify-center items-center' style={{borderRight:( isHover === 'profile'|| pathName === `/${decodedToken?.name}`) ? '5px solid #1457C6': '5px solid #000', borderRadius: '8px' }}>
               <Link href={`/${decodedToken?.name}`}  className={` ${ "nav-slot-bar"}` } style={{background: 'linear-gradient(to right, #4285F4, #1457C6)'}}
               onMouseEnter={()=>{setIsHover('profile')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleProfileClick}
               ><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z" fill="white"/>
               <path d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z" fill="white"/>
               </svg></Link>
-              </div>
+              </div >
               </Tooltip>
                <Tooltip   placement='left' content='אירועים'  style={{background: '#34A853', borderRadius: '20px'}}  classNames={{
   content: "bg-blue-500 text-white",
 }}>
-              <div>
+              <div className='w-full flex justify-center items-center' style={{borderRight:( isHover === 'events'|| pathName === `/events/${decodedToken?.name}`) ? '5px solid #3A9753': '5px solid #000', borderRadius: '8px' }}>
               <Link  href={`/events/${decodedToken?.name}`} className={` ${"nav-slot-bar"}`} style={{background: 'linear-gradient(to right, #34A853, #3A9753)'}}
               onMouseEnter={()=>{setIsHover('events')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleEventsClick}
               ><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,7 +77,7 @@ const StoreSlide = () => {
                <Tooltip   content='ארנק' placement='left' style={{background: '#FBBC05', borderRadius: '20px'}}  classNames={{
   content: "bg-blue-500 text-white",
 }}>
-              <div>
+              <div className='w-full flex justify-center items-center' style={{borderRight:( isHover === 'wallet'|| pathName === `/wallet`) ? '5px solid #CE9A01': '5px solid #000', borderRadius: '8px' }}>
               <Link  href={`/`} className={` ${"nav-slot-bar"}`} style={{background: 'linear-gradient(to right, #FBBC05, #CE9A01)'}}
               onMouseEnter={()=>{setIsHover("wallet")}} onMouseLeave={()=>{setIsHover('')}} onClick={handleHomeClick}
               ><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +89,7 @@ const StoreSlide = () => {
                <Tooltip   content='הגדרות' placement='left' style={{background: '#3F3F46', borderRadius: '20px'}}  classNames={{
   content: "bg-blue-500 text-white",
 }}>
-              <div>
+              <div className='w-full flex justify-center items-center' style={{borderRight:( isHover === 'settings'|| pathName === `/settings`) ? '5px solid #6D6D7D': '5px solid #000', borderRadius: '8px' }}>
               <Link  href={`/`} className={` ${"nav-slot-bar"}`} style={{background: 'linear-gradient(to right, #3F3F46, #6D6D7D)'}}
               onMouseEnter={()=>{setIsHover('settings')}} onMouseLeave={()=>{setIsHover('')}} onClick={handleHomeClick}
               ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,6 +5,7 @@ import '../../styles/navigation.css'
 import '../../styles/dashboard.css'
 import '../../styles/events.css'
 import '../../styles/team.css'
+import '../../styles/finance.css'
 import {NextUIProvider} from "@nextui-org/react";
 import StoreSlide from "@/components/slidebar/StoreSlide";
 import { auth } from "./auth";
@@ -41,19 +42,19 @@ export default async function RootLayout({ children }) {
       <body className={`flex justify-center  ${nunito_v.variable} ${nunito.variable}  antialiased`}>
       <NextUIProvider className='w-full'>
         <div className="flex flex-row w-full">
-         
-         <div className="flex flex-col w-full items-center">
-         {!session ?
-        <div></div>:
-        <NavBar/>}
-        {children}
-         </div>
         {!session ?
         <div></div>:
 
         <StoreSlide>
         </StoreSlide>
         }
+         <div className="flex flex-col w-full items-center">
+         {!session ?
+        <div></div>:
+        <NavBar/>}
+        {children}
+         </div>
+    
           
 
         </div>

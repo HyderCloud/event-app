@@ -4,6 +4,9 @@ mongodb_url = "mongodb://localhost:27017/eventride"
 client = pymongo.MongoClient(mongodb_url)
 db = client.get_database()
 
+def reverse_array(arr):
+    return arr[::-1]
+
 # Select a collection
 missionCollection = db.missions
 storeCollection = db.stores
@@ -32,6 +35,18 @@ class EventsDB:
         new_data = {
         "$set": {
             "ticket_settings": ticket_settings,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+    
+    def update_budget_by_id(self,budget, _id):
+        new_data = {
+        "$set": {
+            "budget": budget,  
         }
         }
         result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)

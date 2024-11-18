@@ -102,10 +102,10 @@ const EventManneger = ({}) => {
         <div className='dashboard-container flex flex-col ' >
             <div className='add-event-container flex flex-col '>
 
-                <div className='flex flex-row w-full h-full justify-end gap-48' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>
+                <div className='flex flex-row w-full h-full  gap-48' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>
 
-                    <div style={{ width: '30%' }}></div>
-                    <div className='flex flex-col items-end 'style={{height: '170px'}}>
+                    
+                    <div className='flex flex-col  'style={{height: '170px'}}>
                         <div></div>
                         <div className='text-right header-events-maneger' >
 
@@ -127,23 +127,23 @@ const EventManneger = ({}) => {
                                         <ModalBody>
                                             <div className='flex flex-col w-full items-center gap-6'>
 
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שם האירוע</div>
                                                     <Input label='Event name' onChange={handleName} />
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%', direction: 'ltr' }}>
                                                     <div className='opacity-70'>תאריך התחלה וסיום</div>
                                                     <DateRangePicker label='Event date' onChange={handleDate}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%', direction: 'ltr' }}>
                                                     <div className='opacity-70'>שעת התחלה</div>
                                                     <TimeInput hourCycle={24} label='Start time' onChange={handleStartTime}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%', direction: 'ltr' }}>
                                                     <div className='opacity-70'>שעת סיום</div>
                                                     <TimeInput hourCycle={24} label='End time' onChange={handleEndTime}/>
                                                 </div>
-                                                <div className='flex flex-col items-end text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>מיקום האירוע</div>
                                                     <Input label='Event place' onChange={handlePlace}/>
                                                 </div>
@@ -170,7 +170,7 @@ const EventManneger = ({}) => {
             </div>
             <div className='flex flex-col w-full h-full0' style={{color: 'white'}}>
             <div className='flex flex-col'>
-            <div className='w-full flex justify-end' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
+            <div className='w-full flex ' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
                 <div>
                     האירועים שלך
                 </div>
@@ -178,7 +178,7 @@ const EventManneger = ({}) => {
             <div className='main-container-event flex flex-row w-full h-full justify-center' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px' }}>
                 <EventSlider data={events} store={data}/>
             </div>
-            <div className='w-full flex justify-end' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
+            <div className='w-full flex ' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
                 <div>
                     אירועים קשורים
                 </div>

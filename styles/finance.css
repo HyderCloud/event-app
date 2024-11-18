@@ -1,0 +1,29 @@
+.eventrise-finance-promo{
+    width: 70%;
+    height: 250px;
+    border-radius: 5px;
+}
+
+.budget-text-promo{
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+    align-items: start;
+    width: 25%;
+    height: 250px;
+    text-align: right;
+    font-size: 24px;
+}
+
+.style-lable-amount{
+    color: white;
+    font-weight: bolder;
+    font-size: 24px;
+}
+
+.style-lable-amount-display{
+    color: white;
+    font-weight: lighter;
+    font-size: 36px;
+}

@@ -67,3 +67,8 @@ def get_connection_event(id):
 def update_description(id):
     event = request.get_json()
     return events_api.update_description(id,event["description"])
+
+@events_blueprint.route('/budget/<string:id>', methods=['PATCH'])
+def update_budget(id):
+    event = request.get_json()
+    return events_api.update_budget_by_id(id,event["budget"])

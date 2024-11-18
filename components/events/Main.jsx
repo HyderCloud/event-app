@@ -27,6 +27,8 @@ const Main = ({admin}) => {
     const {decodedToken, isExpired} = useJwt(cookie.store)
     const [type, setType] = useState('')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
+    const {isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
     const [isPrivate, setIsPrivate] = useState('')
     const [events, setEvents] = useState([])
     const [endTime, setEndTime] = useState('')
@@ -130,9 +132,9 @@ const Main = ({admin}) => {
     }
         return (
 
-                <div className=' flex justify-center items-center flex-col w-full h-full ' style={{ gap: '10px', paddingLeft: "15%" }}>
+                <div className=' flex justify-center items-center flex-col w-full h-full ' style={{ gap: '10px'}}>
                     <div className='h-4'></div>
-                <div className='flex flex-row justify-end w-full' style={{ gap: '10px' }}>
+                <div className='flex flex-row  w-full' style={{ gap: '10px' }}>
                     <div >
                         <Button color='primary'>צפייה מוקדמת</Button>
                     </div>
@@ -145,6 +147,17 @@ const Main = ({admin}) => {
                 <div className='flex flex-col w-full h-screen glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px', overflowY: 'scroll'
                 }}>
                     <div className='flex flex-row justify-between' >
+                        {/* date */}
+
+                {/* name */}
+                <div className='event-lable font-bold flex flex-col items-start' style={{gap: '0px', paddingRight: '5%'}}>{name}
+                    <div className='flex' style={{paddingRight: '15px'}}>
+                {icon}
+                </div>
+                <div className='flex  font-bold type-string text-white' style={{paddingRight: '2%'}}>
+                {type}
+                    </div>
+                </div>
                 <div className='text-white flex flex-col justify-center glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
                 <div>
                     {startDate} - {endDate}
@@ -156,85 +169,37 @@ const Main = ({admin}) => {
                 {place}
                 </div>
                 </div>
-                <div className='event-lable font-bold flex flex-col' style={{gap: '0px', paddingRight: '5%'}}>{name}
-                    <div style={{paddingRight: '15px'}}>
-                {icon}
-                </div>
-                <div className='flex justify-end font-bold type-string text-white' style={{paddingRight: '2%'}}>
-                {type}
                     </div>
-                </div>
-                    </div>
+                    {/* description */}
                 <div className='flex flex-row justify-between' style={{gap: '10px'}}>
-                <div   style={{backgroundImage:  `url(${tubnail})`,
-                        borderRadius: '15px',
-                        backgroundSize: 'cover',
-                        height: "450px",
-                        width: '350px',
-                        backgroundPosition: 'center'}}></div>
+
                 <div className=' text-white '   style={{
-    
+                     minHeight: '200px',
     textAlign: 'right',
     width: '50%',
     wordBreak: 'break-word', // Ensures long words wrap to the next line
     whiteSpace: 'normal'     // Allows wrapping to the next line when content overflows
   }} dangerouslySetInnerHTML={{ __html: content }}>
                 </div>
-                    
+                <div   style={{backgroundImage:  `url(${tubnail})`,
+                        borderRadius: '15px',
+                        backgroundSize: 'cover',
+                        minHeight: '250px',
+                        maxHeight: '450px',
+                        width: '350px',
+                        backgroundPosition: 'center'}}></div>
                 </div>
                 {(admin === 'מפיק'|| admin ==='בעלים'||admin === "יוצר")&&
                 <div className='flex flex-row w-full h-full' style={{gap: '25px'}}>
-                <div className=' flex flex-col glass-background image-cont-main ' >
-                        <div className='image-event-cont cursor-pointer' 
-                        style={{backgroundImage:  `url(${tubnail})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'}}
-                        onClick={()=>{
-                            setIsImage("image")
-                            onOpen()
-                        }}></div>
-                        <div className='w-full h-full flex justify-center items-center'>
-                            <Button color='primary'> AI עשה זאת עם </Button>
-                        </div>
-                        </div>
-                <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
-               <div className='flex flex-row w-full'>
-                        <div><Button onPress={handleSaveDescription} color='primary'>שמור</Button></div>
-                <div className='w-full flex flex-col  text-white font-semibold items-end' >
-                           <div> תיאור האירוע</div>
-                           {icon}
-                        </div>
-               </div>
-                        <div className='w-full h-full'>
-                        <ReactQuill
-                        value={content}
-                        className='bg-white quil'
-                        style={{position: 'static' ,height: '100%', paddingBottom: '35%', paddingLeft: '3%',width: '350px', paddingRight: '3%', paddingTop: '3%', borderRadius: '15px'}}       
-                onChange={handleChange}    
-                theme="snow"                
-                placeholder="Type here..."
-                modules={{
-                    toolbar: [
-                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                        // [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                        [{ 'align': [] }],
-                        ['link', 'image'],
-                        ['clean']                                         // remove formatting button
-                    ]
-                }}
-            />
-                        </div>
-                </div>
+                {/* edit */}
                 <div className='flex flex-col ' style={{gap: '20px',width: '60%'}}>
-                <div className='flex flex-col  items-end ' style={{ borderRadius: '10px',padding: '2%'}}>
+                <div className='flex flex-col  items-start ' style={{ borderRadius: '10px',padding: '2%'}}>
                 <Button color='primary' onPress={()=>{onOpen()
                             setIsImage("details")
                         }}>עריכת האירוע</Button>
                 </div>
                     <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
-                        <div className='w-full flex flex-col  text-white font-semibold items-end' >
+                        <div className='w-full flex flex-col  text-white font-semibold items-start' >
                            <div> פרטיות</div>
                            {icon}
                         </div>
@@ -242,7 +207,7 @@ const Main = ({admin}) => {
                             <Button color='primary' onClick={()=>{
                                 setIsImage("ll")
                                 onOpen()
-                            }}> יצירת הגבלה</Button>
+                            }}>יצירת הגבלת גיל</Button>
                                                 <div className='flex flex-col justify-center items-center'>
                     <div className='text-white' >{isPrivate ? "אירוע פרטי": "אירוע ציבורי"}</div>
                 <Switch isSelected={isPrivate} onChange={()=>{
@@ -252,7 +217,7 @@ const Main = ({admin}) => {
                             </div>
                     </div>
                     <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
-                        <div className='w-full flex flex-col  text-white font-semibold items-end' >
+                        <div className='w-full flex flex-col  text-white font-semibold ' >
                            <div>  סוג האירוע</div>
                            {icon}
                         </div>
@@ -275,6 +240,51 @@ const Main = ({admin}) => {
                             </div>
                     </div>
                 </div>
+
+                {/* description */}
+                <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
+               <div className='flex flex-row w-full'>
+                <div className='w-full flex flex-col  text-white font-semibold items-start' >
+                           <div> תיאור האירוע</div>
+                           {icon}
+                        </div>
+                        <div><Button onPress={handleSaveDescription} color='primary'>שמור</Button></div>
+               </div>
+                        <div className='w-full h-full flex justify-center items-center'>
+                        <ReactQuill
+                        value={content}
+                        className='bg-white quil'
+                        style={{position: 'static' ,height: '100%', paddingBottom: '35%', paddingLeft: '3%',width: '350px', paddingRight: '3%', paddingTop: '3%', borderRadius: '15px'}}       
+                onChange={handleChange}    
+                theme="snow"                
+                placeholder="Type here..."
+                modules={{
+                    toolbar: [
+                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']                                         // remove formatting button
+                    ]
+                }}
+            />
+                        </div>
+                </div>
+                {/* image */}
+                <div className=' flex flex-col glass-background image-cont-main ' >
+                        <div className='image-event-cont cursor-pointer' 
+                        style={{backgroundImage:  `url(${tubnail})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'}}
+                        onClick={()=>{
+                            setIsImage("image")
+                            onOpen()
+                        }}></div>
+                        <div className='w-full h-full flex justify-center items-center'>
+                            <Button color='primary'> AI עשה זאת עם </Button>
+                        </div>
+                        </div>
 
                     <Modal className='change-details' isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true}>
                         <ModalContent>
@@ -342,6 +352,7 @@ const Main = ({admin}) => {
                 </div>
                 }
                 </div>
+               
                 </div>
         )
     }

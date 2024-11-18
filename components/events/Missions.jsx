@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
-import { color } from 'framer-motion';
+
 const Missions = ({ admin }) => {
 
   const [messages, setMessages] = useState([]);
@@ -169,7 +169,7 @@ const Missions = ({ admin }) => {
       ws.onopen = () => {
         console.log(`Connected to WebSocket server as ${getStringAfterSecondSlash(path)}`);
         setSocket(ws);
-      };
+      }
   
       ws.onmessage = (event) => {
         // Handle incoming messages from the server
@@ -278,7 +278,59 @@ const Missions = ({ admin }) => {
       <ModalHeader className="flex flex-col gap-1">הוסף משימה</ModalHeader>
   {section1?
       <div className='flex flex-row' style={{ paddingLeft: '20px' }}>
+                <ModalBody style={{ gap: '10px' }}>
+          <div className='flex flex-col w-full h-full add-partner-cont'>
+            <div className='style-displaying-role flex w-full  flex-row'>
+              {role?.map((item, index) => {
+                return (
+                  <Tooltip showArrow className=' text-white' color='primary' content="סנן לפי">
+                    <div onClick={() => {
+                      setFilterBy(item)
+                    }} className='role-style glass-background cursor-pointer' style={{ background: filterBy === item && '#006FEE' }}>
+                      {item}
+                    </div>
+                  </Tooltip>
+                )
+              })}
+            </div>
+            <div className='class-result-output flex flex-row  overflow-x-auto'>
 
+              {waitWorkers?.map((item, index) => {
+                return (
+                  <div className='flex items-center justify-center flex-col' style={{ width: '70px' }}>
+                    <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
+                      const removedArr = removeElementAtIndex(waitWorkers, index)
+                      setWaitWorkers(removedArr)
+                    }} content="מחק">
+                      <div className='img-user-added'>
+                        <Image className='cursor-pointer'  style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} isBlurred radius='full'
+                          borderRadius="full" width={40} height={40}
+                          alt="NextUI hero Image"
+                          src={item.profile_img?.length === 0 ? `https://app.requestly.io/delay/5000/https` : `${item.profile_img}`} />
+                      </div>
+                    </Tooltip>
+                    <div>
+                      {item.name}
+                    </div>
+
+                    <div className='w-full justify-center flex glass-background2'>
+                      {waiting[index]?.role}
+                    </div>
+                    <div className='w-full'>
+
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <div style={{ paddingLeft: '20%' }}>
+              <Input label='Search for' onChange={handleSearch} placeholder='חפש חבר צוות' />
+
+            </div>
+
+          </div>
+
+        </ModalBody>
         <div className='searchResult flex flex-col'>
 
           {match.length > 0 ? match.map((item, index) => {
@@ -391,67 +443,15 @@ const Missions = ({ admin }) => {
             )
           })}
         </div>
-        <ModalBody style={{ gap: '10px' }}>
-          <div className='flex flex-col w-full h-full add-partner-cont'>
-            <div className='style-displaying-role flex w-full justify-end flex-row'>
-              {role?.map((item, index) => {
-                return (
-                  <Tooltip showArrow className=' text-white' color='primary' content="סנן לפי">
-                    <div onClick={() => {
-                      setFilterBy(item)
-                    }} className='role-style glass-background cursor-pointer' style={{ background: filterBy === item && '#006FEE' }}>
-                      {item}
-                    </div>
-                  </Tooltip>
-                )
-              })}
-            </div>
-            <div className='class-result-output flex flex-row justify-end overflow-x-auto'>
 
-              {waitWorkers?.map((item, index) => {
-                return (
-                  <div className='flex items-center justify-center flex-col' style={{ width: '70px' }}>
-                    <Tooltip className='cursor-pointer text-white' color='danger' onClick={() => {
-                      const removedArr = removeElementAtIndex(waitWorkers, index)
-                      setWaitWorkers(removedArr)
-                    }} content="מחק">
-                      <div className='img-user-added'>
-                        <Image className='cursor-pointer'  style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} isBlurred radius='full'
-                          borderRadius="full" width={40} height={40}
-                          alt="NextUI hero Image"
-                          src={item.profile_img?.length === 0 ? `https://app.requestly.io/delay/5000/https` : `${item.profile_img}`} />
-                      </div>
-                    </Tooltip>
-                    <div>
-                      {item.name}
-                    </div>
-
-                    <div className='w-full justify-center flex glass-background2'>
-                      {waiting[index]?.role}
-                    </div>
-                    <div className='w-full'>
-
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            <div style={{ paddingLeft: '20%' }}>
-              <Input label='Search for' onChange={handleSearch} placeholder='חפש חבר צוות' />
-
-            </div>
-
-          </div>
-
-        </ModalBody>
       </div>: 
-      <div className='flex flex-col justify-center items-end w-full'
+      <div className='flex flex-col justify-center  w-full'
        style={{paddingLeft: '30%', height: '400px', paddingRight: '30%', color: 'white', gap: '15px'}}>
-        <div className='flex flex-col w-full items-end'>
+        <div className='flex flex-col w-full '>
         <div className='opacity-70'>כותרת המשימה</div>
         <Input onChange={handleTitle} label='Mission title'/>
         </div>
-        <div className='flex flex-col w-full items-end'>
+        <div className='flex flex-col w-full '>
         <div className='opacity-70'>תיאור המשימה</div>
         <Textarea
         onChange={handleDescription}
@@ -460,13 +460,13 @@ const Missions = ({ admin }) => {
       style={{textAlign: 'right'}}
     />
         </div>
-        <div className='flex flex-col w-full items-end'>
+        <div className='flex flex-col w-full '>
         <div className='opacity-70'>תאריך התחלה וסיום</div>
-        <DateRangePicker   label='Event date' onChange={handleDate}/>
+        <DateRangePicker   label='Event date' style={{direction: 'ltr'}} onChange={handleDate}/>
         </div>
-        <div className='flex flex-col w-full items-end'>
+        <div className='flex flex-col w-full '>
         <div className='opacity-70'>שעת סיום</div>
-        <TimeInput  hourCycle={24} label='End time' onChange={handleEndTime}/>
+        <TimeInput  hourCycle={24} label='End time' style={{direction: 'ltr'}} onChange={handleEndTime}/>
         </div>
       </div>
   }
@@ -535,6 +535,9 @@ const Missions = ({ admin }) => {
                 <div 
                 className='w-full glass-background flex flex-row justify-between items-center' 
                 style={{height: '40px',  borderTopLeftRadius: '8px', color: 'white', borderTopRightRadius: '8px', padding: '5px', borderBottom: '1px solid white'}}>
+                  <div className=''>
+                    {item.title}
+                  </div>
                  <Tooltip  className='glass-background ' content={<div className='flex flex-col'  style={{height: '100px', color: 'white'}}>
                   <div></div>
                   <div>
@@ -552,14 +555,20 @@ const Missions = ({ admin }) => {
                 </svg>
                   </div>
                  </Tooltip>
-                  <div className=''>
-                    {item.title}
-                  </div>
+
                 </div>
                 {item?.participent.map((item2, index2)=>{
                   return(
-                    <div className='w-full h-full flex flex-row justify-end items-center'
+                    <div className='w-full h-full flex flex-row  items-center'
                      style={{borderBottom: '1px solid white', height: '50px', paddingRight: '5px',  }}>
+                                          <div className=' flex items-center ' style={{width: '40px'}}>
+              <div style={{ backgroundImage: `url(${item2.profile_img})`, borderRadius: '100px', height: '35px', width: '35px', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+</div>
+              <div className='w-full flex items-center text-center justify-center h-full'>
+                                          <div style={{color: 'white' }}>{item2.name}</div>
+                </div>
+                <div className='w-full flex items-center  text-center justify-center h-full' 
+                style={{color: 'white', borderRight: '1px solid white' }}>{item2.role}</div>
                 {(item2._id === decodedToken?.store_id )?
                 <div className='w-full flex items-center text-center justify-center h-full' style={{backgroundColor: item2.status.color, color: 'white', height: '100%',borderRight: '1px solid white'}}>
 
@@ -599,15 +608,9 @@ const Missions = ({ admin }) => {
                 style={{backgroundColor: item2.status?.color, color: 'white', borderRight: '1px solid white'}}>
                   {item2?.status?.text} </div>
                 }
-                <div className='w-full flex items-center  text-center justify-center h-full' style={{color: 'white', borderRight: '1px solid white' }}>{item2.role}</div>
-                <div className='w-full flex items-center text-center justify-center h-full' 
-                     >
-                                          <div style={{color: 'white' }}>{item2.name}</div>
-                                        </div>
-                    <div className=' flex items-center justify-end' style={{width: '40px'}}
-                     >
-                      <div style={{ backgroundImage: `url(${item2.profile_img})`, borderRadius: '100px', height: '35px', width: '35px', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
-                    </div>
+
+
+
                 </div>
                   )
                 })}
@@ -619,7 +622,7 @@ const Missions = ({ admin }) => {
         </div>
 
         <div
-          className="absolute w-full flex justify-end items-center px-4"
+          className="absolute w-full flex  items-center px-4"
           style={{
             height: '70px',
             top: '0',
@@ -644,7 +647,7 @@ const Missions = ({ admin }) => {
             zIndex: 1, // Ensure it's above the canvas
           }}
         >
-          <div className='w-full flex flex-row shadow-examp' style={{ borderRadius: '25px', height: '45px', backgroundColor: 'black' }}>
+          <div className='w-full flex flex-row shadow-examp' style={{ borderRadius: '25px', height: '45px', backgroundColor: 'black', direction: 'ltr' }}>
             <Button
               className='h-full glass-background'
               color='none'
