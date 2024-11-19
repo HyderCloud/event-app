@@ -460,13 +460,13 @@ const Missions = ({ admin }) => {
       style={{textAlign: 'right'}}
     />
         </div>
-        <div className='flex flex-col w-full '>
+        <div style={{direction: 'ltr'}} className='flex flex-col w-full '>
         <div className='opacity-70'>תאריך התחלה וסיום</div>
         <DateRangePicker   label='Event date' style={{direction: 'ltr'}} onChange={handleDate}/>
         </div>
-        <div className='flex flex-col w-full '>
+        <div className='flex flex-col w-full ' style={{direction: 'ltr'}}>
         <div className='opacity-70'>שעת סיום</div>
-        <TimeInput  hourCycle={24} label='End time' style={{direction: 'ltr'}} onChange={handleEndTime}/>
+        <TimeInput  hourCycle={24} label='End time' onChange={handleEndTime}/>
         </div>
       </div>
   }

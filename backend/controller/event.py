@@ -24,7 +24,7 @@ class Events:
             "place": place,
             "description": '',
             "tubnail": '',
-            "tickets": '',
+            "tickets": 'ללא הגבלה',
             "clients": [],
             "images": [],
             "cuppons": [],
@@ -122,6 +122,14 @@ class Events:
             is_updated = api_events.update_type_by_id(type, id)
             if is_updated:
                 return jsonify({"type": type}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_tickets_amount_by_id(self,id,tickets_amount):
+        try:
+            is_updated = api_events.update_ticket_amount_by_id(tickets_amount, id)
+            if is_updated:
+                return jsonify({"rounds": tickets_amount}), 200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
         

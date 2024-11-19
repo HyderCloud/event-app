@@ -16,18 +16,30 @@ body {
   }
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #007bff; /* Blue color */
-  border-radius: 20px; /* Rounded corners */
-  border: 3px solid #f0f0f0; /* Space between the thumb and the track */
-}
+
 
 /* Style for the scrollbar corner */
 ::-webkit-scrollbar-corner {
   background-color: transparent; /* Optional if you want to hide the corner */
-  
+
 }
 
+::-webkit-scrollbar {
+  width: 8px;  /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar */
+}
+
+/* Style the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #003995a3; /* Thumb color */
+  border-radius: 6px;        /* Rounded corners */
+}
+
+/* Style the scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: #000000; /* Track color */
+  border-radius: 6px;        /* Optional rounded corners */
+}
 
 .events-promo{
   min-height: 300px;

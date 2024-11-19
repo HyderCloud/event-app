@@ -705,7 +705,7 @@ const Budgets = ({admin}) => {
         <div className='w-full glass-background flex flex-col' style={{borderRadius: '20px', padding: '5%',gap: '25px'}}>
         <div className='w-full flex flex-row' style={{ gap: '20px'}}>
         <div>
-        <Button onPress={onOpen} isDisabled={budget.length > 1} color='primary'>הגדר את תקציב האירוע</Button>
+        <Button onPress={onOpen} isDisabled={budget?.length > 1} color='primary'>הגדר את תקציב האירוע</Button>
         </div>
         <div>
         <Button onPress={onOpen2} isDisabled={budget[0]?.y <= 0} color='primary'>הוסף תקציב לפי תחום</Button>

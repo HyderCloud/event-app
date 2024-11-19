@@ -52,7 +52,12 @@ def update_ticket_settings(id):
 @events_blueprint.route('/rounds/<string:id>', methods=['PATCH'])
 def update_rounds(id):
     event = request.get_json()
-    return events_api.update_rounds(id,event["rounds"])
+    return events_api.update_rounds(id,event["tamount"])
+
+@events_blueprint.route('/tamount/<string:id>', methods=['PATCH'])
+def update_tamount(id):
+    event = request.get_json()
+    return events_api.update_tickets_amount_by_id(id,event["tamount"])
 
 @events_blueprint.route('/cuppons/<string:id>', methods=['PATCH'])
 def update_cupponss(id):

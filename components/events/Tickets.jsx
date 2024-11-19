@@ -1,8 +1,7 @@
 "use client"
-import { TimeInput, Divider,DatePicker, Input, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import { TimeInput, Divider,DatePicker, Input, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, link } from '@nextui-org/react'
 import React, { useState, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
-
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
@@ -15,12 +14,15 @@ const Tickets = ({admin}) => {
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
   </svg> </div>
     const [groupSelected, setGroupSelected] = useState(["credit"]);
+    const [ticketsAmout, setTicketsAmount] = useState('ללא הגבלה')
     const [section1, setSection1] = useState(true)
     const [section2, setSection2] = useState(false)
     const [section3, setSection3] = useState(false)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
-
+    const {isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
+    const {isOpen: isOpen4, onOpen: onOpen4, onOpenChange: onOpenChange4 } = useDisclosure();
+    const {isOpen: isOpen5, onOpen: onOpen5, onOpenChange: onOpenChange5 } = useDisclosure();
     const [index1, setIndex1] = useState(null)
     const [index2, setIndex2] = useState(null)
     const [name, setName] = useState('')
@@ -33,7 +35,7 @@ const Tickets = ({admin}) => {
     const [rounds, setRounds] = useState([])
     const [price, setPrice] = useState('')
     const [amount, setAmount] = useState('')
-
+    const [link, setLink] = useState('http//:localhost:3000/')
     // settings states
     const [ticketSet,SetTicketSet] = useState({})
     const [cash, setCash] = useState(false)
@@ -74,6 +76,7 @@ const Tickets = ({admin}) => {
     const getEvents = async ()=>{
         const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
         setEvents(getAllEvents.data.events)
+        setTicketsAmount(getAllEvents.data.events.tickets)
         setRounds(getAllEvents.data.events.rounds)
         const theSettings = getAllEvents.data.events.ticket_settings
         setCash(theSettings.cash)
@@ -166,6 +169,12 @@ const handleDate = (newRange)=>{
         isInstegram,
         instegramLink,
         facebookLink,])
+    
+        const handleTicketsAmountUpdate = async (arr)=>{
+            const result =  await axios.patch(`http://localhost:9020/tamount/${events._id}`, {tamount: arr})
+            setTicketsAmount(result.data.rounds)
+        }    
+    
     const handleName = (e)=>{
         setName(e.target.value)
     }
@@ -175,12 +184,66 @@ const handleDate = (newRange)=>{
     }
   return (
     <div className='w-full h-full'>
-       
+         <Modal className='glass-background' style={{color: 'white'}} isOpen={isOpen3} onOpenChange={onOpenChange3}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">הגדרת לינק לרכישה</ModalHeader>
+              <ModalBody style={{direction: 'ltr'}}>
+                <Input defaultValue={''} label={link} value={''}/>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Action
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal className='glass-background' style={{color: 'white'}} isOpen={isOpen5} onOpenChange={onOpenChange5}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">הגבלת כמות הכרטיסים לרכישה</ModalHeader>
+              <ModalBody >
+                <Input onChange={(e)=>{setTicketsAmount(e.target.value)}}
+                 type='number' label={'כמות הכרטיסים'} value={ticketsAmout}/>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={async ()=>{
+                    if(ticketsAmout > 0){
+                        await handleTicketsAmountUpdate(ticketsAmout)
+                        onClose()
+                        setPayment(!payment)
+                    }
+                }}>
+                  Action
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     <div className=' flex justify-center items-center flex-col'>
         <div className='w-full flex flex-row justify-between'style={{paddingLeft: '50%'}}>
-        <Tooltip  className='glass-background text-white'  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
-        <div><Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button></div>
+        <div className='flex flex-row' style={{gap: '15px'}}>
+        <Tooltip  className='glass-background text-white' showArrow  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
+        <Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button>
         </Tooltip>
+        <Tooltip  className='glass-background text-white' placement='bottom' showArrow  content=" לינק ייחודי לרכישה">
+        <Button className='text-white'color='primary' onClick={()=>{onOpen3()}} >  הגדרת לינק לרכישה</Button>
+        </Tooltip>
+        <Tooltip  className='glass-background text-white' placement='left' showArrow  content=" ה- AI שלנו יעשה זאת בשבילך">
+        <Button className='text-white'color='primary' onClick={()=>{onOpen4()}} >   עשה זאת עם AI </Button>
+        </Tooltip>
+        </div>
         <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
          className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
    
@@ -199,51 +262,66 @@ const handleDate = (newRange)=>{
             <div className='flex flex-row w-full justify-between setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
          
            <div>מזומן:</div>
-            <Switch isSelected={cash} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={cash} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setCash(!cash)}} aria-label="Automatic updates"/>
      
         
                 </div>
+                <Tooltip color='primary' placement='right' 
+                content={<div>כמות הרכישות שניתן לבצע: {ticketsAmout}</div>}>        
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
             <div>
+            
            <div>הגבלת רכישה:</div></div>
-            <Switch isSelected={payment} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setPayment(!payment)}} aria-label="Automatic updates"/>
+            <Switch onClick={()=>{
+                if(payment==false){
+                    onOpen5()
+                }
+                }} style={{direction: 'ltr'}} isSelected={payment} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} 
+                onChange={ async ()=>{
+                   if(payment){
+                       await handleTicketsAmountUpdate('ללא הגבלה')
+                       setPayment(!payment)
+                       setTicketsAmount('ללא הגבלה')
+                   }
+                    }}  aria-label="Automatic updates"/>
             
            </div>
+                    </Tooltip>
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
             <div>
            <div>מילוי ת"ז:</div></div>
-            <Switch isSelected={ID} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={ID} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setID(!ID)}} aria-label="Automatic updates"/>
            </div>
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                             <div>
            <div>תאריך לידה:</div></div>  
-            <Switch isSelected={isdate} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={isdate} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setIsdate(!isdate)}} aria-label="Automatic updates"/>
            </div>
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
             <div>
            <div>מגדר:</div></div>
-            <Switch isSelected={gender} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={gender} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setGender(!gender)}} aria-label="Automatic updates"/>
            </div>
            <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
                 <div>
                <div>אינסטגרם או פייסבוק:</div></div>  
-                <Switch isSelected={isInstegram} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
+                <Switch style={{direction: 'ltr'}} isSelected={isInstegram} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setisInstegram(!isInstegram)}} aria-label="Automatic updates"/>
                </div>
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
                       
             <div>
             <div>קישור לפייסבוק:</div></div>
-            <Switch isSelected={facebookLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={facebookLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setFacebookLink(!facebookLink)}} aria-label="Automatic updates"/>
            </div>
          
             <div className='flex flex-row w-full justify-between  setting-tickets' style={{gap: '15px', fontSize: '16px', fontWeight: 'bolder'}} >
                 
             <div>
            <div>משתמש לאינסטגרם:</div></div>  
-            <Switch isSelected={instegramLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
+            <Switch style={{direction: 'ltr'}} isSelected={instegramLink} isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true} onChange={()=>{setInstegramLink(!instegramLink)}} aria-label="Automatic updates"/>
            </div>
             </div>
         </div>
@@ -418,11 +496,19 @@ const handleDate = (newRange)=>{
                                                 setSection1(false)
                                                 setSection2(true)
                                             }}  onMouseEnter={()=>{setIndex2(index4)}} onMouseLeave={()=>{setIndex2(null)}}>
-                                                        <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row '>
-            <div className='flex flex-col  w-full'>
+                                            <div style={{gap: '4px', fontSize: '20px', fontWeight: 'bold', width: "100%", paddingRight: '2%', paddingLeft: '5px'}} className='flex h-full  flex-row '>
+                                             <div className='flex flex-col  w-full'>
+                
             <div className='flex flex-row' style={{ gap: '10px'}}>
-            <div>{item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>:<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
-
+            <div>
+               סבב {index4+1} -
+                </div>
+            <div>
+                {item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>
+                :<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
+                <div className='element-ticket'>
+                {item.name} 
+                </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
                 {item.startDate}  
@@ -432,46 +518,47 @@ const handleDate = (newRange)=>{
                     {item.endDate} 
                     </div>
                 </div>
-                <div className='element-ticket'>
-                {item.name} 
+                
+                </div>}
                 </div>
-                </div>}</div>
-                <div>
-                - {index2 + 1} סבב
-                </div>
+
                 </div>
             {icon}
 
             <div className='flex    flex-row'style={{paddingTop: '5%', fontWeight: 'lighter', fontSize: '16px',gap: '20px' }}>
             <div className='flex  flex-row ' style={{gap: '10px'}}>
-                    <div className='element-ticket'>
-                    {item.endTime} 
+      
+                    <div>
+                מחיר: 
                     </div>
-                    <div> -</div>
-                    <div className='element-ticket'> 
-                {item.startTime}  
+                    <div className='element-ticket'>
+                {item.price}
                     </div>
                 </div>
+
             <div className='flex flex-row ' style={{gap: '10px'}}>
+  
+                    <div>
+              כמות כרטיסים
+                    </div>
                     <div className='element-ticket'>
                 {item.amount}
-                    </div>
-                    <div>
-                :כמות כרטיסים  
                     </div>
                 </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
-                {item.price}
+                    {item.startTime} 
+          
                     </div>
-                    <div>
-                :מחיר  
+                    <div> -</div>
+                    <div className='element-ticket'> 
+                    {item.endTime} 
                     </div>
                 </div>
 
             </div>
-            </div>
-         </div>
+                                             </div>
+                                            </div>
                                             </div>
                                                 )
                                             })}

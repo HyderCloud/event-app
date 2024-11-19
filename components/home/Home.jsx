@@ -2,7 +2,7 @@
 import { Divider } from "@nextui-org/react"
 import { useState, useEffect } from "react"
 import EventSlider from "../events/EventSlider"
-
+import axios from 'axios'
 
 const Home = () => {
   const [searchHolder, setSearchHolder] = useState('')

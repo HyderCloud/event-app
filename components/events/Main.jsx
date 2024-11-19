@@ -1,5 +1,5 @@
 "use client"
-import { TimeInput, Divider, Input, Switch,Calendar,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import { TimeInput, Divider, Input, Switch,Calendar,Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea } from '@nextui-org/react'
 import React, { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -20,8 +20,11 @@ const Main = ({admin}) => {
         console.log(value)
         setContent(value); 
     };
-
+    const [prompt, setPrompt] = useState('')
+    const [images, setImages] = useState([])
     const [isImage, setIsImage] = useState('')
+    const [isGenerate, setIsgenerate] = useState(false)
+    const [isUsed, setIsUsed] = useState(false)
     const [cookie, setCookie, removeCookie] = useCookies()
     const [age, setAge] = useState('')
     const {decodedToken, isExpired} = useJwt(cookie.store)
@@ -110,6 +113,10 @@ const Main = ({admin}) => {
         const result =  await axios.patch(`http://localhost:9020/chnagetubnail/${events._id}`, {image: tubnail})
         setTubnail(result.data.image)
     }
+    const handleChangeTubnailAi = async (data)=>{
+        const result =  await axios.patch(`http://localhost:9020/chnagetubnail/${events._id}`, {image: data})
+        setTubnail(result.data.image)
+    }
     const handleChangeDetails = async ()=>{
         const result =  await axios.patch(`http://localhost:9020/chnagdetails/${events._id}`,
             {startDate: startDate, endDate: endDate,startTime: startTime, endTime: endTime, place: place})
@@ -126,13 +133,21 @@ const Main = ({admin}) => {
     const handleAge = (e)=>{
         setAge(e.target.value)
     }
+    const handleSentImages = async ()=>{
+        try {
+            const response = await axios.post("/api/generateimage", { prompt: prompt, type: type });
+            setImages(response.data.images); // Store generated images
+          } catch (err) {
+            console.error("Error:", err.response?.data || err.message);
+          }}
+
     const handleChangeAge = async ()=>{
         const result =  await axios.patch(`http://localhost:9020/chnageage/${events._id}`, {age: age})
         setAge(result.data.age)
     }
         return (
 
-                <div className=' flex justify-center items-center flex-col w-full h-full ' style={{ gap: '10px'}}>
+                <div className=' flex justify-center items-center flex-col w-full ' style={{ gap: '10px', paddingBottom: '5%'}}>
                     <div className='h-4'></div>
                 <div className='flex flex-row  w-full' style={{ gap: '10px' }}>
                     <div >
@@ -144,7 +159,7 @@ const Main = ({admin}) => {
                 </div>
 
 
-                <div className='flex flex-col w-full h-screen glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px', overflowY: 'scroll'
+                <div className='flex flex-col w-full h-full glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px'
                 }}>
                     <div className='flex flex-row justify-between' >
                         {/* date */}
@@ -184,13 +199,13 @@ const Main = ({admin}) => {
                 <div   style={{backgroundImage:  `url(${tubnail})`,
                         borderRadius: '15px',
                         backgroundSize: 'cover',
-                        minHeight: '250px',
-                        maxHeight: '450px',
+                        minHeight: '400px',
+                        maxHeight: '400px',
                         width: '350px',
                         backgroundPosition: 'center'}}></div>
                 </div>
                 {(admin === 'מפיק'|| admin ==='בעלים'||admin === "יוצר")&&
-                <div className='flex flex-row w-full h-full' style={{gap: '25px'}}>
+                <div className='flex flex-row w-full ' style={{gap: '25px', height: '540px'}}>
                 {/* edit */}
                 <div className='flex flex-col ' style={{gap: '20px',width: '60%'}}>
                 <div className='flex flex-col  items-start ' style={{ borderRadius: '10px',padding: '2%'}}>
@@ -243,11 +258,12 @@ const Main = ({admin}) => {
 
                 {/* description */}
                 <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
-               <div className='flex flex-row w-full'>
+               <div className='flex flex-row w-full' style={{gap: '10px'}}>
                 <div className='w-full flex flex-col  text-white font-semibold items-start' >
                            <div> תיאור האירוע</div>
                            {icon}
                         </div>
+                        <div><Button onPress={""} color='primary'>עשה/י זאת עם AI</Button></div>
                         <div><Button onPress={handleSaveDescription} color='primary'>שמור</Button></div>
                </div>
                         <div className='w-full h-full flex justify-center items-center'>
@@ -282,10 +298,71 @@ const Main = ({admin}) => {
                             onOpen()
                         }}></div>
                         <div className='w-full h-full flex justify-center items-center'>
-                            <Button color='primary'> AI עשה זאת עם </Button>
+                            <Button color='primary' onPress={onOpen3}> עשה זאת עם AI</Button>
                         </div>
                         </div>
+                        <Modal className='glass-background' style={{color: 'white'}} size='5xl' isOpen={isOpen3} onOpenChange={onOpenChange3}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader style={{direction: 'ltr'}} className="flex flex-col gap-1">riseAI</ModalHeader>
+              <ModalBody >
+            <div className='w-full flex flex-col items-center' style={{height: '500px', gap: '15px', paddingBottom: '2%'}}>
+                <div className='w-full flex justify-center h-full' style={{borderRadius: '5px'}}>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                
+        {images.map((img, index) => (
+            <div
+  className="h-full relative"
+  onMouseEnter={() => {
+    setIsUsed(true);
+  }}
+  onMouseLeave={() => {
+    setIsUsed(false);
+  }}
+>
+  <button
+    className="absolute"
+    style={{ top: "3px", right: "3px", color: 'white', backgroundColor: '#4285f4', borderRadius: '8px' }}
+    onClick={async () => {
+       await handleChangeTubnailAi(img);
+        onClose()
+    }}
+  >
+    השתמש/י
+  </button>
+  <img
+    key={index}
+    src={img}
+    alt={`Generated ${index}`}
+    style={{ width: "250px", margin: "10px", height: "100%" }}
+  />
+</div>
+       
+         
+        ))}
+      </div>
+                </div>
+                <div className='w-full' style={{paddingRight: "15%",paddingLeft: "15%"}}>
+            <Textarea onChange={(e)=>{setPrompt(e.target.value)}} style={{}} label={'איזו תמונה תרצה היום...'}/>
+                </div>
+                <div>
+                    <Button onPress={()=>{
+                        handleSentImages()
+                    }} isDisabled={prompt.length === 0} color='primary'>צור תמונת נושא</Button>
+                </div>
+            </div>
+              </ModalBody>
+              <ModalFooter>
 
+                <Button color="primary" onPress={onClose}>
+                  סיום
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
                     <Modal className='change-details' isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true}>
                         <ModalContent>
                             {(onClose) => (
