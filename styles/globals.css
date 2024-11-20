@@ -31,13 +31,22 @@ body {
 
 /* Style the scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background-color: #003995a3; /* Thumb color */
+
+    background-color: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
+    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */ /* Track color */
   border-radius: 6px;        /* Rounded corners */
 }
 
+::-webkit-scrollbar-thumb:hover{
+  background: #4286f495;
+  animation: fadeIn2 0.5s ease-in forwards;
+}
 /* Style the scrollbar track */
 ::-webkit-scrollbar-track {
-  background-color: #000000; /* Track color */
+  background: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
+  backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */ /* Track color */
   border-radius: 6px;        /* Optional rounded corners */
 }
 

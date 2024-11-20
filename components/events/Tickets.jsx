@@ -1,5 +1,5 @@
 "use client"
-import { TimeInput, Divider,DatePicker, Input, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, link } from '@nextui-org/react'
+import { TimeInput, Divider,DatePicker, Input,Slider, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, link } from '@nextui-org/react'
 import React, { useState, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -13,6 +13,8 @@ const Tickets = ({admin}) => {
   <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="18" height="4" rx="2" fill="#FBB03B"/>
   </svg> </div>
+    const [roundForAi, setRoundForAi] = useState(1)
+    const [budgetdForAi, setBudgetdForAi] = useState([1,100])
     const [groupSelected, setGroupSelected] = useState(["credit"]);
     const [ticketsAmout, setTicketsAmount] = useState('ללא הגבלה')
     const [section1, setSection1] = useState(true)
@@ -46,6 +48,8 @@ const Tickets = ({admin}) => {
     const [isInstegram, setisInstegram] = useState(false)
     const [instegramLink, setInstegramLink] = useState(false)
     const [facebookLink, setFacebookLink] = useState(false)
+    const [startDateForAi, setStartDateForAi] = useState('')
+    const [endDateForAi, setEndDateForAi] = useState('')
     const ticketSettings =
             {cash: cash,
             payment: payment,
@@ -65,13 +69,18 @@ const Tickets = ({admin}) => {
         amount: amount
     }
     const round = {
-        name: '',
-        startDate: '',
-        endDate: '',
-        startTime: '',
-        endTime: '',
-        price: '',
-        amount: ''
+        name: events.name,
+        startDate: startDateForAi,
+        endDate: endDateForAi,
+        price: budgetdForAi,
+        number: roundForAi
+    }
+    const aiDoc = {
+        name: events.name,
+        amount: roundForAi,
+        prices: budgetdForAi,
+        startDate: startDateForAi,
+        endDateForAi: endDateForAi
     }
     const getEvents = async ()=>{
         const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
@@ -119,7 +128,25 @@ const handleDate = (newRange)=>{
           setStartDate(formattedDateStart)
         
     }
-
+    const handleDateForAi = (newRange)=>{
+        const data = { 
+            start: new Date(newRange.start), 
+            end: new Date(newRange.end) 
+          };
+          const formattedDateStart = data.start.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+          const formattedDateEnd = data.end.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+          setEndDateForAi(formattedDateEnd)
+          setStartDateForAi(formattedDateStart)
+        
+    }
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
         return parts[2] || null; // Returns the third part, or null if it doesn't exist
@@ -174,7 +201,11 @@ const handleDate = (newRange)=>{
             const result =  await axios.patch(`http://localhost:9020/tamount/${events._id}`, {tamount: arr})
             setTicketsAmount(result.data.rounds)
         }    
-    
+    const handleTicketsAmountUpdate2 = async ()=>{
+            const result =  await axios.post(`/api/generateticket`, {aiDoc})
+            await handleroundUpdate(result.data)
+        }    
+
     const handleName = (e)=>{
         setName(e.target.value)
     }
@@ -222,6 +253,53 @@ const handleDate = (newRange)=>{
                         await handleTicketsAmountUpdate(ticketsAmout)
                         onClose()
                         setPayment(!payment)
+                    }
+                }}>
+                  Action
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal className='glass-background' size='lg' style={{color: 'white'}} isOpen={isOpen4} onOpenChange={onOpenChange4}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">RiseAI</ModalHeader>
+              <ModalBody >
+                <Input onChange={(e)=>{setRoundForAi(e.target.value)}}
+                 type='number' label={'כמות הסבבים'} value={roundForAi}/>
+                 <Slider 
+                label="טווח מחירים"
+                style={{direction: 'ltr'}}
+                step={5}
+                minValue={0}
+                maxValue={10000}
+                defaultValue={[100, 500]}
+                value={budgetdForAi}
+                onChange={(newValue) => setBudgetdForAi(newValue)}
+                formatOptions={{ style: 'currency', currency: 'ILS' }}
+                className={'text-white'}
+                />
+                <div style={{direction: 'ltr'}}>
+                <DateRangePicker   label='Event date' onChange={handleDateForAi}/>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={()=>{
+
+                }}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={async ()=>{
+                    if(roundForAi > 1 && roundForAi.length > 0){
+                        await handleTicketsAmountUpdate2(aiDoc)
+                        onClose()
+                        setBudgetdForAi('')
+                        setEndDateForAi('')
+                        setStartDateForAi('')
+                        setRoundForAi('')
                     }
                 }}>
                   Action
@@ -338,9 +416,9 @@ const handleDate = (newRange)=>{
                                         <ModalBody>
                                             <div className='flex flex-col w-full items-center gap-6'>
 
-                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%', }}>
                                                     <div className='opacity-70'>שם הסבב</div>
-                                                    <Input placeholder={item.name} label='Event name' onChange={handleName} />
+                                                    <Input value={item.name} label='Event name' onChange={handleName} />
                                                 </div>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr'  }}>
                                                     <div className='opacity-70'>תאריך התחלה וסיום</div>
@@ -348,19 +426,19 @@ const handleDate = (newRange)=>{
                                                 </div>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr' }}>
                                                     <div className='opacity-70'>שעת התחלה</div>
-                                                    <TimeInput placeholder={item.startTime} hourCycle={24} label='Start time' onChange={handleStartTime}/>
+                                                    <TimeInput  hourCycle={24} label='Start time' onChange={handleStartTime}/>
                                                 </div>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%',direction: 'ltr'  }}>
                                                     <div className='opacity-70'>שעת סיום</div>
-                                                    <TimeInput placeholder={item.endTime} hourCycle={24} label='End time' onChange={handleEndTime}/>
+                                                    <TimeInput  hourCycle={24} label='End time' onChange={handleEndTime}/>
                                                 </div>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>כמות כרטיסים</div>
-                                                    <Input type='number' placeholder={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                    <Input type='number' value={item.amount}  label='Tickets amount' onChange={(e)=>{setAmount(e.target.value)}}/>
                                                 </div>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'> מחיר עבור כרטיס</div>
-                                                    <Input type='number' placeholder={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
+                                                    <Input type='number' value={item.price}  label='Price' onChange={(e)=>{setPrice(e.target.value)}}/>
                                                 </div>
                                             </div>
                                         </ModalBody>
@@ -412,13 +490,13 @@ const handleDate = (newRange)=>{
             <div className='flex flex-col  w-full'>
                 
             <div className='flex flex-row' style={{ gap: '10px'}}>
-            <div>
+            <div style={{  whiteSpace: 'nowrap'}}>
                סבב {index+1} -
                 </div>
             <div>
                 {item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>
-                :<div className='flex flex-row w-full justify-between' style={{gap: '140px'}}> 
-                <div className='element-ticket'>
+                :<div className='flex flex-row w-full justify-between' style={{gap: '50px'}}> 
+                <div className='element-ticket flex' style={{ overflowX: 'auto', whiteSpace: 'nowrap',}}>
                 {item.name} 
                 </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>

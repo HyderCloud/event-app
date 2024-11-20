@@ -14,10 +14,6 @@ import jwt from 'jsonwebtoken';
 
 export const { auth, handlers: {GET,POST}, signIn, signOut } = NextAuth({
     providers: [
-
-     
-      
-      
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
