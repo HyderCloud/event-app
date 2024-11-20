@@ -20,6 +20,7 @@ const Tickets = ({admin}) => {
     const [section1, setSection1] = useState(true)
     const [section2, setSection2] = useState(false)
     const [section3, setSection3] = useState(false)
+    const [ticketsTotalAmount, setTicketsTotalAmount ] = useState('')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
     const {isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
@@ -80,7 +81,8 @@ const Tickets = ({admin}) => {
         amount: roundForAi,
         prices: budgetdForAi,
         startDate: startDateForAi,
-        endDateForAi: endDateForAi
+        endDateForAi: endDateForAi,
+        ticketsAmount: ticketsTotalAmount
     }
     const getEvents = async ()=>{
         const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
@@ -285,6 +287,8 @@ const handleDate = (newRange)=>{
                 <div style={{direction: 'ltr'}}>
                 <DateRangePicker   label='Event date' onChange={handleDateForAi}/>
                 </div>
+                <Input onChange={(e)=>{setTicketsTotalAmount(e.target.value)}}
+                 type='number' label={'סהכ כמות הכרטיסים למכירה'}value={ticketsTotalAmount}/>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={()=>{
@@ -494,7 +498,7 @@ const handleDate = (newRange)=>{
                סבב {index+1} -
                 </div>
             <div>
-                {item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב </div>
+                {item?.name === ''? <div style={{fontSize: '20px', fontWeight: 'lighter',}}> יש לערוך סבב או ליצור באמצעות AI </div>
                 :<div className='flex flex-row w-full justify-between' style={{gap: '50px'}}> 
                 <div className='element-ticket flex' style={{ overflowX: 'auto', whiteSpace: 'nowrap',}}>
                 {item.name} 

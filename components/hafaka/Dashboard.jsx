@@ -124,8 +124,8 @@ const handleEdit = ()=>{
 }
 
   return (
-    <div className='dashboard-container flex flex-col'>
-      <div className='main-container flex flex-col'>
+    <div className='dashboard-container flex flex-col' >
+      <div className='main-container flex flex-col' style={{direction: 'ltr'}}>
         <div className='sec-bunner-cont'>
         <div className='bunner-dash' style={{backgroundImage:  `url(${data.bunner})` ,       height: '250px',
                     backgroundSize: 'cover',
@@ -166,7 +166,7 @@ const handleEdit = ()=>{
       
         </div>
       </div>
-      <div className='sec-main-container flex flex-row'>
+      <div className='sec-main-container flex flex-row' style={{direction: 'ltr'}}>
         <div className='third-main-dash flex flex-col'>
         </div>
         <div className='main-dashboard flex flex-col items-end' style={{paddingRight: '20%'}}>

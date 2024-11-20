@@ -6,18 +6,41 @@ export async function POST(request) {
         const body = await request.json();
         const prompt = body.prompt;
         const type = body.type
-
-        const goalContext = `
-        :אתה מעצב גרפי המתמחה ביצירת עיצובים עבור 
+        console.log(type)
+        const prompt2 = `
+        You are a skilled graphic designer tasked with creating a captivating design for the event:
         ---
-        ${type}
+        Type: ${type}
+        Details: ${prompt}
         ---
-        . צור גרפיקה בהתאם לפרטים הבאים:
-        ---
-        ${prompt}
-        ---
+        **Key Instructions:**
+        1. **Date and Time:**
+           - Highlight the **date** ("${body.startDate} - ${body.endDate}") and **time** ("${body.startTime} - ${body.endTime}") prominently.
+           - Ensure readability with a font size larger than 12px and a subtle shadow for visibility.
+           - Use a clean, stylish font that complements the theme.
+        
+        2. **Theme Consistency:**
+           - If "מדבר" (desert) is mentioned, use warm, sandy tones (gold, beige, brown) and elements like dunes, clear skies, and natural textures.
+           - For "מסיבת טבע" (nature party), use vibrant, magical colors (greens, blues, purples) with glowing plants, celestial skies, and ethereal lighting.
+           - Adapt other themes to match their mood (sleek for corporate, bold for parties).
+        
+        3. **Typography:**
+           - Ensure the date and time stand out and align with the design theme.
+           - For text following "את הכיתוב הבא:" or "את הכיתוב":
+             - Display exactly as written, without changes.
+             - Use absolute positioning and a subtle shadow for emphasis.
+        
+        4. **Composition:**
+           - Keep the design balanced and clean with depth and layers for a professional look.
+        
+        5. **Impact and Integration:**
+           - Add textures (sand, glowing elements) for emotional resonance.
+           - Ensure the date, time, and key text blend harmoniously with the design.
+        
+        **Final Goal:** Deliver an eye-catching, theme-aligned design that emphasizes the **date** and **time** clearly while adhering to the specific style requirements.
         `;
-        const fullPrompt = goalContext;
+        
+        const fullPrompt = prompt2;
         // Initialize OpenAI client
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY, // Replace with your OpenAI API key
