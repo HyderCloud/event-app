@@ -2,20 +2,27 @@ import OpenAI from "openai";
 
 export async function POST(request) {
     try {
-        const body = await request.json();
-        console.log("Request Body:", body.aiDoc);
+        const body1 = await request.json();
+        const body = body1.aiDoc
 
         const prompt = `
-        You are a ticket seller. Generate ${parseInt(body.aiDoc.amount)} unique JSON objects representing different ticket rounds for the event named "${body.aiDoc.name}". Each ticket should be logically consistent and distinct, with the following rules:
-
-        1. The "name" field should be based on the input event name "${body.aiDoc.name}" and include a unique ticket type (e.g., "${body.aiDoc.name} Standard", "${body.aiDoc.name} VIP", "${body.aiDoc.name} Gold").
+        You are a ticket seller. Generate ${parseInt(body.amount)} unique JSON objects representing different ticket rounds for the event named "${body.name}". Each ticket should be logically consistent and distinct, with the following rules:
+        
+        1. The "name" field should be based on the input event name "${body.name}" and include a unique ticket type (e.g., "${body.name} Standard", "${body.name} VIP", "${body.name} Gold").
         2. Each ticket must have non-colliding date ranges. Ensure "startDate" and "endDate" for each ticket are sequential and do not overlap.
         3. Times ("startTime" and "endTime") should be logical for ticket sales and should not include the time zone abbreviation (e.g., "09:00" instead of "09:00 IST").
-        4. Prices must vary for each round and increase logically, starting from the cheapest ("Standard") to the most expensive ("VIP" or "Gold").
-        5. Use the provided date range (${body.aiDoc.startDate} to ${body.aiDoc.endDateForAi}) to construct valid dates for all rounds.
-
+        4. Prices for each ticket type must:
+           - Start at the provided minimum price (${body.prices[0]}) and increment logically across ticket rounds, reaching or approaching the maximum price (${body.prices[1]}) for the most expensive ticket.
+           - Be distributed proportionally, ensuring a steady price progression from the cheapest to the most expensive ticket type.
+        5. Use the provided date range (${body.startDate} to ${body.endDateForAi}) to construct valid dates for all rounds.
+        6. Distribute the total ticket quantity (${body.ticketsAmount}) proportionally across all ticket types under the "amount" key. Ensure:
+           - The sum of all "amount" values equals ${body.ticketsAmount}.
+           - Distribute amounts logically based on the ticket type, starting with higher quantities for less expensive tickets and reducing quantities for more premium tickets.
+        
         Ensure the output is a **valid JSON array** of objects. Do not include any explanations or additional text; only return the JSON array.
         `;
+        
+        
 
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,

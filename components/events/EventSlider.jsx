@@ -69,10 +69,10 @@ const router = useRouter()
                 <Divider />
                 <div style={{paddingLeft: '25%'}}>
                 <CardFooter className="glass-background text-right items-center border-white/20 border-1  py-1 absolute before: shadow-small z-10"  style={{bottom: '30px', width: '240px', borderBottomRightRadius: '0'}}>
-                <div  className="text-right text-tiny w-full text-black">כותרת הפרומו</div>
+                <div  className="text-right text-tiny w-full text-black"> </div>
               <Button onClick={()=>{
                     router.push(`/${item?.name}/${item?._id}`) }} className="text-tiny text-white "  color="primary" radius="lg" size="sm">
-                explore
+                גלה עוד
               </Button>
               
 

@@ -135,7 +135,9 @@ const Main = ({admin}) => {
     }
     const handleSentImages = async ()=>{
         try {
-            const response = await axios.post("/api/generateimage", { prompt: prompt, type: type });
+            const response = await axios.post("/api/generateimage", 
+                { prompt: prompt, type: type, endDate: endDate,startDate: startDate,
+                startTime: startTime, endTime: endTime });
             setImages(response.data.images); // Store generated images
           } catch (err) {
             console.error("Error:", err.response?.data || err.message);

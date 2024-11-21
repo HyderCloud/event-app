@@ -191,7 +191,7 @@ const EditMode = ({ onMode }) => {
     }
     return (
         <div className='dashboard-container flex flex-col'>
-            <div className='main-container flex flex-col'>
+            <div className='main-container flex flex-col' style={{direction: 'ltr'}}>
                 <div className='sec-bunner-cont'>
                     <div onClick={() => {
                         setWhichIcon(' באנר ההפקה')
@@ -269,7 +269,7 @@ const EditMode = ({ onMode }) => {
                     backgroundPosition: 'center'}}></div>
                 </div>
             </div>
-            <div className='sec-main-container flex flex-row'>
+            <div className='sec-main-container flex flex-row' style={{direction: 'ltr'}}>
                 {whichSection === 'links' ?
                     <div className='edit-links' style={{ width: '50%' }}>
                         <div className='flex flex-col h-full'>
@@ -519,32 +519,32 @@ const EditMode = ({ onMode }) => {
                         </div>
 
                         <div className='flex flex-col w-full' style={{ paddingRight: '4%', paddingTop: '10px', paddingBottom: '10px' }}>
-                            <div className=' flex flex-row w-full gap-3 cursor-pointer  hover-slots-edit' style={{ background: whichInstegram === 'email' ? ' linear-gradient(90deg, #000 54%, #FBB03B  100%)' : '' }}
+                            <div className=' flex flex-row w-full  cursor-pointer  hover-slots-edit' style={{ background: whichInstegram === 'email' ?  'rgba(255, 255, 255, 0.089)' : '', borderRadius: '8px' }}
                                 onClick={handleEditEmail}>
-                                <div className='about-slots-edit-result text-right'>
+                                <div className='about-slots-edit-result text-right' style={{padding: '5px', }}>
                                     {email === '' ? 'הוסף אימייל' : email}</div>
-                                <div className='about-slots-edit-sub text-right'>:אימייל</div>
+                                <div className='about-slots-edit-sub text-right' style={{padding: '5px',}}>:אימייל</div>
                             </div>
                             <div style={{ height: '10px' }}></div>
-                            <div className=' flex flex-row w-full gap-3  cursor-pointer  hover-slots-edit' style={{ background: whichInstegram === 'phone' ? ' linear-gradient(90deg, #000 54%, #FBB03B  100%)' : '' }}
+                            <div className=' flex flex-row w-full   cursor-pointer  hover-slots-edit' style={{ background: whichInstegram === 'phone' ?  'rgba(255, 255, 255, 0.089)' : '' , borderRadius: '8px'}}
                                 onClick={handleEditPhone}>
-                                <div className='about-slots-edit-result text-right '>{
+                                <div className='about-slots-edit-result text-right ' style={{padding: '5px',}} >{
                                     phone === '' ? 'הוסף טלפון' : phone
                                 }</div>
-                                <div className='about-slots-edit-sub text-right'>:טלפון</div>
+                                <div className='about-slots-edit-sub text-right' style={{padding: '5px',}} >:טלפון</div>
                             </div>
                             <div style={{ height: '10px' }}></div>
-                            <div className=' flex flex-row w-full gap-3 cursor-pointer  hover-slots-edit' onClick={handleEditEmail}>
-                                <div className='about-slots-edit-result text-right'>{data?.address?.length === 0
+                            <div className=' flex flex-row w-full gap-3 cursor-pointer  hover-slots-edit' onClick={handleEditEmail} style={{borderRadius: '5px'}}>
+                                <div className='about-slots-edit-result text-right' style={{padding: '5px',}} >{data?.address?.length === 0
                                     ? 'הוסף כתובת' : data?.address}</div>
-                                <div className='about-slots-edit-sub text-right'>:כתובת</div>
+                                <div className='about-slots-edit-sub text-right' style={{padding: '5px',}} >:כתובת</div>
 
                             </div>
                             <div style={{ height: '10px' }}></div>
                         </div>
                     </div>
                     <div className='about-container flex flex-col ' onClick={handleEditDescription}
-                        style={{ cursor: 'pointer', background: '#000' }}>
+                        style={{ cursor: 'pointer'}}>
                         <h1 className='about-header-dash' >תיאור
                         </h1>
                         <div style={{ paddingRight: '4%' }}>
