@@ -320,10 +320,12 @@ const handleDate = (newRange)=>{
         <Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button>
         </Tooltip>
         <Tooltip  className='glass-background text-white' placement='bottom' showArrow  content=" לינק ייחודי לרכישה">
-        <Button className='text-white'color='primary' onClick={()=>{onOpen3()}} >  הגדרת לינק לרכישה</Button>
+        <Button className='text-white'color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
+         onClick={()=>{onOpen3()}} >  הגדרת לינק לרכישה</Button>
         </Tooltip>
         <Tooltip  className='glass-background text-white' placement='left' showArrow  content=" ה- AI שלנו יעשה זאת בשבילך">
-        <Button className='text-white'color='primary' onClick={()=>{onOpen4()}} >   עשה זאת עם AI </Button>
+        <Button className='text-white'color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
+         onClick={()=>{onOpen4()}} >   עשה זאת עם AI </Button>
         </Tooltip>
         </div>
         <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
