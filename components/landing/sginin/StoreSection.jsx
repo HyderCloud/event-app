@@ -36,30 +36,39 @@ const StoreSection = ({ username, id, profession, email}) => {
         )
     }else{
         return (
-          <main className='sginin-container min-h-screen'>
-          <div className='flex flex-row sginin-container min-h-screen'>
-          <div className='sginin1sec-container'>
-              <div className='flex items-center justify-center' style={{height: "90%"}}>
+            <div className='glass-background w-screen h-screen'>
+            <div className=' body2 flex flex-row' >
+      
+          <div className="form-container">
+          <h1 className="title">Buisness name</h1>
+          <form className="form">
+            <div className="input-group">
+              <label htmlFor="username" className="username" >
+                שם העסק
+              </label>
+              <input type="text" name="username" required  onChange={handleChange}/>
+            </div>
+            <div className="input-group">
+ 
+            </div>
+            <div className="forgot">
+       
+            </div>
+            <Button type="button" onPress={handleSubmit} className="sign-in">
+              סיום
+            </Button>
+            <div className="social-messages">
+              <div className="line"></div>
+          
+              <div className="line"></div>
+            </div>
 
-              </div>
+         
+          </form>
+        </div>
+
+            </div>
           </div>
-          <div className='sginin2sec-container flex flex-col space-y-12'>
-            
-              <form onSubmit={handleSubmit} className='sginin-form-container flex flex-col'>
-          <div>צור את העסק שלך</div>
-          <div style={{height: '60px'}}></div>
-          <Input type="email" variant={"flat"} onChange={handleChange} label="name" radius='lg'/>
-          <div style={{height: '40px'}}></div>
-          <Button color='primary' onPress={handleSubmit} className='signin-button'>לשלב הבא</Button>
-          <div style={{height: '20px'}}></div>
-          <div style={{height: '20px'}}></div>
-          <Divider/>
-          <div style={{height: '20px'}}></div>
-          <div style={{height: '20px'}}></div>
-              </form>
-          </div>
-          </div>
-      </main>
         )
     }
 }

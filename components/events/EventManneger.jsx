@@ -109,7 +109,7 @@ const EventManneger = ({}) => {
                         <div></div>
                         <div className='text-right header-events-maneger' >
 
-                            {data?.name}  מנהל האירועים של
+                           מנהל האירועים של {data?.name}
 
                         </div>
                         <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">

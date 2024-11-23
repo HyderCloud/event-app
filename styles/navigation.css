@@ -21,6 +21,16 @@
 
 }
 
+.chat-btn{
+height: 70px;
+width: 70px;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 15px;
+cursor: pointer;
+}
+
 
 .nav-slot-bar-hover{
     font-family: var(--italic-nunito);

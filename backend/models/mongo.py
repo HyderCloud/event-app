@@ -14,6 +14,7 @@ collectionUsers = db.users
 eventsCollection = db.events
 requestCollection = db.request
 connectionsCollection = db.connections
+chatCollection = db.chat
 
 class EventsDB:
     def __init__(self):
@@ -444,6 +445,11 @@ class Team:
         inserted_id = result.inserted_id
         return str(inserted_id)
     
+    def insert_message_to_chat(self, doccument):
+        result = chatCollection.insert_one(doccument)
+        inserted_id = result.inserted_id
+        return str(inserted_id)
+
     def insert_mission(self, doccument):
         result = missionCollection.insert_one(doccument)
         inserted_id = result.inserted_id
@@ -453,6 +459,16 @@ class Team:
         result = connectionsCollection.insert_one(doccument)
         inserted_id = result.inserted_id
         return str(inserted_id)
+
+    def get_chat_by_key(self, key):
+        documents_cursor = chatCollection.find({'key': key})
+        documents_list = []
+        for document in documents_cursor:
+            document['_id'] = str(document['_id'])
+            documents_list.append(document)
+        if not documents_list:
+            return None
+        return documents_list
 
     def get_jobs_by_key(self, key):
         documents_cursor = requestCollection.find({'key': key})

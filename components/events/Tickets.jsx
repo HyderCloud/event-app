@@ -511,9 +511,9 @@ const handleDate = (newRange)=>{
                     <div> -</div>
                     <div className='element-ticket'>
                     
+                {item.startDate}  
                     </div>
                 </div>
-                {item.startDate}  
                 </div>}
                 </div>
 
@@ -542,12 +542,12 @@ const handleDate = (newRange)=>{
                 </div>
                 <div className='flex  flex-row ' style={{gap: '10px'}}>
                     <div className='element-ticket'>
-                    {item.startTime} 
           
+                    {item.endTime} 
                     </div>
                     <div> -</div>
                     <div className='element-ticket'> 
-                    {item.endTime} 
+                    {item.startTime} 
                     </div>
                 </div>
 

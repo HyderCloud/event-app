@@ -26,39 +26,65 @@ const Sginin = () => {
 
 
   return (
-    <main className='sginin-container min-h-screen'>
-        <div className='flex flex-row sginin-container min-h-screen'>
+    <div className='glass-background w-screen h-screen'>
+      <div className=' body2 flex flex-row' >
 
-        <div className='sginin2sec-container flex flex-col space-y-12'>
-            <form className='sginin-form-container flex flex-col'>
-        <div>אנחנו שמחים לראותכם</div>
-        <div style={{height: '60px'}}></div>
-        <Input type="email" variant={"flat"} label="Email" onChange={handleOnChangeEmail} radius='lg'/>
-        <div style={{height: '40px'}}></div>
+    <div className="form-container">
+    <h1 className="title">LOGIN</h1>
+    <form className="form">
+      <div className="input-group">
+        <label htmlFor="username" className="username" onChange={handleOnChangeEmail}>
+          אימייל
+        </label>
+        <input type="text" name="username" required />
+      </div>
+      <div className="input-group">
+        <label htmlFor="password" className="password">
+          סיסמה
+        </label>
+        <input type="password" onChange={handleOnChangePassword} name="password" required />
+      </div>
+      <div className="forgot">
+        <a href="#">שכחת את הסיסמה?</a>
+      </div>
+      <Button type="button" onPress={onSubmit} className="sign-in">
+        התחברות
+      </Button>
+      <div className="social-messages">
+        <div className="line"></div>
+        <p className="message">התחברות עם רשתות חברתיות</p>
+        <div className="line"></div>
+      </div>
+      <div className="icons" onClick={() => signIn("google")}>
+        <div style={{height: '75px', width: '75px', cursor: 'pointer'}}>
+        <Image 
+        style=  {{ backgroundSize: 'cover',
+        backgroundPosition: 'center'}}
+        src={require('@/image/face2.png')}
+        height={100}
+        width={100}
+        alt='fff' />
+        </div>
+        <div style={{height: '75px', width: '75px', cursor: 'pointer'}} onClick={() => signIn("google")}>
+                <Image 
+        style=  {{ backgroundSize: 'cover',
+        backgroundPosition: 'center'}}
+        src={require('@/image/google.png')}
+        height={100}
+        width={100}
+        alt='fff' />
+        </div>
+        
+     
+      </div>
+      <p className="sign-up">
+        עדיין אין לך משתמש <Link href="/signup">הרשמה</Link>
+      </p>
+    </form>
+  </div>
 
-        <Input type="Password" variant={"bordered"} label="Password" onChange={handleOnChangePassword} radius='lg'/>
-        <div style={{height: '50px'}}></div>
-        <Button onPress={()=>{onSubmit({username: email, password: password})}} color='primary' className='signin-button'>התחברות</Button>
-        <div style={{height: '20px'}}></div>
-        <Link href={'/signup'}>יצירת משתמש חדש</Link>
-        <div style={{height: '20px'}}></div>
-        <Divider/>
-        <div>או</div>
-        <div style={{height: '20px'}}></div>
-        <div className='flex flex-row'>
-            <div>
-            <Button onPress={() => signIn("google")} style={{height: '50px'}}></Button>
-            </div>
-            <div style={{width: '40px'}}></div>
-            <div >
-            <Button onPress={() => signIn("google")} style={{height: '50px'}}></Button>    
-            </div>
-        </div>
-        <div style={{height: '20px'}}></div>
-            </form>
-        </div>
-        </div>
-    </main>
+      </div>
+    </div>
   )
 }
 

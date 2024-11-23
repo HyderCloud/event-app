@@ -4,6 +4,25 @@
     -webkit-backdrop-filter: blur(10px); /* For Safari support */
     
   }
+
+  .glass-background-chat {
+    background: #34a8539e; /* White background with 20% opacity */ /* White background with 20% opacity */
+    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+    
+  }
+
+  .glass-background-message{
+    background: #4286f490; /* White background with 20% opacity */
+    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  }
+
+  .glass-background-message:hover{
+    background: #4286f447;
+    animation: fadeIn2 0.5s ease-in forwards;
+}
+
   .glass-payment{
     background: rgba(255, 255, 255, 0.089);
     backdrop-filter: blur(10px); /* Apply blur to the backdrop */
@@ -15,6 +34,9 @@
     -webkit-backdrop-filter: blur(10px); /* For Safari support */
     
   }
+
+
+
   .input-glass-background {
     background: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
     backdrop-filter: blur(10px); /* Apply blur to the backdrop */
@@ -28,6 +50,15 @@
     height: 40px;
     align-items: center;
   }
+
+  .chat-input{
+    border-color: white;
+  }
+
+  .chat-Input:focus{
+    border-color: white;
+  }
+
   .setting-tickets:hover{
     background-color: rgba(255, 255, 255, 0.18);
   }
@@ -202,3 +233,8 @@ input{
 
 }
 
+.message-style{
+  padding: 12px;
+  border-radius: 20px;
+  min-width: 50px;
+}

@@ -40,13 +40,21 @@ def admin_up(id):
 @team_blueprint.route('/addmission/<string:id>', methods=['POST'])
 def add_mission(id):
     event = request.get_json()
-
     return team_api.add_mission(event['data'], event["request"])
+
+@team_blueprint.route('/addmessage', methods=['POST'])
+def add_message():
+    event = request.get_json()
+    return team_api.add_mesasge_to_chat(event['data'])
 
 @team_blueprint.route('/missions/<string:id>', methods=['GET'])
 def get_missions(id):
     print(get_missions)
     return team_api.get_mission_by_key(id)
+
+@team_blueprint.route('/chat/<string:id>', methods=['GET'])
+def get_chat(id):
+    return team_api.get_chat_by_key(id)
 
 @team_blueprint.route('/updatemissions/<string:id>', methods=['PATCH'])
 def update_position_mission(id):

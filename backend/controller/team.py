@@ -15,6 +15,21 @@ class TeamC:
     def __init__(self):
         pass
 
+    def add_mesasge_to_chat(self,doc):
+        try:
+            is_inserted = team_api.insert_message_to_chat(doc)
+            if is_inserted:
+                return jsonify({"acknowledge": True}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+
+    def get_chat_by_key(self,key):
+        try:
+            chat = team_api.get_chat_by_key(key)
+            return jsonify({"chat": chat}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+
     def get_team_by_profession(self,profession):
         try:
             team = team_api.get_team_by_profession(profession)
