@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { TimeInput, Card, CardHeader, CardBody, User, Link, Textarea,Spacer, CardFooter, Image, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import { TimeInput, Card, CardHeader, CardBody, User, Link,Accordion, AccordionItem, Textarea,Spacer, CardFooter, Image, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -12,7 +12,7 @@ import { Navigation, Pagination, Virtual  } from 'swiper/modules';
 import 'swiper/css/virtual';
 
 const Missions = ({ admin }) => {
-
+  const [isLoadingSelect, setIsLoadingSelect] = useState(false)
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "ביטול", color: '#ae4335'}]
@@ -191,6 +191,7 @@ const Missions = ({ admin }) => {
     const result = await axios.patch(`http://localhost:9020/updatestatus/${getStringAfterSecondSlash(path)}`, {status: status, id: id})
     if(result?.data?.acknowledge){
       await handleUpdatemission()
+      setIsLoadingSelect(false)
      }
   }
 
@@ -224,8 +225,8 @@ const Missions = ({ admin }) => {
           <div className=''>
            <Swiper
           
-          slidesPerView={3}
-          spaceBetween={10}
+          slidesPerView={3.5}
+          spaceBetween={2}
           pagination={{
             clickable: true,
           }}
@@ -237,7 +238,7 @@ const Missions = ({ admin }) => {
           {items && items.map((item, index) => (
             <SwiperSlide key={index}>
               <div className='glass-background flex flex-col'
-               style={{height: '550px', width: '320px', borderRadius: '15px', padding: '10px', color: "white", gap: '10px'}}>
+               style={{height: '550px', width: '350px', borderRadius: '15px', padding: '10px', color: "white", gap: '10px'}}>
                 <div className='w-full flex flex-row items-center justify-between' style={{height: '50px' , borderBottom: '1px solid white'}}>
                   <div>{item.title}</div>
              
@@ -246,18 +247,72 @@ const Missions = ({ admin }) => {
                 <div style={{opacity: '70%', direction: 'ltr'}}>{item.startDate}-{item.endDate}</div>
                 <div style={{opacity: '70%', direction: 'ltr'}}>{item.endTime}</div>
                 <div>
-                  <div style={{paddingTop: '30px'}}>
+                  <Accordion style={{color: 'white', paddingTop: '20px'}}>
+                  <AccordionItem key="1" aria-label="Accordion 1" title={<div style={{color: 'white'}}>תיאור המשימה</div>}
+                   className='w-full glass-background' style={{borderRadius: '15px', padding:"10px", maxHeight: '200px', overflow: 'auto'}} >
+                    {item.content}
+                  </AccordionItem>
+                  </Accordion>
+                  <div className='h-full flex flex-col' style={{paddingTop: '30px', gap: '10px', maxHeight: '200px', overflow: 'auto'}}>
+                  <div>חברי צוות</div>
                   {item.participent.map((item2, index2)=>{
                     return(
-                      <div className='flex flex-row glass-background w-full items-center' style={{ borderRadius: '15px', padding: '10px', gap: '10px'}}>
+                      <div className='flex flex-row glass-background w-full items-center'
+                       style={{ borderRadius: '15px', padding: '10px', gap: '10px', height: '60px'}}>
                   
                           <div  style={{backgroundImage:  `url(${item2.profile_img})`,
                        borderRadius: '15px',
                        backgroundSize: 'cover',
                        height: '30px',
-                       width: '30px',
+                       width: '140px',
                        backgroundPosition: 'center'}}></div>
-                        <div>{item2.name}</div>
+                        <div className='w-full text-center'>{item2.name}</div>
+                        <div className='w-full text-center'>{item2.profession} </div>
+                       
+                        {item2.name === decodedToken.name ? <div className='w-full' 
+                        style={{color: 'white',}}
+                      >
+                             <Select 
+                             isLoading={isLoadingSelect}
+                  onChange={async (e)=>{
+                    
+                    if(e.target.value === status_u[0].text){
+                      console.log(items[index])
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[0].color
+                    }else if(e.target.value === status_u[1].text){
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[1].color
+                      console.log(e.target.value)
+                    }else if(e.target.value === status_u[2].text){
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[2].color
+                      console.log(e.target.value)
+                    }else if(e.target.value === status_u[3].text){
+                      items[index].participent[index2].status.text = e.target.value
+                      items[index].participent[index2].status.color = status_u[3].color
+                      console.log(e.target.value)
+                    }
+                    setIsLoadingSelect(true)
+                    await  handleUpdateStatus(items[index].participent,item._id)
+                  }}
+               
+                 radius='full'
+                 className='w-full flex items-center text-center justify-center h-full'
+                 style={{backgroundColor: item2.status.color, height: '100%'}}
+                  startContent={<div style={{color: 'white', width: '70px'}}>{item2.status.text}</div>}
+
+               >
+                 {status_u.map((status) => (
+                   <SelectItem  key={status.text}  className='text-center' style={{color: 'white', backgroundColor: status.color}}>
+                     <div>{status.text}</div>
+                   </SelectItem>
+                 ))}
+               </Select>
+                        </div>:<div  className='w-full text-center'
+                        style={{borderRadius: '10px', backgroundColor: item2.status.color,}}>
+                          {item2.status.text}
+                          </div>}
                       </div>
                       
                     )
@@ -270,7 +325,7 @@ const Missions = ({ admin }) => {
           ))}
         </Swiper>
           </div>
- 
+ <div style={{height: ''}}></div>
                 <Modal size='5xl' style={{ width: '80%' }} className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
 
 <ModalContent>

@@ -58,7 +58,7 @@ const EventManneger = ({}) => {
         const event = await axios.post(`http://localhost:9020/addevent/${decodedToken?.store_id}/${decodedToken?.name}`, 
             {name: name, start_date: startDate, end_date: endDate, startTime: startTime,id: decodedTokens?.user_id,
             endTime: endTime, place: place}) 
-    if(event.data.acknowledge === "allow"){
+    if(event.data.acknowledge){
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
      
         setEvents(getAllEvents.data.events)

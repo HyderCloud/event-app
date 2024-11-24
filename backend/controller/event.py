@@ -56,7 +56,7 @@ class Events:
         }
             result = api_events.insert_event(doccument)
             if result:
-                 return jsonify({"acknowledge": "allow"}),200
+                 return jsonify({"acknowledge": True}),200
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501 
         
