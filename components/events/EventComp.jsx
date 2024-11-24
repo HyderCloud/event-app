@@ -111,7 +111,7 @@ const handleKeyDown = (event) => {
   },[])
 
   useEffect(()=>{
-    if(events._id){
+    if(events?._id){
       getchat()
     }
   },[events])
