@@ -60,7 +60,7 @@ const router = useRouter()
                   <div style={{height: '250px', cursor: 'pointer', background: `url(${item?.tubnail})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'}} onClick={()=>{
-                    router.push(`/${item?.name}/${item?._id}`) }}
+                    router.push(`/${item?.name}/${item?.origin}`) }}
                     alt="Woman listing to music"
                     className="object-cover"
 

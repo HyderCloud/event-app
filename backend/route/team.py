@@ -65,3 +65,13 @@ def update_position_mission(id):
 def update_mission_status(id):
     event = request.get_json()
     return team_api.update_mission_status(event['status'], event["id"])
+
+@team_blueprint.route('/updateworker/<string:id>', methods=['PATCH'])
+def update_worker_status(id):
+    event = request.get_json()
+    return team_api.update_workers(event['team'], id)
+
+@team_blueprint.route('/updategrid/<string:id>', methods=['PATCH'])
+def update_grid_status(id):
+    event = request.get_json()
+    return team_api.update_grid(event['grid'], id)

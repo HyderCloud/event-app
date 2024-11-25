@@ -93,7 +93,22 @@ class TeamC:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
         
-    
+    def update_workers(self, workers, fromU):
+        try:
+            is_updated = team_api.update_workers(workers, fromU)
+            if is_updated:
+                return jsonify({"workers": workers}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
+    def update_grid(self, grid, fromU):
+        try:
+            is_updated = team_api.update_grid(grid, fromU)
+            if is_updated:
+                return jsonify({"grid": grid}), 200
+        except Exception as e:
+            return jsonify({"message": 'error-' + str(e)}), 501
+        
 
     def update_job_by_id(self, id, role, name, key, fromU):
         try:

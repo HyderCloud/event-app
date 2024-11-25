@@ -3,15 +3,26 @@ import React, { useState, useEffect } from 'react'
 import { TimeInput, Card, CardHeader, CardBody, User, Link, Spacer, CardFooter, Image, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import { useJwt } from 'react-jwt';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 import axios from 'axios'
+import TeamTabel from './TeamTable';
 
 export const Team = ({admin}) => {
+  
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [columnDefs, setColumnDefs] = useState([])
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const { isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
+  const { isOpen: isOpen4, onOpen: onOpen4, onOpenChange: onOpenChange4 } = useDisclosure();
   const router = useRouter()
+  const [newWorker, setNewWorker] = useState([])
   const searchParams = useSearchParams()
   const [team, setTeam] = useState([])
+  const [column, setColumn] = useState('')
   const [role, setRole] = useState([])
   const [filterBy, setFilterBy] = useState('')
   const [search, setSearch] = useState([])
@@ -35,7 +46,16 @@ export const Team = ({admin}) => {
     setTeam(getAllEvents.data?.team)
     setRole(eventU.roles)
     setWaiters(eventU.waiting)
+    setNewWorker(getAllEvents.data.workers)
+    setColumnDefs(getAllEvents.data.events.grid)
   }
+
+  const handleUpdatemission = async () => {
+    await axios.post(`http://localhost:8000/notify/event/${getStringAfterSecondSlash(path)}`, {
+      message: 'Hello, Event!'
+    })
+
+}
 
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
@@ -107,6 +127,18 @@ export const Team = ({admin}) => {
     const theRole = result.data.role
     setRole(theRole)
   }
+  const handleUpdateworker = async (data) => {
+    const result = await axios.patch(`http://localhost:9020/updateworker/${events._id}`, { team: data })
+    const theRole = result.data.workers
+    setNewWorker(theRole)
+  }
+
+  const handleUpdateGrid = async (data) => {
+    const result = await axios.patch(`http://localhost:9020/updategrid/${events._id}`, { grid: data })
+    const theRole = result.data.grid
+    setColumnDefs(theRole)
+  }
+
   const handleUpdateWaiting = async (data) => {
     const result = await axios.patch(`http://localhost:9020/waiting/${events._id}`, { waiting: data })
     const theWaiter = result.data.waiting
@@ -116,10 +148,59 @@ export const Team = ({admin}) => {
     const exists = waitWorkers.some(item => item._id === id);
     return !exists; // Returns true if id is unique, false if it exists
   }
+  const onCellValueChanged = async (params) => {
+
+    const value = params.colDef.field
+    const arr  = [...newWorker]
+    arr[params.rowIndex][value] = params.newValue
+    setTeam([...team]); 
+    await handleUpdateworker(arr)
+  };
+
+  const addColumn = async () => {
+    const newColumn = { field: column, editable: true };
+
+    setColumnDefs([...columnDefs, newColumn]);
+    await handleUpdateGrid([...columnDefs, newColumn])
+    const updatedRowData = team.map((row) => ({
+      ...row,
+      [column]: '', // Default empty value
+    }));
+    const updatedRowData2 = newWorker.map((row) => ({
+      ...row,
+      [column]: '', // Default empty value
+    }));
+    setTeam(updatedRowData);
+    setNewWorker(updatedRowData2)
+    await handleUpdateworker(updatedRowData2)
+  };
+
   useEffect(() => {
     getEvents()
     handleGetSearch()
+    const ws = new WebSocket(`ws://localhost:8000/ws/notification/${getStringAfterSecondSlash(path)}`);
 
+    ws.onopen = () => {
+      console.log(`Connected to WebSocket server as ${getStringAfterSecondSlash(path)}`);
+      setSocket(ws);
+    }
+
+    ws.onmessage = (event) => {
+      // Handle incoming messages from the server
+      const message = JSON.parse(event.data);
+      console.log(message)
+      getEvents()
+      setMessages((prevMessages) => [...prevMessages, message]);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+      setSocket(null);
+    };
+
+    return () => {
+      if (ws) ws.close();
+    };
   }, [])
 
   return (
@@ -151,83 +232,17 @@ export const Team = ({admin}) => {
     </Tooltip>
 
       </div>
-      <div className='glass-background text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'white' }}>
-        <div className=' w-full flex flex-col' style={{ padding: '2%', gap: '20px' }}>
-         {team?.map((item, index)=>{
-          return(
-            <div className='w-full h-full flex glass-background flex-col justify-center'style={{borderTop: "1px solid white", textAlign: 'right',
-              padding: '15px', gap: '15px', height: '85px', borderRadius: '15px'}}>
-              <div className=' w-full flex flex-row items-center ' style={{gap: '15px',textAlign: 'right'}}  key={index}>
-       
-              <div style={{width: '270px'}}>ID</div>
-              <div className='w-full' style={{textAlign: 'right'}}>
-                פרופיל
-              </div>
-              <div className='w-full'>שם</div>
-              <div className='w-full'>התמחות</div>
-              <div className='w-full'>תפקיד</div>
-              <div className='w-full'>הרשאה</div>
-              <div className='w-full'></div>
-  
-              <div className='w-full h-full items-start flex justify-center'> 
-                {(admin === 'יחצן'||admin ==='עובד כללי'||admin === "none")|| (admin === item.admin)|| (item.admin === 'יוצר') ||
-                (admin === 'בעלים' && item.admin === 'בעלים')             
-                ?<div></div>:
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M18.75 5H16.08L14.87 3.68C14.4271 3.24459 13.8311 3.00041 13.21 3H10.29C9.65816 3.00529 9.05413 3.26056 8.61 3.71L7.42 5H4.75C4.33579 5 4 5.33579 4 5.75C4 6.16421 4.33579 6.5 4.75 6.5H18.75C19.1642 6.5 19.5 6.16421 19.5 5.75C19.5 5.33579 19.1642 5 18.75 5ZM9.69 4.74C9.8496 4.58138 10.065 4.49163 10.29 4.49H13.21C13.4257 4.48936 13.6334 4.57171 13.79 4.72L14.04 4.99H9.46L9.69 4.74Z" fill="white"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M4.23 9.52V17C4.23 19.4632 6.22681 21.46 8.69 21.46H14.81C17.2732 21.46 19.27 19.4632 19.27 17V9.52C19.27 8.41543 18.3746 7.52 17.27 7.52H6.27C5.73267 7.50925 5.21363 7.71521 4.82986 8.09145C4.44609 8.4677 4.22989 8.98256 4.23 9.52ZM9.5 13.05C9.5 13.4642 9.16421 13.8 8.75 13.8C8.33579 13.8 8 13.4642 8 13.05V10.68C8 10.2658 8.33579 9.93 8.75 9.93C9.16421 9.93 9.5 10.2658 9.5 10.68V13.05ZM11.75 17.75C12.1642 17.75 12.5 17.4142 12.5 17V10.68C12.5 10.2658 12.1642 9.93 11.75 9.93C11.3358 9.93 11 10.2658 11 10.68V17C11 17.4142 11.3358 17.75 11.75 17.75ZM15.5 13.05C15.5 13.4642 15.1642 13.8 14.75 13.8C14.3358 13.8 14 13.4642 14 13.05V10.68C14 10.2658 14.3358 9.93 14.75 9.93C15.1642 9.93 15.5 10.2658 15.5 10.68V13.05Z" fill="white"/>
-                </svg>
-                }
-              </div>
-            </div>
-
-            <div className=' w-full flex flex-row items-center ' style={{gap: '15px', textAlign: 'right'}}  key={index}>
-            <div style={{width: '270px'}}>
-                {index+1}
-              </div>
-              <div className='w-full flex  '>
-              <div className='bg-black ' style={{borderRadius: '100px', height:'40px', width: '40px', backgroundImage: `url(${item.profile_img})`,backgroundSize: 'cover',
-                      backgroundPosition: 'center'}}></div>
-              </div>
-              <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.name}
-              </div>
-              </div>
-              <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.profession}
-              </div>
-              </div>
-              <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.role}
-              </div>
-              </div>
-              <div className='w-full '>
-              <div className='team-slot-hover'>
-              {item.admin}
-              </div>
-              </div>
-              <div className='w-full'></div>
-            <div className='w-full h-full items-start flex justify-center'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.79 8.04C11.4065 8.08421 11.117 8.40894 11.117 8.795C11.117 9.18106 11.4065 9.50579 11.79 9.55C11.9915 9.5528 12.1854 9.47329 12.327 9.32985C12.4685 9.18641 12.5455 8.99145 12.54 8.79C12.5346 8.37804 12.202 8.04539 11.79 8.04Z" fill="white"/>
-<path d="M11.79 10.92C11.5903 10.9173 11.3979 10.9954 11.2567 11.1367C11.1154 11.2779 11.0373 11.4703 11.04 11.67V14.79C11.04 15.2042 11.3758 15.54 11.79 15.54C12.2042 15.54 12.54 15.2042 12.54 14.79V11.69C12.5454 11.4876 12.4688 11.2917 12.3275 11.1467C12.1863 11.0017 11.9924 10.9199 11.79 10.92Z" fill="white"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M11.79 2C6.38542 2.00551 2.00551 6.38542 2 11.79C2 17.1969 6.38313 21.58 11.79 21.58C17.1969 21.58 21.58 17.1969 21.58 11.79C21.5745 6.38542 17.1946 2.00551 11.79 2ZM11.79 20.08C7.21156 20.08 3.5 16.3684 3.5 11.79C3.5 7.21156 7.21156 3.5 11.79 3.5C16.3684 3.5 20.08 7.21156 20.08 11.79C20.0745 16.3662 16.3662 20.0745 11.79 20.08Z" fill="white"/>
-</svg></div>
-
-
-
-
-
-
-
-            </div>
-            </div>
-          )
-         })}
-
+      <div className=' text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'black', gap: '20px' }}>
+        <div className='flex flex-col ag-theme-quartz-dark' 
+         style={{gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%',}}>
+          <div className='w-full'>
+        <div style={{width: '50px'}}>
+        <Button onPress={onOpen4} color='primary'>הוסף עמודה</Button>
         </div>
+          </div>
+        <AgGridReact rowData={team} columnDefs={columnDefs} onCellValueChanged={onCellValueChanged}  domLayout="autoHeight"></AgGridReact>
+        </div>
+     
       </div>
       <Modal size='5xl' style={{ width: '80%' }} className='event-modal-container glass-background' isOpen={isOpen} onOpenChange={onOpenChange}>
 
@@ -520,7 +535,31 @@ export const Team = ({admin}) => {
           )}
         </ModalContent>
       </Modal>
-      
+      <Modal className='glass-background' isOpen={isOpen4} onOpenChange={onOpenChange4}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+              <ModalBody>
+              <Input onChange={(e)=>{setColumn(e.target.value)}}/>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={async ()=>{
+                  onClose()
+                  await addColumn()
+                 
+                  setColumn('')
+                }}>
+                  Action
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
 
   )

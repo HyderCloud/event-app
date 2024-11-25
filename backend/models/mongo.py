@@ -402,6 +402,19 @@ class Team:
         else:
             print("No document found with the given email.")
 
+    def update_grid(self, doc, _id):
+        new_data = {
+        "$set": {
+            "grid": doc,  
+        }
+        }
+        result = eventsCollection.update_one({'_id': ObjectId(_id)},new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+
     def update_waiting(self, waiting, _id):
         new_data = {
         "$set": {

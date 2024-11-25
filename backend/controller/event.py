@@ -44,6 +44,7 @@ class Events:
             "age": '',
             "type": '',
             "mode": True,
+            "grid": [{ "field": '_id' }, { "field": 'name' }, { "field": 'email' }, {"field": 'phone'}, {"field": 'role'}, {"field": 'admin'}],
             "ticket_settings": {"cash": False, 
                                  "payment": False,
                                  "ID": False,
@@ -80,12 +81,13 @@ class Events:
                 if len(result["workers"])  > 0:
                     for res in result["workers"]:
                         result2 = api_store.get_store_by_key(res["key"])
-                        result2["role"] = res["role"]
+                        for i in res:
+                            result2[i] = res[i]
+                            result2[i] = res[i]
                         
-                        result2["admin"] = res["admin"]
                         team.append(result2)
                     
-                    return jsonify({"events": result, "team": team}), 200
+                    return jsonify({"events": result, "team": team, "workers": result["workers"]}), 200
                 else:
                     return jsonify({"events": result}), 200
          except Exception as e:

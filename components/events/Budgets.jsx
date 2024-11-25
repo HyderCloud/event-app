@@ -4,16 +4,25 @@ import axios from 'axios'
 import { TimeInput, Divider,DatePicker,Slider, Input,Image, Switch,Calendar,CheckboxGroup,User ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import PieChart3D from '@/components/events/Cake.jsx'
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 import Link from 'next/link'
 const Budgets = ({admin}) => {
     const icon =           <div >
     <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="18" height="4" rx="2" fill="#4285F4"/>
     </svg> </div>
+      const [columnDefs] = useState([
+        { field: 'name', width: 200 },
+        { field: 'budget', width: 200 },
+      ]);
+
     const [section1, setSection1] = useState(false)
     const [section2, setSection2] = useState(false)
     const [messages, setMessages] = useState([]);
     const [fieldUsers, setFieldUsers] = useState([])
+
     const [socket, setSocket] = useState(null);
     const [team, setTeam] = useState([])
     const [events, setEvents] = useState([])
@@ -38,6 +47,7 @@ const Budgets = ({admin}) => {
     const {isOpen: isOpen5, onOpen: onOpen5, onOpenChange: onOpenChange5 } = useDisclosure();
     const {isOpen: isOpen6, onOpen: onOpen6, onOpenChange: onOpenChange6 } = useDisclosure();
     const {isOpen: isOpen7, onOpen: onOpen7, onOpenChange: onOpenChange7 } = useDisclosure();
+    const [tableBudget, setTableBudget] = useState([])
     const [match, setMatch] = useState([])
     const [filterBy, setFilterBy] = useState('')
     const [waiting, setWaiting] = useState([])
@@ -45,6 +55,13 @@ const Budgets = ({admin}) => {
     const [searchTem, setSearchTerm] = useState('')
     function removeByName(array, name) {
         return array.filter(item => item.name !== name);
+      }
+      function changeKeyToBudget(arr) {
+        return arr.map(item => {
+          const { y, ...rest } = item; // Destructure the item to exclude `y`
+          console.log({ ...rest, budget: y })
+          return { ...rest, budget: y }; // Add the new `budget` key
+        });
       }
     const handleSearch = (e) => {
       const term = e.target.value;
@@ -85,6 +102,7 @@ const Budgets = ({admin}) => {
         setEvents(getAllEvents.data.events)
         setTeam(getAllEvents.data?.team)
         setBudget(getAllEvents.data.events.budget)
+        setTableBudget(changeKeyToBudget(getAllEvents.data.events.budget))
         console.log(getAllEvents.data.events.budget)
         setAmount(getSumOfNums(getAllEvents.data.events.budget))
         setField(extractNames(getAllEvents.data.events.budget))
@@ -722,7 +740,7 @@ const Budgets = ({admin}) => {
         </div>
             </div>
         <div style={{height:'20px'}}></div>
-        <div className='w-full' style={{paddingLeft: '12%', paddingRight: '12%'}} 
+        <div className='w-full flex justify-center flex-col items-center' style={{paddingLeft: '12%', paddingRight: '12%'}} 
         onMouseEnter={()=>{setGraphHover(true)}} onMouseLeave={()=>{setGraphHover(false)}}>
             {(grapghHover && budget[0]?.y > 0 || budget.length > 1)  &&
             <div className='flex flex-col absolute' style={{right: '10%', gap: '10px'}}>
@@ -735,24 +753,56 @@ const Budgets = ({admin}) => {
                 
             </div>
             }
+              <div
+        className="ag-theme-quartz-dark"
+        style={{
+          width: '420px',
+          overflowX: 'auto', // Enable horizontal scrolling
+        }}
+      >
+        <AgGridReact
+          rowData={tableBudget}
+          columnDefs={columnDefs}
+          domLayout="autoHeight" // Ensure the grid calculates height dynamically
+        ></AgGridReact>
+      </div>
         <PieChart3D title={'תקציב לפי תחומים'} data={budget}/>
         </div>
         </div>
-        <div className='w-full flex flex-row flex-wrap items-center justify-center' style={{ gap: '10px'}}
+        <div className='w-full flex flex-row flex-wrap items-center justify-center' style={{ gap: '100px'}}
         onMouseEnter={()=>{setSubGraphHover(true)}} onMouseLeave={()=>{setSubGraphHover(false)}}>
             {budget.slice(1)?.map((item,index)=>{
                 return(
-           
-                            <div className='flex flex-row ' style={{width: '350px', gap: '20px'}}   >
-                                    {subGrapghHover &&
-                                <div className='absolute flex flex-col' style={{right: '5px', gap: '10px'}}>
+                            <div className='flex flex-row ' style={{width: '350px'}}   >
+                 <div className='flex flex-col w-full justify-center items-center'>
+                                                      {subGrapghHover &&
+                                <div className='absolute flex flex-col' style={{right: '5px', gap: '5px'}}>
                                 <Button onPress={onOpen4} className='buttonfade' color='primary'>הוסף עובד לתקציב</Button>
                                 <Button onPress={onOpen6} className='buttonfade' color='primary'>שנה תקציב לעובד </Button>
                                 </div>
                                     }
-                            <PieChart3D title={item?.name} data={item.users} />
+                                              <div
+                            className="ag-theme-quartz-dark"
+                            style={{
+            
+                              width: '420px',
+                              overflowX: 'auto', // Enable horizontal scrolling
+                            }}
+                          >
+                            <AgGridReact
+                              rowData={changeKeyToBudget(item.users)}
+                              columnDefs={columnDefs}
+                              domLayout="autoHeight" // Ensure the grid calculates height dynamically
+                            ></AgGridReact>
                             </div>
-                    
+
+                                    <div >
+                            <PieChart3D title={item?.name} data={item.users} />
+                                    </div>
+
+                            </div>
+                 </div>
+
                 )
             })}
         </div>
