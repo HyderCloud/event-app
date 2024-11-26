@@ -28,6 +28,7 @@
     "react-dropzone": "^14.2.10",
     "react-jwt": "^1.2.2",
     "react-quill": "^2.0.0",
+    "react-signature-canvas": "^1.0.6",
     "swiper": "^11.1.14"
   },
   "devDependencies": {
