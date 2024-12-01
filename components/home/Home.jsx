@@ -22,7 +22,7 @@ const Home = () => {
         </div>
           </div>
           <div className="w-full h-full  flex flex-col  " style={{gap: '10px'}}>
-          <div className="w-full flex text-end items-end   flex-row" style={{color: 'white', gap: '15px'}}>
+          <div className="w-full flex text-end items-end   flex-row" style={{color: "#252323", gap: '15px'}}>
           <div className="promos-text-slider flex" style={{  height: "30px"}}>הלוהטים ביותר</div>
           <div className="promo-patches" style={{background: 'linear-gradient(to right, #EA4335, #CD7A7C)'}}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +34,7 @@ const Home = () => {
           <div style={{height: '400px'}}>
          <EventSlider/>
           </div>
-         <div className="w-full flex text-end items-end   flex-row" style={{color: 'white', gap: '15px'}}>
+         <div className="w-full flex text-end items-end   flex-row" style={{color: "#252323", gap: '15px'}}>
          <div className="promos-text-slider flex" style={{  height: "30px"}}>  לספונטניים בלבד</div>
           <div className="promo-patches" style={{background: 'linear-gradient(to right, #FBBC05, #CD7A7C)'}}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

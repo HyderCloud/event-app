@@ -168,7 +168,7 @@ const EventManneger = ({}) => {
                 </div>
                 <Divider className='bg-white opacity-70' />
             </div>
-            <div className='flex flex-col w-full h-full0' style={{color: 'white'}}>
+            <div className='flex flex-col w-full h-full0' style={{color: "#252323"}}>
             <div className='flex flex-col'>
             <div className='w-full flex ' style={{height:'30%', paddingRight: '5%', fontSize: '35px', fontWeight: 'bolder'}}> 
                 <div>

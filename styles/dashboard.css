@@ -6,7 +6,7 @@
     padding-right: 3%;
     gap: 5%;
     overflow-y: auto;
-    background: radial-gradient(circle, #001731, #000000);
+    background: #fefbf9;
 }
 
 .dashboard-container2{
@@ -15,7 +15,7 @@
     align-items: center;
     gap: 5%;
     overflow-y: auto;
-    background: radial-gradient(circle, #001731, #000000);
+    background: #fcf5ee;
 }
 
 .proceed-pay-div{
@@ -26,7 +26,7 @@
       border-radius: 10px;
       border: none;
       background-color: #F3A33A;
-      color: #fff;
+      color: #252323;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -45,7 +45,7 @@
     background-color: #F3A33A;
     border: none;
     border-radius: 8px;
-    color: #fff;
+    color: #252323;
     font-size: 16px;
     transform: translate(0%,-50%);
   }

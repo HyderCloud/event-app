@@ -127,7 +127,7 @@ const handleEdit = ()=>{
     <div className='dashboard-container flex flex-col' >
       <div className='main-container flex flex-col' style={{direction: 'ltr'}}>
         <div className='sec-bunner-cont'>
-        <div className='bunner-dash' style={{backgroundImage:  `url(${data.bunner})` ,       height: '250px',
+        <div className='bunner-dash' style={{backgroundImage:  `url(${data?.bunner})` ,       height: '250px',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'}}>
           
@@ -155,10 +155,10 @@ const handleEdit = ()=>{
             </div>
             <div></div>
           <div className='flex flex-col '>
-          <div className='store-name items-end'>{data.name}</div>
-          <div className='folowers-digits opacity-70 mb-6'>{data.slogen}</div>
+          <div className='store-name items-end'>{data?.name}</div>
+          <div className='folowers-digits opacity-70 mb-6'>{data?.slogen}</div>
           </div>
-          <div className='profile-image-edit' style={{backgroundImage:  `url(${data.profile_img})` , 
+          <div className='profile-image-edit' style={{backgroundImage:  `url(${data?.profile_img})` , 
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'}}></div>
 

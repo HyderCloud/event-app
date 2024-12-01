@@ -1,8 +1,5 @@
 .glass-background {
-    background: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
-    backdrop-filter: blur(10px); /* Apply blur to the backdrop */
-    -webkit-backdrop-filter: blur(10px); /* For Safari support */
-    
+    background:#ebe6de;
   }
 
   .glass-background-chat {
@@ -18,10 +15,7 @@
     -webkit-backdrop-filter: blur(10px); /* For Safari support */
   }
 
-  .glass-background-message:hover{
-    background: #4286f447;
-    animation: fadeIn2 0.5s ease-in forwards;
-}
+
 
 .workspace-style{
   background-color: #34a853;
@@ -58,11 +52,11 @@
   }
 
   .chat-input{
-    border-color: white;
+    border-color: #252323;
   }
 
   .chat-Input:focus{
-    border-color: white;
+    border-color: #252323;
   }
 
   .setting-tickets:hover{
@@ -74,10 +68,7 @@
     border-radius: 10px;
 
   }
-.glass-background:hover{
-    background: rgba(255, 255, 255, 0.089);
-    animation: fadeIn2 0.5s ease-in forwards;
-}
+
 .start-main-content{
     width: 50%;
     padding-left: 2%;
@@ -101,7 +92,7 @@
     width: 1080px;
     height: 40%;
     /* background-color: #27272A; */
-    color: white;
+    color: #252323;
     border-radius: 8px;
 }
 
@@ -121,7 +112,7 @@
 
 .event-modal-container{
 
-    color: white;
+    color: #252323;
 }
 
 .navbar-event{
@@ -131,7 +122,7 @@
 }
 
 .navbar-event-slot{
-    color: white;
+    color: #252323;
     height: 100%;
     cursor: pointer;
     font-family: var(--italic-nunito);
@@ -161,7 +152,7 @@
 }
 
 .event-lable{
-    color: white;
+    color: #252323;
     width: 100%;
     font-family: var(--italic-nunito);
     font-size: 52px;
@@ -172,7 +163,7 @@
 
 .change-details{
     background-color: #27272A;
-    color: white;
+    color: #252323;
 }
 
 .buttonfade {
@@ -227,7 +218,7 @@
     padding-left: 1%;
     justify-content: end;
     gap: 15px;
-    color: white;
+    color: #252323;
 }
 
 ::-webkit-input-placeholder{

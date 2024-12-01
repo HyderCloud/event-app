@@ -70,13 +70,12 @@ class TeamC:
         except Exception as e:
             return jsonify({"message": 'error-' + str(e)}), 501
 
-    def workers_recruit(self, emails):
+    def workers_recruit(self, data):
         try:
-            send_bulk_emails(emails)
-            for email in emails:
-                team = team_api.insert_job_request(email)
+            send_bulk_emails(data)
+            team = team_api.insert_job_request(data)
             if team:
-                return jsonify({"waiting": "message"}), 200
+                return jsonify({"waiting": True}), 200
             else:
                 return jsonify({"message": 'error-'}), 200
         except Exception as e:

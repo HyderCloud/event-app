@@ -5,7 +5,7 @@
 }
 
 .budget-text-promo{
-    color: white;
+    color: #252323;
     display: flex;
     justify-content: center;
     font-weight: bolder;
@@ -17,13 +17,13 @@
 }
 
 .style-lable-amount{
-    color: white;
+    color: #252323;
     font-weight: bolder;
     font-size: 24px;
 }
 
 .style-lable-amount-display{
-    color: white;
+    color: #252323;
     font-weight: lighter;
     font-size: 36px;
 }

@@ -282,7 +282,7 @@ const handleDate = (newRange)=>{
                 value={budgetdForAi}
                 onChange={(newValue) => setBudgetdForAi(newValue)}
                 formatOptions={{ style: 'currency', currency: 'ILS' }}
-                className={'text-white'}
+                className={''}
                 />
                 <div style={{direction: 'ltr'}}>
                 <DateRangePicker   label='Event date' onChange={handleDateForAi}/>
@@ -316,20 +316,20 @@ const handleDate = (newRange)=>{
     <div className=' flex justify-center items-center flex-col'>
         <div className='w-full flex flex-row justify-between'style={{paddingLeft: '50%'}}>
         <div className='flex flex-row' style={{gap: '15px'}}>
-        <Tooltip  className='glass-background text-white' showArrow  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
-        <Button className='text-white'color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button>
+        <Tooltip  className='glass-background ' showArrow  content="צפייה מוקדמת בתהליך הרכישה של הלקוח">
+        <Button className=''color='primary' onClick={()=>{onOpen2()}} > צפייה מוקדמת</Button>
         </Tooltip>
-        <Tooltip  className='glass-background text-white' placement='bottom' showArrow  content=" לינק ייחודי לרכישה">
-        <Button className='text-white'color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
+        <Tooltip  className='glass-background ' placement='bottom' showArrow  content=" לינק ייחודי לרכישה">
+        <Button className=''color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
          onClick={()=>{onOpen3()}} >  הגדרת לינק לרכישה</Button>
         </Tooltip>
-        <Tooltip  className='glass-background text-white' placement='left' showArrow  content=" ה- AI שלנו יעשה זאת בשבילך">
-        <Button className='text-white'color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
+        <Tooltip  className='glass-background ' placement='left' showArrow  content=" ה- AI שלנו יעשה זאת בשבילך">
+        <Button className=''color='primary' isDisabled={(admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר")?false:true}
          onClick={()=>{onOpen4()}} >   עשה זאת עם AI </Button>
         </Tooltip>
         </div>
         <div><Button isDisabled={admin === 'מפיק'||admin ==='בעלים'||admin === "יוצר"?false:true}
-         className='text-white' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
+         className='' onClick={handleAddRound} color='primary'>הוספת סבב מכירה</Button></div>
    
         </div>
         <div className='h-10'></div>
@@ -338,7 +338,7 @@ const handleDate = (newRange)=>{
         <div className='h-10 '></div>
         <div className='flex flex-row w-full h-full justify-center' style={{gap: '20px'}}>
         <div className='flex flex-col items-center glass-background' style={{width: '20%', height: '100%', borderRadius: '10px', paddingTop: '1%',paddingRight: '1%', paddingLeft: '1%'}}>
-            <div className='text-white flex flex-col ' style={{width: '100%', height: '450px', fontSize: '20px', gap: '10px'}}>
+            <div className=' flex flex-col ' style={{width: '100%', height: '450px', fontSize: '20px', gap: '10px'}}>
             <div className='flex flex-col '>
             <div> הגדרות כרטיסים</div>
             {icon}
@@ -665,9 +665,9 @@ const handleDate = (newRange)=>{
                                                         label="Select your gender"
                                                         orientation="horizontal"
                                                       >
-                                                        <Radio  value="hgfdh"><div className='text-white'>גבר</div></Radio>
-                                                        <Radio  value="buenos-aires"><div className='text-white'>אישה</div></Radio>
-                                                        <Radio  value="sydney"><div className='text-white'>אחר</div></Radio>
+                                                        <Radio  value="hgfdh"><div className=''>גבר</div></Radio>
+                                                        <Radio  value="buenos-aires"><div className=''>אישה</div></Radio>
+                                                        <Radio  value="sydney"><div className=''>אחר</div></Radio>
                                                       </RadioGroup>
                                                 }
                                                 {instegramLink&&

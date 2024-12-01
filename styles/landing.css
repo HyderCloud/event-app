@@ -10,7 +10,7 @@
 
 .header-main{
     padding-top: 5%;
-    color: white;
+    color: #252323;
     text-align: right;
     padding-right: 5%;
     width: 80%;
@@ -247,7 +247,7 @@ padding-left: 40%;
     width: 80%;
     height: 50px;
     background-color: #006FEE;
-    color: white;
+    color: #252323;
     border-radius: 10px;
   }
   .close-button {
@@ -258,7 +258,7 @@ padding-left: 40%;
     background: transparent;
     border: none;
     cursor: pointer;
-    color: white;
+    color: #252323;
   }
 
  .full-screen-div {
@@ -270,7 +270,7 @@ padding-left: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: #252323;
   }
 
   .shadow-examp{

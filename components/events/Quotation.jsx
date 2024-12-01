@@ -40,6 +40,9 @@ const Quotation = ({data}) => {
         <div className='req-prices flex flex-col' style={{textAlign: 'right'}}>
           <div>מחיר: {data?.price}</div>
         </div>    
+        <div className='req-payment-methods flex flex-col' style={{textAlign: 'right'}}>
+          <div>התשלום יתבצע באמצעות: {data?.paymentMethods}</div>
+        </div>   
         <div className='req-starting-pay flex flex-col' style={{textAlign: 'right'}}>
           <div>מקדמה</div>
           <div>מועד תשלום: {data?.startDate}</div>
@@ -48,7 +51,7 @@ const Quotation = ({data}) => {
         <div className='req-other-pay flex flex-col' style={{textAlign: 'right'}}>
             
 
-                    {data?.paymentData.map((item2,index2)=>{
+                    {data?.paymentData?.map((item2,index2)=>{
             return(
                     <div className='flex flex-col' key={index2}>
                         <div>תשלום מס' {index2+1}</div> 
@@ -57,7 +60,7 @@ const Quotation = ({data}) => {
                     מחיר: {item2}
                 </div>
                 <div>
-                   מועד התשלום:  {data.paymentDate[index2]}
+                   מועד התשלום:  {data?.paymentDate[index2]}
                 </div>
                 </div>
                 </div>
@@ -82,7 +85,12 @@ const Quotation = ({data}) => {
           </div>
           <div className='flex flex-col'> 
             <div>חתימת הלקוח</div>
-       
+            <div   style={{backgroundImage:  `url(${data?.signatureClient})`,
+                        borderRadius: '15px',
+                        backgroundSize: 'cover',
+                        height: '100px',
+                        width: '350px',
+                        backgroundPosition: 'center'}}></div>
           </div>
         </div> 
     </div>

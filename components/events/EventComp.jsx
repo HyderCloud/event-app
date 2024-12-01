@@ -221,7 +221,7 @@ const handleKeyDown = (event) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader style={{paddingLeft: '5%', paddingRight: '5%'}} className="flex flex-col gap-1 text-white">הצא'ט של {events.name}</ModalHeader>
+              <ModalHeader style={{paddingLeft: '5%', paddingRight: '5%'}} className="flex flex-col gap-1 ">הצא'ט של {events.name}</ModalHeader>
               <ModalBody>
               <div style={{height: '410px', paddingBottom: '6%', color: 'white', gap: '10px'}}>
                 <div  ref={scrollableDivRef} className='w-full flex flex-col h-full' style={{gap:'10px', overflow: 'auto', paddingBottom: '20px'}}>

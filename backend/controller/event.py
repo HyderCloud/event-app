@@ -44,7 +44,7 @@ class Events:
             "age": '',
             "type": '',
             "mode": True,
-            "grid": [{ "field": '_id' }, { "field": 'name' }, { "field": 'email' }, {"field": 'phone'}, {"field": 'role'}, {"field": 'admin'}],
+            "grid": [{ "field": '_id' }, { "field": 'name' }, { "field": 'email' }, {"field": 'phone'}, {"field": 'role', "editable": True }, {"field": 'admin'},{"field":"quotations"},{"field":"status"}],
             "ticket_settings": {"cash": False, 
                                  "payment": False,
                                  "ID": False,

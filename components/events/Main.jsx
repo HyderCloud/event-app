@@ -171,11 +171,11 @@ const Main = ({admin}) => {
                     <div className='flex' style={{paddingRight: '15px'}}>
                 {icon}
                 </div>
-                <div className='flex  font-bold type-string text-white' style={{paddingRight: '2%'}}>
+                <div className='flex  font-bold type-string ' style={{paddingRight: '2%'}}>
                 {type}
                     </div>
                 </div>
-                <div className='text-white flex flex-col justify-center glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
+                <div className=' flex flex-col justify-center glass-background' style={{borderRadius: '15px', width: '300px', padding: '1%'}}>
                 <div>
                     {startDate} - {endDate}
                 </div>
@@ -190,7 +190,7 @@ const Main = ({admin}) => {
                     {/* description */}
                 <div className='flex flex-row justify-between' style={{gap: '10px'}}>
 
-                <div className=' text-white '   style={{
+                <div className='  '   style={{
                      minHeight: '200px',
     textAlign: 'right',
     width: '50%',
@@ -216,7 +216,7 @@ const Main = ({admin}) => {
                         }}>עריכת האירוע</Button>
                 </div>
                     <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
-                        <div className='w-full flex flex-col  text-white font-semibold items-start' >
+                        <div className='w-full flex flex-col   font-semibold items-start' >
                            <div> פרטיות</div>
                            {icon}
                         </div>
@@ -226,7 +226,7 @@ const Main = ({admin}) => {
                                 onOpen()
                             }}>יצירת הגבלת גיל</Button>
                                                 <div className='flex flex-col justify-center items-center'>
-                    <div className='text-white' >{isPrivate ? "אירוע פרטי": "אירוע ציבורי"}</div>
+                    <div className='' >{isPrivate ? "אירוע פרטי": "אירוע ציבורי"}</div>
                 <Switch isSelected={isPrivate} onChange={()=>{
                             handleIsPrivate(!isPrivate)
                             setIsPrivate(!isPrivate)}}/>
@@ -234,7 +234,7 @@ const Main = ({admin}) => {
                             </div>
                     </div>
                     <div className='flex flex-col glass-background w-full age-container 'style={{padding: '5%'}}>
-                        <div className='w-full flex flex-col  text-white font-semibold ' >
+                        <div className='w-full flex flex-col   font-semibold ' >
                            <div>  סוג האירוע</div>
                            {icon}
                         </div>
@@ -261,7 +261,7 @@ const Main = ({admin}) => {
                 {/* description */}
                 <div className='w-full flex flex-col glass-background' style={{padding: '15px', borderRadius: '15px', gap: '15px'}}>
                <div className='flex flex-row w-full' style={{gap: '10px'}}>
-                <div className='w-full flex flex-col  text-white font-semibold items-start' >
+                <div className='w-full flex flex-col   font-semibold items-start' >
                            <div> תיאור האירוע</div>
                            {icon}
                         </div>
