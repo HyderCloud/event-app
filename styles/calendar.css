@@ -1,0 +1,18 @@
+/* Hover effect for individual day cells (all calendar views) */
+.fc-day:hover {
+    background-color: #ffeb3b !important;  /* Hover color for day cells */
+    cursor: pointer;                      /* Change cursor to pointer */
+  }
+  
+  /* Optional: Hover effect for current day in the month view */
+  .fc-daygrid-day:hover {
+    background-color: #ffeb3b !important;  /* Hover color for the day grid view */
+    cursor: pointer;                      /* Change cursor to pointer */
+  }
+  
+  /* Optional: Hover effect for time grid events (in week or day views) */
+  .fc-time-grid-event:hover {
+    background-color: #ffeb3b !important;  /* Hover color for events */
+    cursor: pointer;                      /* Change cursor to pointer */
+  }
+  

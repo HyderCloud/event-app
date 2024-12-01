@@ -13,6 +13,7 @@ import { useJwt } from 'react-jwt';
 import Adds from './Adds'
 import Missions from './Missions'
 import Budgets from './Budgets'
+import Calendar from './Calendar'
 const EventComp = ({}) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [socket, setSocket] = useState(null);
@@ -352,6 +353,7 @@ const handleKeyDown = (event) => {
         {section === "add"&& <Adds admin2={admin}/>}
         {section === "mission" && <Missions admin={admin}/>}
         {section === "budget" && <Budgets admin={admin}/>}
+        {section === "calendar" && <Calendar admin={admin}/>}
         <div className='absolute chat-btn glass-background-chat'  style={{left: '15px', bottom: '50px'}}>
           <Button className='w-full h-full' onPress={()=>{
             scrollToBottom()

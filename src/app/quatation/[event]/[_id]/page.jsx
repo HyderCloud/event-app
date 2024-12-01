@@ -97,7 +97,7 @@ if(newWorker){
     <Button color='primary' onPress={ async ()=>{
       const arr = [...newWorker]
       arr[index].quotations.signatureClient = signature
-      arr[index].status = 'חבר צוות'
+      arr[index].status = 'v'
       await handleUpdateworker(arr)
       await handleAddNotification()
     }}>שליחה</Button>

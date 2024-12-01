@@ -161,7 +161,7 @@ const Main = ({admin}) => {
                 </div>
 
 
-                <div className='flex flex-col w-full h-full glass-background' style={{gap:"20px",padding: '5%', borderRadius: '15px'
+                <div className='flex flex-col w-full h-full ' style={{gap:"20px",padding: '5%', borderRadius: '15px'
                 }}>
                     <div className='flex flex-row justify-between' >
                         {/* date */}

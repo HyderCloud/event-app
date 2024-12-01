@@ -239,7 +239,7 @@ const Missions = ({ admin }) => {
           {items && items.map((item, index) => (
             <SwiperSlide key={index}>
               <div className='glass-background flex flex-col'
-               style={{height: '550px', width: '350px', borderRadius: '15px', padding: '10px', color: "white", gap: '10px'}}>
+               style={{height: '550px', width: '350px', borderRadius: '15px', padding: '10px', gap: '10px'}}>
                 <div className='w-full flex flex-row items-center justify-between' style={{height: '50px' , borderBottom: '1px solid white', paddingLeft: '45%'}}>
                   
                   <div style={{fontSize: '20px', fontWeight: 'bolder'}}>{item.title}</div>
@@ -262,15 +262,17 @@ const Missions = ({ admin }) => {
                 <div style={{opacity: '70%', direction: 'ltr'}}>{item.endTime}</div>
                   </div>
                   <div >
-                  <Accordion style={{color: 'white', paddingTop: '20px'}}>
-                  <AccordionItem key="1" aria-label="Accordion 1" title={<div style={{color: 'white'}}>תיאור המשימה</div>}
+                  <Accordion style={{ paddingTop: '20px', color: '#252323'}}>
+                  <AccordionItem key="1" aria-label="Accordion 1" title={<div style={{}}>תיאור המשימה</div>}
                    className='w-full glass-background' style={{borderRadius: '15px', padding:"10px", maxHeight: '200px', overflow: 'auto'}} >
+                    <div style={{color: '#252323'}}>
                     {item.content}
+                    </div>
                   </AccordionItem>
                   </Accordion>
-                  <div className='flex justify-center items-center text-white'
-                   style={{paddingTop: '20px',color: 'white'}}>
-                    <Tooltip showArrow color='success' content={<div style={{color: 'white'}}>מרחב העבודה</div>}>
+                  <div className='flex justify-center items-center'
+                   style={{paddingTop: '20px',}}>
+                    <Tooltip showArrow color='success' content={<div style={{}}>מרחב העבודה</div>}>
                     <Button isIconOnly className='flex justify-center items-center workspace-style'
                      style={{ borderRadius: '100px', height: '45px', width: "45px",}}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

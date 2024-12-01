@@ -44,8 +44,8 @@ const NavBar = () => {
 </Link>
 
 
-    <div className='flex' style={{direction: 'ltr'}}>
-      <User  className='text-white'
+    <div className='flex' style={{direction: 'ltr', color: "#252323" }}>
+      <User style={{ color: "#252323" }}
       name={data.username}
       description={(
         <div  size="sm" isExternal>
