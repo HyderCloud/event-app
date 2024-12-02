@@ -42,7 +42,7 @@ export default async function RootLayout({ children }) {
           ></script>
         </head>
       <body className={`flex justify-center  ${nunito_v.variable} ${nunito.variable}  antialiased`}>
-      <NextUIProvider className='w-full'>
+      <NextUIProvider className='w-full' locale="he-IL">
         <div className="flex flex-row w-full">
         {!session ?
         <div></div>:

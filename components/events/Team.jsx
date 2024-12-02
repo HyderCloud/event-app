@@ -9,6 +9,7 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import axios from 'axios'
 import SignatureCanvas from 'react-signature-canvas';
 import Quotation from './Quotation';
+import DragPerson from '../DragPerson';
 
 
 export const Team = ({ admin }) => {
@@ -17,9 +18,8 @@ export const Team = ({ admin }) => {
   const [socket, setSocket] = useState(null);
   const [columnDefs, setColumnDefs] = useState([])
   const [payment, setPayment] = useState([])
-
+  const [isFilesCont, setIsFileCont] = useState(false)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
- 
   const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const { isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
   const { isOpen: isOpen4, onOpen: onOpen4, onOpenChange: onOpenChange4 } = useDisclosure();
@@ -154,23 +154,123 @@ export const Team = ({ admin }) => {
 const changeGrisdByIndex = (arr)=>{
   const arr1 = [...arr]
   arr1[7] = {   headerName: "Status",
+    width: 90,
   cellRenderer: statusColumn,}
   arr1[6] = {   headerName: "Quotations",
+    width: 120,
     cellRenderer: quatationColumn,}
+    arr1[5] = {   headerName: "Files",
+       width: 120,
+      cellRenderer: fileColumn,}
+  arr1[2] = {   headerName: "Email",
+        cellRenderer: emailColumn,}
+  arr1[1] = {   headerName: "Profile",
+      cellRenderer: nameColumn,
+    }
   return arr1
 }
 const quatationColumn = ({data})=>{
-  return(
-    <div className='flex'><Button onPress={()=>{setPreviewReq(data.quotations)
-      onOpen2()
-    }} variant='fdszfd' isIconOnly><svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.57 9.41988C4.18323 9.69388 4.68677 10.1657 5 10.7599L7.64 15.5699C7.83762 15.9277 7.93763 16.3312 7.93 16.7399L7.88 18.7399C7.87836 19.1527 7.65749 19.5335 7.3 19.7399C7.13675 19.8263 6.95468 19.8709 6.77 19.8699C6.54744 19.869 6.32945 19.8067 6.14 19.6899L4.46 18.6899C4.11098 18.4744 3.82475 18.1709 3.63 17.8099L0.999997 12.9999C0.668643 12.3855 0.555813 11.6768 0.679997 10.9899C0.75635 10.3414 1.1246 9.76325 1.68 9.41988C2.27514 9.12352 2.97485 9.12352 3.57 9.41988ZM5.23 17.3599L6.39 18.0599L6.38 16.6799C6.37661 16.5332 6.33894 16.3894 6.27 16.2599L3.64 11.4499C3.48697 11.1471 3.23704 10.9042 2.93 10.7599C2.82744 10.7087 2.71462 10.6813 2.6 10.6799C2.51638 10.6807 2.43414 10.7012 2.36 10.7399C2.19422 10.851 2.08762 11.0311 2.07 11.2299C2.0243 11.5762 2.09463 11.9278 2.27 12.2299L4.9 16.9999C4.97088 17.1506 5.08599 17.2762 5.23 17.3599Z" fill="black" />
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.2199 0.349883L17.2199 7.34988C17.3682 7.49766 17.4479 7.70069 17.4399 7.90988V14.9099C17.4399 16.1697 16.9395 17.3778 16.0487 18.2686C15.1579 19.1594 13.9497 19.6599 12.6899 19.6599H9.8199C9.40569 19.6599 9.0699 19.3241 9.0699 18.9099C9.0699 18.4957 9.40569 18.1599 9.8199 18.1599H12.6899C14.4826 18.1544 15.9344 16.7025 15.9399 14.9099V8.65988H11.6899C10.1734 8.6544 8.94539 7.42639 8.9399 5.90988V1.65988H6.6899C4.89498 1.65988 3.4399 3.11496 3.4399 4.90988V7.55988C3.4399 7.9741 3.10412 8.30988 2.6899 8.30988C2.27569 8.30988 1.9399 7.9741 1.9399 7.55988V4.90988C1.93192 3.64491 2.42883 2.42901 3.3205 1.53172C4.21216 0.634419 5.42491 0.129858 6.6899 0.129883H9.6899C9.88875 0.130058 10.0794 0.20919 10.2199 0.349883ZM10.4399 2.68988V5.90988C10.4399 6.60024 10.9995 7.15988 11.6899 7.15988H14.9099L10.4399 2.68988Z" fill="black" />
-  </svg></Button>
+  if(data.quotations){
+    return(
+      <div className='flex'><Button onPress={()=>{setPreviewReq(data.quotations)
+        onOpen2()
+      }} variant='fdszfd' isIconOnly><svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.57 9.41988C4.18323 9.69388 4.68677 10.1657 5 10.7599L7.64 15.5699C7.83762 15.9277 7.93763 16.3312 7.93 16.7399L7.88 18.7399C7.87836 19.1527 7.65749 19.5335 7.3 19.7399C7.13675 19.8263 6.95468 19.8709 6.77 19.8699C6.54744 19.869 6.32945 19.8067 6.14 19.6899L4.46 18.6899C4.11098 18.4744 3.82475 18.1709 3.63 17.8099L0.999997 12.9999C0.668643 12.3855 0.555813 11.6768 0.679997 10.9899C0.75635 10.3414 1.1246 9.76325 1.68 9.41988C2.27514 9.12352 2.97485 9.12352 3.57 9.41988ZM5.23 17.3599L6.39 18.0599L6.38 16.6799C6.37661 16.5332 6.33894 16.3894 6.27 16.2599L3.64 11.4499C3.48697 11.1471 3.23704 10.9042 2.93 10.7599C2.82744 10.7087 2.71462 10.6813 2.6 10.6799C2.51638 10.6807 2.43414 10.7012 2.36 10.7399C2.19422 10.851 2.08762 11.0311 2.07 11.2299C2.0243 11.5762 2.09463 11.9278 2.27 12.2299L4.9 16.9999C4.97088 17.1506 5.08599 17.2762 5.23 17.3599Z" fill="#252323" />
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M10.2199 0.349883L17.2199 7.34988C17.3682 7.49766 17.4479 7.70069 17.4399 7.90988V14.9099C17.4399 16.1697 16.9395 17.3778 16.0487 18.2686C15.1579 19.1594 13.9497 19.6599 12.6899 19.6599H9.8199C9.40569 19.6599 9.0699 19.3241 9.0699 18.9099C9.0699 18.4957 9.40569 18.1599 9.8199 18.1599H12.6899C14.4826 18.1544 15.9344 16.7025 15.9399 14.9099V8.65988H11.6899C10.1734 8.6544 8.94539 7.42639 8.9399 5.90988V1.65988H6.6899C4.89498 1.65988 3.4399 3.11496 3.4399 4.90988V7.55988C3.4399 7.9741 3.10412 8.30988 2.6899 8.30988C2.27569 8.30988 1.9399 7.9741 1.9399 7.55988V4.90988C1.93192 3.64491 2.42883 2.42901 3.3205 1.53172C4.21216 0.634419 5.42491 0.129858 6.6899 0.129883H9.6899C9.88875 0.130058 10.0794 0.20919 10.2199 0.349883ZM10.4399 2.68988V5.90988C10.4399 6.60024 10.9995 7.15988 11.6899 7.15988H14.9099L10.4399 2.68988Z" fill="#252323" />
+    </svg></Button>
+  
+    </div>
+    )
+  }
+}
+const fileColumn = ({data})=>{
+const [isOpen, setIsOpen] = useState(false)
+    return(
+      <div className='flex items-center justify-center w-full h-full' onClick={()=>setIsOpen(false)} style={{paddingLeft: '10px', paddingRight: '10px'}}>
+        <Tooltip showArrow isOpen={isOpen} content={<div className='flex flex-col'
+         style={{height: '300px',width: '450px', backgroundColor: '#'}}>
+          <div>
+            <Button className='' variant='fgdfg' isIconOnly onPress={()=>{
+              setIsOpen(false)}}>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#252323"/>
+              </svg></Button>
+          </div>
+            <div className='' style={{height: '150px'}}></div>
+          <div style={{height: '60px'}}>
+          <DragPerson className='w-full h-full' label={`הקבצים של ${data.name}`}/>
+          </div>
+        </div>}>
+        <Button onPress={()=>{
+          
+          setIsOpen(true)}}
+       className='w-full' style={{height: '25px', border: '1px solid gray'}} variant='fdszfd' isIconOnly>
+        קבצים
+      </Button>
+        </Tooltip>
+  
+    </div>
+    )
+  
+}
 
-  </div>
+const emailColumn = ({data})=>{
+  const [isOpen, setIsOpen] = useState(false)
+      return(
+        <div className='flex items-center justify-center w-full h-full' onClick={()=>{
+          setIsOpen(true)}} style={{gap: '10px'}}>
+          <Tooltip showArrow isOpen={isOpen} content={<div className='flex flex-col'
+           style={{height: '300px',width: '450px', backgroundColor: '#'}}>
+            <div>
+              <Button className='' variant='fgdfg' isIconOnly onPress={()=>{
+                setIsOpen(false)}}>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#252323"/>
+                </svg></Button>
+            </div>
+              <div className='flex flex-row w-full items-center' style={{gap: '15px', height: '50px'}}>
+                <div>
+                  שלח מייל ל- 
+                </div>
+                <Link href={`/${data.name}`}>{data.name}</Link>
+                <div className='flex' style={{backgroundImage:  `url(${data.profile_img})`,
+                        borderRadius: '100px',
+                        backgroundSize: 'cover',
+                        minHeight: '30px',
+                        maxHeight: '30px',
+                        width: '30px',
+                        backgroundPosition: 'center'}}></div>
+      
+             
+              </div>
+           
+            <Input label='כותרת'/>
+            <Textarea label='הודעה חדשה'/>
+          </div>}>
+ 
+     
+         {data.email}
+     
+          </Tooltip>
+    
+      </div>
+      )
+    
+  }
+
+const nameColumn = ({data})=>{
+  return(
+    <div className='flex flex-row items-center h-full w-full' style={{gap: '5px'}}>
+      <div className='flex' style={{backgroundImage:  `url(${data.profile_img})`,
+                        borderRadius: '100px',
+                        backgroundSize: 'cover',
+                        minHeight: '30px',
+                        maxHeight: '30px',
+                        width: '30px',
+                        backgroundPosition: 'center'}}></div>
+      <Link href={`/${data.name}`}>{data.name}</Link>
+    </div>
   )
 }
+
 const statusColumn = ({data})=>{
 
   return(
@@ -384,9 +484,7 @@ const statusColumn = ({data})=>{
       </Modal>
       <div className='flex flex-row justify-between w-full' style={{ gap: '20px', paddingRight: '5%', paddingLeft: '5%' }}>
         <div className='flex flex-row  w-full' style={{ gap: '20px' }}>
-
         </div>
-
         <Button isIconOnly variant='kff'>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7691 10.6179C14.6701 10.5963 15.4749 10.0491 15.8263 9.21925C15.9013 9.25087 15.9815 9.2683 16.0629 9.27067H20.1771C20.6032 9.27067 20.9486 8.92534 20.9486 8.49935C20.9486 8.07336 20.6032 7.72802 20.1771 7.72802H16.1143C16.0699 7.72221 16.025 7.72221 15.9806 7.72802C15.686 6.57063 14.5523 5.83303 13.3746 6.0325C12.1969 6.23197 11.3695 7.30174 11.4726 8.49158C11.5756 9.68142 12.5747 10.593 13.7691 10.5871V10.6179ZM13.7691 7.58404C14.1838 7.58404 14.52 7.92017 14.52 8.3348C14.52 8.74943 14.1838 9.08556 13.7691 9.08556C13.3545 9.08556 13.0183 8.74943 13.0183 8.3348C13.0183 7.92017 13.3545 7.58404 13.7691 7.58404Z" fill="#252323" />
@@ -394,7 +492,6 @@ const statusColumn = ({data})=>{
             <path fill-rule="evenodd" clip-rule="evenodd" d="M5.736 15.9555C6.05818 15.0444 6.91918 14.4347 7.88571 14.4334V14.4128C9.04884 14.4114 10.029 15.2806 10.1663 16.4354C10.3037 17.5902 9.55477 18.6651 8.42374 18.9364C7.29271 19.2077 6.13762 18.5896 5.736 17.4981H3.77143C3.34538 17.4981 3 17.1528 3 16.7268C3 16.3008 3.34538 15.9555 3.77143 15.9555H5.736ZM7.1361 16.7809C7.14317 17.19 7.47652 17.5181 7.88571 17.5187V17.4776C8.3004 17.4776 8.63657 17.1414 8.63657 16.7268C8.61415 16.3183 8.26871 16.0029 7.85978 16.0177C7.45086 16.0324 7.12903 16.3718 7.1361 16.7809Z" fill="#252323" />
             <path d="M12 15.9555H20.2286C20.6546 15.9555 21 16.3008 21 16.7268C21 17.1528 20.6546 17.4981 20.2286 17.4981H12C11.574 17.4981 11.2286 17.1528 11.2286 16.7268C11.2286 16.3008 11.574 15.9555 12 15.9555Z" fill="#252323" />
           </svg>
-
         </Button>
         <Tooltip showArrow color='primary' content={<div>היומן של {events?.name}</div>}>
           <Button variant='ffe' onPress={() => { router.push(`${path}?section=calendar`)}} isIconOnly>
@@ -404,7 +501,16 @@ const statusColumn = ({data})=>{
 
           </Button>
         </Tooltip>
-        <Tooltip showArrow color='primary' content={'הצעת מחיר'}>
+        <Tooltip showArrow color='primary' content={<div>הוספת יחצנים {events?.name}</div>}>
+          <Button variant='ffe' onPress={() => {""}} isIconOnly>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.65 22H5.35999C4.34955 21.9639 3.40833 21.4774 2.79458 20.6739C2.18083 19.8704 1.95901 18.8344 2.18999 17.85L2.41999 16.71C2.69603 15.1668 4.02261 14.0327 5.58999 14H14.41C15.9797 14.0319 17.3096 15.1652 17.59 16.71L17.82 17.85C18.0472 18.834 17.8239 19.8679 17.2109 20.6704C16.5979 21.4729 15.659 21.9604 14.65 22Z" fill="#252323"/>
+          <path d="M10.5 12H9.49999C7.29085 12 5.49999 10.2092 5.49999 8.00001V5.36001C5.49999 3.50434 7.00431 2.00001 8.85999 2.00001H11.14C12.0319 1.99735 12.8881 2.35049 13.5188 2.98119C14.1495 3.61189 14.5027 4.46807 14.5 5.36001V8.00001C14.5 10.2092 12.7091 12 10.5 12Z" fill="#252323"/>
+          <path d="M21 6.25002H19.63V4.88002C19.63 4.4658 19.2942 4.13002 18.88 4.13002C18.4658 4.13002 18.13 4.4658 18.13 4.88002V6.25002H16.77C16.3558 6.25002 16.02 6.5858 16.02 7.00002C16.02 7.41423 16.3558 7.75002 16.77 7.75002H18.13V9.12002C18.13 9.53423 18.4658 9.87002 18.88 9.87002C19.2942 9.87002 19.63 9.53423 19.63 9.12002V7.75002H21C21.4142 7.75002 21.75 7.41423 21.75 7.00002C21.75 6.5858 21.4142 6.25002 21 6.25002Z" fill="#252323"/>
+          </svg>
+          </Button>
+        </Tooltip>
+        <Tooltip showArrow color='primary' content={'הצעת מחיר לספקים'}>
           <Button variant='ffe' onPress={() => { onOpen6() }} isIconOnly>
             <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M3.57 9.41988C4.18323 9.69388 4.68677 10.1657 5 10.7599L7.64 15.5699C7.83762 15.9277 7.93763 16.3312 7.93 16.7399L7.88 18.7399C7.87836 19.1527 7.65749 19.5335 7.3 19.7399C7.13675 19.8263 6.95468 19.8709 6.77 19.8699C6.54744 19.869 6.32945 19.8067 6.14 19.6899L4.46 18.6899C4.11098 18.4744 3.82475 18.1709 3.63 17.8099L0.999997 12.9999C0.668643 12.3855 0.555813 11.6768 0.679997 10.9899C0.75635 10.3414 1.1246 9.76325 1.68 9.41988C2.27514 9.12352 2.97485 9.12352 3.57 9.41988ZM5.23 17.3599L6.39 18.0599L6.38 16.6799C6.37661 16.5332 6.33894 16.3894 6.27 16.2599L3.64 11.4499C3.48697 11.1471 3.23704 10.9042 2.93 10.7599C2.82744 10.7087 2.71462 10.6813 2.6 10.6799C2.51638 10.6807 2.43414 10.7012 2.36 10.7399C2.19422 10.851 2.08762 11.0311 2.07 11.2299C2.0243 11.5762 2.09463 11.9278 2.27 12.2299L4.9 16.9999C4.97088 17.1506 5.08599 17.2762 5.23 17.3599Z" fill="#252323" />
@@ -426,12 +532,15 @@ const statusColumn = ({data})=>{
       <div className=' text-white flex flex-col w-full h-full' style={{ borderRadius: '15px', color: 'black', gap: '20px' }}>
         <div className='flex flex-col ag-theme-quartz'
           style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%', }}>
-          <div className='w-full'>
+    
+          <div className='w-full relative flex flex-row'>
             <div style={{ width: '50px' }}>
               <Button onPress={onOpen4} color='primary'>הוסף עמודה</Button>
             </div>
           </div>
-          <AgGridReact rowData={team} columnDefs={columnDefs} onCellValueChanged={onCellValueChanged} domLayout="autoHeight"></AgGridReact>
+          <AgGridReact rowData={team} columnDefs={columnDefs} onCellValueChanged={onCellValueChanged} domLayout="autoHeight">
+     
+          </AgGridReact>
         </div>
 
       </div>

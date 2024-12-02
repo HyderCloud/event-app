@@ -1,7 +1,23 @@
-/* Hover effect for individual day cells (all calendar views) */
-.fc-day:hover {
-    background-color: #ffeb3b !important;  /* Hover color for day cells */
-    cursor: pointer;                      /* Change cursor to pointer */
+
+.search-bar-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .search-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
   /* Optional: Hover effect for current day in the month view */
