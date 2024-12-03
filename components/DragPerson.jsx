@@ -3,42 +3,72 @@ import React, { useCallback,useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 const DragPerson = ({label, onFileUpload}) => {
-  const onDrop = useCallback((acceptedFiles) => {
-    if (onFileUpload && acceptedFiles.length > 0) {
-      const file = acceptedFiles[0]; // Get the first file in the array
-      const reader = new FileReader();
+    const onDrop = useCallback((acceptedFiles) => {
+        if (onFileUpload && acceptedFiles.length > 0) {
+          const filesData = [];
+        
+          acceptedFiles.forEach((file) => {
+            const reader = new FileReader();
+        
+            reader.onloadend = () => {
+              const fileData = { 
+                fileName: file.name, 
+                base64: reader.result, 
+                fileType: file.type,
+                relativePath: file.webkitRelativePath // This will give the relative path within the folder
+              };
       
-      reader.onloadend = () => {
-        onFileUpload(reader.result); // Pass Base64 string to onFileUpload callback
-      };
+              // Add file data to filesData array
+              filesData.push(fileData);
       
-      reader.readAsDataURL(file); // Read the file as a Base64-encoded string
-    }
-  }, [onFileUpload]);
+              // Once all files are processed, trigger the file upload
+              if (filesData.length === acceptedFiles.length) {
+                onFileUpload(filesData); // Call the onFileUpload callback with the array of files
+              }
+            };
+      
+            reader.readAsDataURL(file); // Read file as Base64 string
+          });
+        }
+      }, [onFileUpload]);
+      
+      
   
 
   
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*', 
   });
 
   return (
     <div
       {...getRootProps()}
       style={{
-        border: '2px dashed #0070f3',
+        border: isDragActive ?  '2px solid #0070f3': '2px dashed #0070f3',
         padding: '20px',
         textAlign: 'center',
         borderRadius: '10px',
         backgroundColor: isDragActive ? '#f2f2f2' : '#f2f2f2',
+        opacity: isDragActive ? '70%' : '100%',
         position: 'relative',
         
       }}
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p className='opacity-70'>... שחרר את ה{label} כאן </p>
+        <div>
+        <p className='opacity-70 '>... שחרר את ה{label} כאן </p>
+        <div className='h-1'></div>
+        <div
+        
+          style={{
+            padding: '10px 20px',
+
+          }}
+        >
+           הוסף קבצים
+        </div>
+      </div>
       ) : (
         <div>
           <p className='opacity-70'>

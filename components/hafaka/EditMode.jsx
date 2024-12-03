@@ -565,4 +565,3 @@ const EditMode = ({ onMode }) => {
 }
 
 export default EditMode
-

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
-import { TimeInput, Card, CardHeader, CardBody, User, Accordion, AccordionItem, Link, Image, Spacer, CardFooter, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea } from '@nextui-org/react'
+import { TimeInput, Card, CardHeader, CardBody, User, Accordion, AccordionItem, Link, Image, Spacer, CardFooter, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, Tabs, Tab } from '@nextui-org/react'
 import { useJwt } from 'react-jwt';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { AgGridReact } from 'ag-grid-react';
@@ -69,7 +69,7 @@ export const Team = ({ admin }) => {
     offerExpiryDate: null,
   });
   const sigCanvas = useRef(null);
-
+// index
   const doc = {
     user: reqUser,
     description: textarea1,
@@ -151,14 +151,18 @@ export const Team = ({ admin }) => {
     }));
   };
 
+  
 const changeGrisdByIndex = (arr)=>{
   const arr1 = [...arr]
-  arr1[7] = {   headerName: "Status",
+  arr1[8] = {   headerName: "Status",
     width: 90,
   cellRenderer: statusColumn,}
-  arr1[6] = {   headerName: "Quotations",
+  arr1[7] = {   headerName: "Quotations",
     width: 120,
     cellRenderer: quatationColumn,}
+    arr1[6] = {   headerName: `Your ai`,
+      width: 120,
+      cellRenderer: quatationColumn,}
     arr1[5] = {   headerName: "Files",
        width: 120,
       cellRenderer: fileColumn,}
@@ -185,20 +189,88 @@ const quatationColumn = ({data})=>{
 }
 const fileColumn = ({data})=>{
 const [isOpen, setIsOpen] = useState(false)
+const [isTab, setIsTab] = useState(false)
+const [newFiles, setNewFiles] = useState([]);
+const [newWorker, setNewWorker] = useState([])
+const handleUpdateworker = async (data) => {
+  const result = await axios.patch(`http://localhost:9020/updateworker/${getStringAfterSecondSlash(path)}`, { team: data })
+  const theRole = result.data.workers
+  setNewWorker(theRole)
+}
+const getEvents = async () => {
+  const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
+  setNewWorker(getAllEvents.data.workers)
+}
+useEffect(()=>{
+  getEvents()
+},[])
+const handleFileUpload = (files) => {
+  console.log(files)
+  setNewFiles(files)
+}
     return(
       <div className='flex items-center justify-center w-full h-full' onClick={()=>setIsOpen(false)} style={{paddingLeft: '10px', paddingRight: '10px'}}>
         <Tooltip showArrow isOpen={isOpen} content={<div className='flex flex-col'
          style={{height: '300px',width: '450px', backgroundColor: '#'}}>
-          <div>
+          <div className='flex flex-row justify-between' >
+            <div  className='flex'>
             <Button className='' variant='fgdfg' isIconOnly onPress={()=>{
-              setIsOpen(false)}}>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#252323"/>
-              </svg></Button>
+                          setIsOpen(false)}}>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#252323"/>
+                          </svg></Button>
+            </div>
+              <div className='flex' style={{paddingLeft: '30%'}}>
+              <Tabs className='w-full' variant='light' color='primary'>
+              <Tab key="photos" className='p-0'  title={<div className='w-full h-full p-2' onClick={()=>{setIsTab(false)}}>העלאת קבצים</div>}/>
+              <Tab key="files" className='p-0' title={<div className='w-full h-full p-2'  onClick={()=>{setIsTab(true)}}>הקבצים שלי</div>}/>
+              </Tabs>
+              </div>
           </div>
-            <div className='' style={{height: '150px'}}></div>
-          <div style={{height: '60px'}}>
-          <DragPerson className='w-full h-full' label={`הקבצים של ${data.name}`}/>
-          </div>
+          {isTab ? 
+          <div></div>
+        :  <>
+        <div className='flex flex-row w-full'  style={{height: '150px',padding: '10px'}}>
+ 
+        <div className='flex flex-col h-full' style={{ overflow: 'auto', padding: '10px', width: '100%', gap: '5px'}}>
+          {newFiles?.map((item, index)=>{
+            return(
+              <Tooltip className='cursor-pointer p-0' color='danger' variant='dfsfg' placement='left' content={
+              <Button    variant='fdsg' style={{height: '20px', width: '20px'}}    onPress={()=>{
+                const arr = removeElementAtIndex(newFiles,index)
+                setNewFiles(arr)
+              }} isIconOnly>
+  <svg
+               width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#252323"/>
+                </svg>
+              </Button>
+            }>
+                <div variant='vfds' className='flex items-center' style={{textWrap: 'nowrap', height: '20px',padding: '5px', borderRadius: '15px', width: '60%', border: '1px solid gray'}} 
+                key={index}><div>{item.fileName}</div></div>
+              </Tooltip>
+            )
+          })}
+    </div>
+    <div className='flex items-center justify-center h-full' style={{width: '60px'}}>
+            {newFiles.length > 0 &&
+            <Button onPress={async ()=>{
+              const arr = [...newWorker]
+              const index = findIndexById(data?.key,newWorker)
+              arr[index].files = [...arr[index].files,newFiles]
+              // await handleUpdatemission()
+              await handleUpdateworker(arr)
+              setNewFiles([])
+            }} color='primary'> שליחה</Button>
+            }
+    </div>
+        </div>
+  <div style={{height: '60px'}} >
+  <DragPerson onFileUpload={handleFileUpload} className='w-full h-full' label={`הקבצים של ${data.name}`}/>
+  </div>
+   </> 
+        }
+    
+       
         </div>}>
         <Button onPress={()=>{
           
@@ -422,7 +494,9 @@ const statusColumn = ({data})=>{
     await handleUpdateworker(arr)
   };
 
-
+  const findIndexById = (id, array) => {
+    return array.findIndex(item => item.key === id);
+  };
 
   const addColumn = async () => {
     const newColumn = { field: column, editable: true };
