@@ -19,6 +19,7 @@ const Missions = ({ admin }) => {
   const status_u = [{text: "בתהליך", color: '#fbbc05'},{text: "בהמתנה", color: '#71717A'},{text: "סיום", color: '#34a853'},{text: "ביטול", color: '#ae4335'}]
   const [cookie, setCookie, removeCookie] = useCookies('')
   const {decodedToken, isExpired} = useJwt(cookie.store)
+ 
   const [match, setMatch] = useState([])
   const [filterBy, setFilterBy] = useState('')
   const path = usePathname()
@@ -223,9 +224,9 @@ const Missions = ({ admin }) => {
          
                </div>
           }
-          <div className=''>
+          <div className='' style={{padding: '5px'}}>
            <Swiper
-          
+          style={{padding: '5px'}}
           slidesPerView={3.5}
           spaceBetween={2}
           pagination={{
@@ -237,9 +238,11 @@ const Missions = ({ admin }) => {
         >
         
           {items && items.map((item, index) => (
-            <SwiperSlide key={index}>
-              <div className='glass-background flex flex-col'
-               style={{height: '550px', width: '350px', borderRadius: '15px', padding: '10px', gap: '10px'}}>
+            <SwiperSlide key={index} >
+              <div className=' flex flex-col'
+               style={{height: '550px', width: '350px', borderRadius: '15px', padding: '10px', gap: '10px', backgroundColor: 'white',
+                boxShadow: "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px"
+               }}>
                 <div className='w-full flex flex-row items-center justify-between' style={{height: '50px' , borderBottom: '1px solid white', paddingLeft: '45%'}}>
                   
                   <div style={{fontSize: '20px', fontWeight: 'bolder'}}>{item.title}</div>
