@@ -347,7 +347,7 @@ const handleKeyDown = (event) => {
       </Modal>
         {!section && <Main data={events} admin={admin}/>}
         {section === 'tickets'&& <Tickets admin={admin}/>}
-        {section === "team"&& <Team admin={admin}/>}
+        {section === "team"&& <Team admin2={admin}/>}
         {section === "cuppons"&& <Cuppons admin={admin}/>}
         {section === "admin"&& <AdminComp admin2={admin}/>}
         {section === "add"&& <Adds admin2={admin}/>}

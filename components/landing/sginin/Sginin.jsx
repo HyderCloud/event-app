@@ -5,7 +5,7 @@ import {Button, Divider, Input} from "@nextui-org/react";
 import { signIn } from "next-auth/react"
 import Image from 'next/image'
 import axios from 'axios';
-import { loginAction } from '@/components/action';
+
 
 const Sginin = () => {
     const [password, setPassword] = useState('')
@@ -77,9 +77,7 @@ const Sginin = () => {
         
      
       </div>
-      <p className="sign-up">
-        עדיין אין לך משתמש <Link href="/signup">הרשמה</Link>
-      </p>
+
     </form>
   </div>
 
