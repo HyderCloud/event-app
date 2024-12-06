@@ -6,7 +6,7 @@ events_api = Events()
 @events_blueprint.route('/addevent/<string:id>/<string:owner>', methods=['POST'])
 def addEvent(id, owner):
     event = request.get_json()
-    return events_api.add_event_for_store(id,owner,event["name"],event["start_date"],event["end_date"],event["startTime"],event["endTime"],event["place"],event["id"])
+    return events_api.add_event_for_store(id,owner,event["name"],event["start_date"],event["end_date"],event["startTime"],event["endTime"],event["place"],event["id"],event["ticket"])
 
 @events_blueprint.route('/getevents/<string:id>', methods=['GET'])
 def get_events_store(id):

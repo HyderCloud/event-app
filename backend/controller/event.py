@@ -11,7 +11,7 @@ class Events:
     def __init__(self):
             pass
 
-    def add_event_for_store(self,id, owner, name, start_date,end_date, start_time, end_time, place,user_id):
+    def add_event_for_store(self,id, owner, name, start_date,end_date, start_time, end_time, place,user_id, ticket):
         try:
             doccument = {
             "key": id,
@@ -27,6 +27,7 @@ class Events:
             "tickets": 'ללא הגבלה',
             "clients": [],
             "images": [],
+            "isTicketSale": ticket,
             "cuppons": [],
             "roles": [],
             "rounds": [{

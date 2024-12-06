@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { usePathname } from 'next/navigation'
-import { Modal, ModalContent, ModalHeader, TimeInput, ModalBody, ModalFooter, Button, useDisclosure, Input, DateRangePicker, Divider } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader,Switch, TimeInput, ModalBody, ModalFooter, Button, useDisclosure, Input, DateRangePicker, Divider } from "@nextui-org/react";
 import EventForm from './EventForm';
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -10,7 +10,10 @@ import Image from 'next/image';
 import EventSlider from './EventSlider';
 import EventConnection from './ConnectionEvent';
 const EventManneger = ({}) => {
-
+    const [cont, setCont1] = useState(true)
+    const [cont2, setCont2] = useState(false)
+    const [cont3, setCont3] = useState(false)
+    const [isTicketSale,setIsTicketSale] = useState(true)
     const [cookie, setCookie, removeCookie] = useCookies()
     const [connectionEv, setConnectionEv] = useState([])
     const {decodedToken, isExpired} = useJwt(cookie.store)
@@ -57,7 +60,7 @@ const EventManneger = ({}) => {
     const handleAddEvent = async ()=>{
         const event = await axios.post(`http://localhost:9020/addevent/${decodedToken?.store_id}/${decodedToken?.name}`, 
             {name: name, start_date: startDate, end_date: endDate, startTime: startTime,id: decodedTokens?.user_id,
-            endTime: endTime, place: place}) 
+            endTime: endTime, place: place, ticket: isTicketSale}) 
     if(event.data.acknowledge){
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
      
@@ -126,12 +129,22 @@ const EventManneger = ({}) => {
                                         <ModalHeader className="flex flex-col gap-1">Add an event</ModalHeader>
                                         <ModalBody>
                                             <div className='flex flex-col w-full items-center gap-6'>
-
+                                                {cont &&
+                                                <>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>שם האירוע</div>
                                                     <Input label='Event name' onChange={handleName} />
                                                 </div>
-                                                <div className='flex flex-col  text-right' style={{ width: '50%', direction: 'ltr' }}>
+                                                <div className='flex flex-col  text-right' style={{ width: '50%' }}>
+                                                    <div className='opacity-70'>האירוע כולל מכירת כרטיסים?</div>
+                                                    <Switch style={{direction: 'ltr'}} isSelected={isTicketSale} onChange={()=>{setIsTicketSale(!isTicketSale)}}>
+                                                    {isTicketSale ? "כן " : "לא"}
+                                                    </Switch>
+                                                </div>
+                                                </>
+                                                }
+                                                {cont2 && <>
+                                                    <div className='flex flex-col  text-right' style={{ width: '50%', direction: 'ltr' }}>
                                                     <div className='opacity-70'>תאריך התחלה וסיום</div>
                                                     <DateRangePicker label='Event date' onChange={handleDate}/>
                                                 </div>
@@ -143,10 +156,26 @@ const EventManneger = ({}) => {
                                                     <div className='opacity-70'>שעת סיום</div>
                                                     <TimeInput hourCycle={24} label='End time' onChange={handleEndTime}/>
                                                 </div>
+                                                </>
+                                                }
+                                                {cont3 &&
                                                 <div className='flex flex-col  text-right' style={{ width: '50%' }}>
                                                     <div className='opacity-70'>מיקום האירוע</div>
                                                     <Input label='Event place' onChange={handlePlace}/>
                                                 </div>
+                                                }
+                                                <Button color='primary' onClick={()=>{
+                                                    if(cont){
+                                                        setCont1(false)
+                                                        setCont2(true)
+                                                    }else if(cont2){
+                                                        setCont2(false)
+                                                        setCont3(true)
+                                                    }else if(cont3){
+                                                        handleAddEvent()
+                                                        onClose()
+                                                    }
+                                                }}>המשך</Button>
                                             </div>
                                         </ModalBody>
                                         <ModalFooter>
