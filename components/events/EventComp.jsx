@@ -154,86 +154,42 @@ const handleKeyDown = (event) => {
 
   return (
     <div className='dashboard-container  flex flex-col'>
-        <div className='w-full navbar-event flex flex-row items-center   ' style={{boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'}}>
-        {/* <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}`)}}>
-            <div className='navbar-event-slot-1' style={{opacity: !section && '100%'}}>ראשי</div>
-            {!section && icon}
-            </div>
-            {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=tickets`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'tickets'&& '100%'}}>כרטיסים</div>
-          {section=== 'tickets' && icon}
-          </div>
-          } 
-                              {(admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=budget`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'budget'&& '100%'}}>תקציבים</div>
-          {section=== 'budget' && icon}
-          </div>
-          }
-                    {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=statistics`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'statistics'&& '100%'}}>סטטיסטיקה</div>
-          {section=== 'statistics' && icon}
-          </div>
-          }
-          
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=team`)}}>            
-            <div className='navbar-event-slot-1' style={{opacity: (section === 'mission' || section=== 'team')&& '100%'}}>צוות</div>
-          {(section === 'mission' || section=== 'team') && icon}</div>
-
-          {( admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=client`)}}>
-        <div className='navbar-event-slot-1' style={{opacity: section=== 'client' && '100%'}}>לקוחות</div>
-        {section=== 'client' && icon}
-        </div>
-          }
-          
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=add`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'add'&& '100%'}}>פרסום</div>
-          {section=== 'add' && icon}
-          </div>
-          }
-          
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
-          <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=cuppons`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'cuppons'&& '100%'}}>קופונים</div>
-          {section=== 'cuppons' && icon}
-          </div>
-          }
-                    <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=admin`)}}>
-          <div className='navbar-event-slot-1' style={{opacity: section=== 'admin'&& '100%'}}>הרשאות</div>
-          {section=== 'admin' && icon}
-          </div>
-          {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
-        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}?section=scanner`)}}>
-        <div className='navbar-event-slot-1' style={{opacity: section=== 'scanner' && '100%'}}>סורק</div>
-        {section=== 'scanner' && icon}
-        </div>
-          }
-  
-
-
- */}
+        <div className='w-full navbar-event flex flex-row items-center   ' style={{paddingRight: '5%'}}>
+       
     <Dropdown>
       <DropdownTrigger>
         <Button variant="bordered">Open Menu</Button>
       </DropdownTrigger>
       <DropdownMenu   itemClasses={{
-    base: "h-[290px] w-[1000px]" // Applies to all items in this menu
-  }} aria-label="Static Actions" classNames={{list: 'flex flex-row h-24',}}>
+
+  }} aria-label="Static Actions">
         <DropdownItem className='flex h-24' onPress={()=>{router.push(`${path}`)}} key="main">ראשי</DropdownItem>
+        {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=tickets`)}} key="tickets">כרטיסים</DropdownItem>
+        }
+        {(admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=budget`)}} key="5">תקציבים</DropdownItem>
+        }
+        {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=statistics`)}} key="4">סטטיסטיקה</DropdownItem>
+        }
+        {( admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=team`)}} key="3">צוות</DropdownItem>
+        }
+        {( admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=client`)}} key="2">לקוחות</DropdownItem>
+        }
+        {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=add`)}} key="2">פרסום</DropdownItem>
+        }
+        {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'יוצר') &&
         <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=cuppons`)}} key="2">קופונים</DropdownItem>
+        }
+        {(admin === 'יחצן'|| admin === 'מפיק'||admin === 'בעלים'||admin === 'עובד כללי'||admin === 'יוצר') &&
         <DropdownItem className='flex' key="delete" onPress={()=>{router.push(`${path}?section=scanner`)}} >
           סורק
         </DropdownItem>
+        }
       </DropdownMenu>
     </Dropdown>
 
