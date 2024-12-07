@@ -157,12 +157,10 @@ export const Team = ({ admin2 }) => {
     const arr1 = [...arr]
     arr1[9] = {
       headerName: "Admin",
-      width: 90,
+      width: 190,
       resizable: false,
       cellRenderer: adminColumn,
-      cellRendererParams: {
-        admin2: admin2,
-      },
+
     }
     arr1[8] = {
       headerName: "Status",
@@ -180,7 +178,7 @@ export const Team = ({ admin2 }) => {
       headerName: `Your ai`,
       width: 120,
       resizable: false,
-      cellRenderer: quatationColumn,
+      cellRenderer: aiColumn,
     }
     arr1[5] = {
       headerName: "Files",
@@ -446,8 +444,12 @@ export const Team = ({ admin2 }) => {
     )
   }
 
-  const adminColumn = (params) => {
-    const { data, admin2 } = params
+  const adminColumn = ({ data }) => {
+    const [cookie, setCookie, removeCookie] = useCookies()
+    const { decodedToken, isExpired } = useJwt(cookie.user)
+    const [isLoad, setIsLoad] = useState(true)
+    const [user, setUser] = useState([])
+    const [admin3, setAdmin3] = useState([])
     const admin = ['בעלים', 'מפיק', 'יחצן', "עובד כללי", "none"]
     const adminM = ['יחצן', "עובד כללי", "none"]
     const [team, setTeam] = useState([])
@@ -456,37 +458,62 @@ export const Team = ({ admin2 }) => {
       const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
       setEvents(getAllEvents.data.events)
       const eventU = getAllEvents.data.events
-      setTeam(getAllEvents.data?.team)
+      setTeam(getAllEvents.data?.workers)
+      setIsLoad(false)
 
     }
-    const handleUpdateAdmin = async (data) => {
-      const getAllEvents = await axios.patch(`http://localhost:9020/updateadmin/${getStringAfterSecondSlash(path)}`, { data: data })
-      setTeam(getAllEvents.data?.team)
+    const indexArr = findIndexById(data.key, team)
+    const getUser = async () => {
+      const getUser1 = await axios.get(`http://localhost:9020/getuser/${decodedToken?.email}`)
+      setUser(getUser1?.data)
+    }
+    const handleCheckAdmin = () => {
+      let isAdminFound = false;
 
+      for (let index = 0; index < team?.length; index++) {
+        const item = team[index];
+        if (item?.key === decodedToken?.user_id) {
+          setAdmin3(item.admin);
+          isAdminFound = true;
+          break; // Exit the loop if condition is true
+        }
+      }
+      if (!isAdminFound) {
+        setAdmin3("visitor");
+      }
+    }
+    const handleUpdateworker = async (data) => {
+      const result = await axios.patch(`http://localhost:9020/updateworker/${getStringAfterSecondSlash(path)}`, { team: data })
+      const theRole = result.data.workers
+      setTeam(theRole)
+      setIsLoad(false)
     }
     useEffect(() => {
       getEvents()
     }, [])
+    useEffect(() => {
+      if (decodedToken) {
+        getUser()
+        handleCheckAdmin()
+      }
+    }, [decodedToken, admin3, team])
     return (
 
-      <div className='w-full'>
-        {console.log(admin2)}
-        {data.admin === "יוצר" || (admin2 === 'בעלים' && data.admin === 'בעלים') ||
-          (admin2 === 'יחצן' || admin2 === 'עובד כללי' || admin2 === 'none') || (admin2 === data.admin) ?
-          <div></div> : admin2 === 'מפיק' ?
+      <div className='w-full py-1'>
+        {data.admin === "יוצר" || (admin3 === 'בעלים' && data.admin === 'בעלים') ||
+          (admin3 === 'יחצן' || admin3 === 'עובד כללי' || admin3 === 'none') || (admin3 === data.admin) ?
+          <div>{data.admin}</div> : admin3 === 'מפיק' ?
             <Select
+              isLoading={isLoad}
+              startContent={team[indexArr]?.admin}
               onChange={(e) => {
-                const arr = [...team]
-                const user = arr[index]
-                user.admin = admin[e.target.value]
-                handleUpdateAdmin(arr)
+                const arr = team
+                arr[indexArr].admin = admin[e.target.value]
+                setIsLoad(true)
+                handleUpdateworker(arr)
               }}
               aria-label="Select your admin"
-              value={data.admin}
-              classNames={{
-                trigger: "justify-center",
-                value: "text-center",
-              }}
+
               style={{ position: 'absolute', textAlign: 'center' }}
               placeholder='בחר הרשאה'
               className="max-w-xs"
@@ -498,21 +525,19 @@ export const Team = ({ admin2 }) => {
               ))}
             </Select> :
             <Select
+              isLoading={isLoad}
               onChange={(e) => {
-                const arr = [...team]
-                const user = arr[index]
-                user.admin = admin[e.target.value]
-                handleUpdateAdmin(arr)
+                const arr = team
+                arr[indexArr].admin = admin[e.target.value]
+                setIsLoad(true)
+                handleUpdateworker(arr)
               }}
               aria-label="Select your admin"
-              value={item.admin}
-              classNames={{
-                trigger: "justify-center",
-                value: "text-center",
-              }}
+              value={''}
+
               style={{ position: 'absolute', textAlign: 'center' }}
-              placeholder='בחר הרשאה'
               className="max-w-xs"
+              startContent={team[indexArr]?.admin}
             >
               {admin?.map((item, index) => (
                 <SelectItem key={index} style={{ textAlign: 'center' }} >

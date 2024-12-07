@@ -6,15 +6,17 @@ import Main from './Main'
 import Tickets from './Tickets'
 import { Team } from './Team'
 import Cuppons from './Cuppons'
-import AdminComp from './AdminComp'
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Textarea} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure,
+   Input, Textarea,Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,} from "@nextui-org/react";
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import Adds from './Adds'
 import Missions from './Missions'
 import Budgets from './Budgets'
 import Calendar from './Calendar'
+import { list } from 'postcss'
 const EventComp = ({}) => {
+  const [isDroped, setIsDroped] = useState(false)
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [socket, setSocket] = useState(null);
   const [cookie, setCookie, removeCookie] = useCookies()
@@ -152,8 +154,8 @@ const handleKeyDown = (event) => {
 
   return (
     <div className='dashboard-container  flex flex-col'>
-        <div className='w-full navbar-event flex flex-row items-center   '>
-        <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}`)}}>
+        <div className='w-full navbar-event flex flex-row items-center   ' style={{boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'}}>
+        {/* <div className='navbar-event-slot flex flex-col ' onClick={()=>{router.push(`${path}`)}}>
             <div className='navbar-event-slot-1' style={{opacity: !section && '100%'}}>ראשי</div>
             {!section && icon}
             </div>
@@ -213,7 +215,27 @@ const handleKeyDown = (event) => {
   
 
 
-
+ */}
+    <Dropdown>
+      <DropdownTrigger>
+        <Button variant="bordered">Open Menu</Button>
+      </DropdownTrigger>
+      <DropdownMenu   itemClasses={{
+    base: "h-[290px] w-[1000px]" // Applies to all items in this menu
+  }} aria-label="Static Actions" classNames={{list: 'flex flex-row h-24',}}>
+        <DropdownItem className='flex h-24' onPress={()=>{router.push(`${path}`)}} key="main">ראשי</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=tickets`)}} key="tickets">כרטיסים</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=budget`)}} key="5">תקציבים</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=statistics`)}} key="4">סטטיסטיקה</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=team`)}} key="3">צוות</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=client`)}} key="2">לקוחות</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=add`)}} key="2">פרסום</DropdownItem>
+        <DropdownItem className='flex' onPress={()=>{router.push(`${path}?section=cuppons`)}} key="2">קופונים</DropdownItem>
+        <DropdownItem className='flex' key="delete" onPress={()=>{router.push(`${path}?section=scanner`)}} >
+          סורק
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
 
 
         </div> 
@@ -349,7 +371,6 @@ const handleKeyDown = (event) => {
         {section === 'tickets'&& <Tickets admin={admin}/>}
         {section === "team"&& <Team admin2={admin}/>}
         {section === "cuppons"&& <Cuppons admin={admin}/>}
-        {section === "admin"&& <AdminComp admin2={admin}/>}
         {section === "add"&& <Adds admin2={admin}/>}
         {section === "mission" && <Missions admin={admin}/>}
         {section === "budget" && <Budgets admin={admin}/>}

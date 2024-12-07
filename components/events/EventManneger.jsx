@@ -127,8 +127,8 @@ const EventManneger = ({}) => {
                                 {(onClose) => (
                                     <>
                                         <ModalHeader className="flex flex-col gap-1">Add an event</ModalHeader>
-                                        <ModalBody>
-                                            <div className='flex flex-col w-full items-center gap-6'>
+                                        <ModalBody >
+                                            <div className='flex flex-col w-full items-center gap-6' style={{height: '400px'}}>
                                                 {cont &&
                                                 <>
                                                 <div className='flex flex-col  text-right' style={{ width: '50%' }}>
