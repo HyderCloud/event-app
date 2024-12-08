@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+
 def send_bulk_emails(recipient):
     print(recipient)
     smtp_server = "smtp.gmail.com"
@@ -57,7 +58,6 @@ def send_bulk_emails(recipient):
         print(f"Error: {e}")
 
 
-
 style = """
     <style>
         body {
@@ -99,4 +99,3 @@ style = """
         }
     </style>
 """
-
