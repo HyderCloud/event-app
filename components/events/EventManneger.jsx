@@ -48,11 +48,12 @@ const EventManneger = ({}) => {
         }
     }, [decodedToken])
     useEffect(() => {
-   
+  
         if(decodedTokens){
             getEventConnection()
 
         }
+            
     }, [decodedTokens])
 
 

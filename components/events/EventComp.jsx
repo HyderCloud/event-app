@@ -166,7 +166,7 @@ const EventComp = ({ }) => {
             router.push(`${path}`)
             setIsDroped(false)
           }} key="main">ראשי</div>
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
+          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר' && events.isTicketSale) &&
             <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
               router.push(`${path}?section=tickets`)
               setIsDroped(false)
@@ -375,7 +375,8 @@ const EventComp = ({ }) => {
           </ModalContent>
         </Modal>
         {!section && <Main data={events} admin={admin} />}
-        {section === 'tickets' && <Tickets admin={admin} />}
+        
+        {(events.isTicketSale && section === 'tickets') && <Tickets admin={admin} />}
         {section === "team" && <Team admin2={admin} />}
         {section === "cuppons" && <Cuppons admin={admin} />}
         {section === "add" && <Adds admin2={admin} />}

@@ -8,6 +8,18 @@
     background: #fefbf9;
 }
 
+.inputtype-5{
+    background-color: #ffffff;
+    cursor: pointer;
+    border-radius: 15px;
+    
+    padding: 2px;
+}
+
+.inputtype-5:hover{
+    background-color: #d2d2d25f;
+}
+
 .dashboard-container2{
     height: 100vh;
     width: 100%;

@@ -32,27 +32,9 @@ const Sginin = () => {
     <div className="form-container">
     <h1 className="title">LOGIN</h1>
     <form className="form">
-      <div className="input-group">
-        <label htmlFor="username" className="username" onChange={handleOnChangeEmail}>
-          אימייל
-        </label>
-        <input type="text" name="username" required />
-      </div>
-      <div className="input-group">
-        <label htmlFor="password" className="password">
-          סיסמה
-        </label>
-        <input type="password" onChange={handleOnChangePassword} name="password" required />
-      </div>
-      <div className="forgot">
-        <a href="#">שכחת את הסיסמה?</a>
-      </div>
-      <Button type="button" onPress={onSubmit} className="sign-in">
-        התחברות
-      </Button>
       <div className="social-messages">
         <div className="line"></div>
-        <p className="message">התחברות עם רשתות חברתיות</p>
+        <p className="message">התחברות עם</p>
         <div className="line"></div>
       </div>
       <div className="icons" onClick={() => signIn("google")}>

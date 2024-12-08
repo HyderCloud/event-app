@@ -7,7 +7,7 @@ import { cookies } from "next/headers"
 const page = async () => {
     const cookieStore = cookies()
     const user = cookieStore.get('user')
-
+    
     const session = await auth()
     if(!session){
       return (<Sginin/>)

@@ -12,9 +12,11 @@ import SignatureCanvas from 'react-signature-canvas';
 import Quotation from './Quotation';
 import DragPerson from '../DragPerson';
 import { saveAs } from 'file-saver';
-
+import { parseDate } from "@internationalized/date";
+import { parseTime } from "@internationalized/date";
 export const Team = ({ admin2 }) => {
-
+  const [columnType,setColumnType] = useState('')
+  const [isColumnOpen, setIsColumnOpen] = useState(false)
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [columnDefs, setColumnDefs] = useState([])
@@ -152,49 +154,147 @@ export const Team = ({ admin2 }) => {
     }));
   };
 
+  function updateJsonValue(json, key, newValue) {
+    // Check if the key exists in the JSON object
+    if (json.hasOwnProperty(key)) {
+      json[key] = newValue;  // Set the new value for the key
+      return json;  // Return the updated JSON object
+    } else {
+      console.log(`Key "${key}" not found in the object.`);
+      return json;  // Return the original JSON if the key is not found
+    }
+  }
+  function checkJsonValue(json, key) {
+    const keys = key?.split('.');  // Split the key into parts for nested objects
+    let obj = json;
+  
+    // Traverse the object structure using the split keys
+    for (let i = 0; i < keys.length; i++) {
+      if (obj && obj.hasOwnProperty(keys[i])) {
+        obj = obj[keys[i]];  // Move deeper into the object
+      } else {
+        console.log(`Key "${keys[i]}" not found in the object.`);
+        return undefined;  // Return undefined if key is not found
+      }
+    }
 
+    return obj;
+  }
   const changeGrisdByIndex = (arr) => {
+    
     const arr1 = [...arr]
-    arr1[9] = {
-      headerName: "Admin",
-      width: 190,
-      resizable: false,
-      cellRenderer: adminColumn,
+    console.log("🚀 ~ changeGrisdByIndex ~ arr1:", arr1)
+    
+    arr.map((items, index)=>{
+      if(items.field === "name" || items.headerName === "Profile"){
+        arr1[index] = {
+          headerName: "Profile",
+          cellRenderer: nameColumn,
+        }
+      }
+      if(items.field === "email" || items.headerName === "Email"){
+        arr1[index] = {
+          headerName: "Email",
+          cellRenderer: emailColumn,
+        }
+      }
+      if(items.field === "files" || items.headerName === "Files"){
+        arr1[index] = {
+          headerName: "Files",
+          resizable: false,
+          width: 120,
+          cellRenderer: fileColumn,
+        }
+      }
+      if(items.field === "ai" || items.headerName === "Your ai"){
+        arr1[index] = {
+          headerName: `Your ai`,
+          width: 120,
+          resizable: false,
+          cellRenderer: aiColumn,
+        }
+      }
+      if(items.field === "quotations" || items.headerName === "Quotations"){
+        arr1[index] = {
+          headerName: "Quotations",
+          width: 120,
+          resizable: false,
+          cellRenderer: quatationColumn,
+        }
+      }
+      if(items.field === "status" || items.headerName === "Status"){
+        arr1[index] = {
+          headerName: "Status",
+          width: 90,
+          resizable: false,
+          cellRenderer: statusColumn,
+        }
+      }
+      if(items.field === "admin" || items.headerName === "Admin"){
+        arr1[index] = {
+          headerName: "Admin",
+          width: 190,
+          resizable: false,
+          cellRenderer: adminColumn,
+        
+    
+        }
+      }
+      if(items?.type === "date"){
+        arr1[index] = {
+  
+          headerName: items?.headerName || items?.field,
+          cellRenderer: dateColumn,
+          type: "date",
+          cellRendererParams: {name: items?.headerName || items?.field}
+        }
+        console.log(arr1[index])
+      }
+    })
 
-    }
-    arr1[8] = {
-      headerName: "Status",
-      width: 90,
-      resizable: false,
-      cellRenderer: statusColumn,
-    }
-    arr1[7] = {
-      headerName: "Quotations",
-      width: 120,
-      resizable: false,
-      cellRenderer: quatationColumn,
-    }
-    arr1[6] = {
-      headerName: `Your ai`,
-      width: 120,
-      resizable: false,
-      cellRenderer: aiColumn,
-    }
-    arr1[5] = {
-      headerName: "Files",
-      resizable: false,
-      width: 120,
-      cellRenderer: fileColumn,
-    }
-    arr1[2] = {
-      headerName: "Email",
-      cellRenderer: emailColumn,
-    }
-    arr1[1] = {
-      headerName: "Profile",
-      cellRenderer: nameColumn,
-    }
     return arr1
+  }
+  const dateColumn = (params)=>{
+    const { data, name } = params;
+    const theJson = checkJsonValue(data,name)
+    console.log("🚀 ~ dateColumn ~ theJson:", theJson)
+    const [date, setDate] = useState(theJson || "")
+    const [newWorker, setNewWorker] = useState([])
+    const getEvents = async () => {
+      const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
+      setNewWorker(getAllEvents.data.workers)
+    }
+    useEffect(() => {
+      getEvents()
+    }, [])
+    const handleUpdateworker = async (data) => {
+      const result = await axios.patch(`http://localhost:9020/updateworker/${getStringAfterSecondSlash(path)}`, { team: data })
+      const theRole = result.data.workers
+      setNewWorker(theRole)
+    }
+    const index3 = findIndexById(data.key, newWorker)
+    const parseDate2 = (dateString) => {
+      const date = new Date(dateString); // Create a Date object from the string
+      return date.toISOString().split('T')[0]; // Extract the date part (YYYY-MM-DD)
+    };
+    const handleChangeDate = (e) => {
+      const arr = newWorker
+      console.log("🚀 ~ handleChangeDate ~ newWorker:", newWorker)
+      const newDate = parseDate2(e)
+      const newjson = updateJsonValue(arr[index3],name,newDate)
+      arr[index3] = newjson
+      handleUpdateworker(arr)
+      setDate(newDate)
+    }
+
+    return(
+      <div>
+        {date.length === 0 ?
+        <DatePicker onChange={handleChangeDate} />:
+        <DatePicker onChange={handleChangeDate} value={parseDate(date)}/>
+        }
+      </div>
+    )
   }
   const quatationColumn = ({ data }) => {
     if (data.quotations) {
@@ -738,7 +838,7 @@ export const Team = ({ admin2 }) => {
   };
 
   const addColumn = async () => {
-    const newColumn = { field: column, editable: true };
+    const newColumn = { field: column, editable: true, type: columnType };
 
     setColumnDefs([...columnDefs, newColumn]);
     await handleUpdateGrid([...columnDefs, newColumn])
@@ -805,13 +905,85 @@ export const Team = ({ admin2 }) => {
       </div>
       <div className=' text-white flex flex-col w-full h-full bg-white'
         style={{
-          borderRadiusR: '15px', color: 'black', gap: '20px', borderRadius: "15px"
+          boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
+          borderRadiusR: '15px', color: 'black', gap: '20px', borderRadius: "15px", padding: "15px"
         }}>
         <div className='flex flex-col ag-theme-quartz'
           style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%', }}>
 
           <div className='w-full h-full relative flex flex-row ' style={{ padding: '5px' }} >
-            <Button onPress={onOpen4} color='primary'>הוסף עמודה</Button>
+            <Tooltip isOpen={isColumnOpen} placement='bottom' content={<div className='flex flex-col' style={{ gap: "10px", padding: "7px" }}>
+              <div className='flex flex-col'>
+                <div>סוגי עמודות</div>
+                <Divider />
+              </div>
+              <div className='flex flex-col' style={{ width: "200px", gap: "10px" }}>
+                <div className='w-full flex flex-row '>
+                  <div onClick={()=>{
+                    onOpen4()
+                    setColumnType("text")
+                  }} className='inputtype-5 w-full'>טקסט</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("date")
+                  }}>תאריך</div>
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("time")
+                  }}>זמן</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("symbol")
+                  }}>סימבול</div>
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full' onClick={()=>{
+                    onOpen4()
+                    setColumnType("price")
+                  }}>מחיר</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("image")
+                  }}>תמונה</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("file")
+                  }}>קובץ</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("place")
+                  }}>מיקום</div>
+
+                </div>
+              </div>
+            </div>}>
+
+              <Button radius='full' isIconOnly={isColumnOpen} variant='faded' onPress={() => setIsColumnOpen(!isColumnOpen)} color='primary' >
+                {isColumnOpen ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19.7188 18.3906L13.325 12.0004L19.7188 5.65714C20.0392 5.28603 20.0219 4.72911 19.679 4.37894C19.3361 4.02878 18.7832 4.00341 18.4101 4.32073L11.9976 10.6169L5.69734 4.27367C5.33275 3.90878 4.74392 3.90878 4.37933 4.27367C4.20236 4.45039 4.10282 4.69094 4.10282 4.94188C4.10282 5.19282 4.20236 5.43337 4.37933 5.61008L10.6703 11.9439L4.2765 18.2777C4.09954 18.4544 4 18.695 4 18.9459C4 19.1969 4.09954 19.4374 4.2765 19.6141C4.45291 19.7903 4.69172 19.8885 4.94018 19.887C5.18409 19.8885 5.41891 19.794 5.59452 19.6235L11.9976 13.2709L18.4101 19.7271C18.5865 19.9032 18.8253 20.0014 19.0738 20C19.319 19.9989 19.554 19.9009 19.7281 19.7271C19.9039 19.5491 20.0017 19.3078 20 19.0569C19.9982 18.8059 19.897 18.5661 19.7188 18.3906Z" fill="#4285f4" />
+                </svg> : <>                עמודה חדשה              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.5 11H15C14.4477 11 14 10.5523 14 10V4.5C14 3.67157 13.3284 3 12.5 3C11.6716 3 11 3.67157 11 4.5V10C11 10.5523 10.5523 11 10 11H4.5C3.67157 11 3 11.6716 3 12.5C3 13.3284 3.67157 14 4.5 14H10C10.5523 14 11 14.4477 11 15V20.5C11 21.3284 11.6716 22 12.5 22C13.3284 22 14 21.3284 14 20.5V15C14 14.4477 14.4477 14 15 14H20.5C21.3284 14 22 13.3284 22 12.5C22 11.6716 21.3284 11 20.5 11Z" fill="#252323" />
+                </svg></>}
+              </Button>
+            </Tooltip>
             <div style={{ width: '50px' }}>
               <Button isIconOnly variant='kff'>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -821,16 +993,18 @@ export const Team = ({ admin2 }) => {
                   <path d="M12 15.9555H20.2286C20.6546 15.9555 21 16.3008 21 16.7268C21 17.1528 20.6546 17.4981 20.2286 17.4981H12C11.574 17.4981 11.2286 17.1528 11.2286 16.7268C11.2286 16.3008 11.574 15.9555 12 15.9555Z" fill="#252323" />
                 </svg>
               </Button>
+                  {events.isTicketSale &&
+                                <Tooltip showArrow color='primary' content={<div>הוספת יחצנים {events?.name}</div>}>
+                                <Button variant='ffe' onPress={() => { onOpen5() }} isIconOnly>
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.65 22H5.35999C4.34955 21.9639 3.40833 21.4774 2.79458 20.6739C2.18083 19.8704 1.95901 18.8344 2.18999 17.85L2.41999 16.71C2.69603 15.1668 4.02261 14.0327 5.58999 14H14.41C15.9797 14.0319 17.3096 15.1652 17.59 16.71L17.82 17.85C18.0472 18.834 17.8239 19.8679 17.2109 20.6704C16.5979 21.4729 15.659 21.9604 14.65 22Z" fill="#252323" />
+                                    <path d="M10.5 12H9.49999C7.29085 12 5.49999 10.2092 5.49999 8.00001V5.36001C5.49999 3.50434 7.00431 2.00001 8.85999 2.00001H11.14C12.0319 1.99735 12.8881 2.35049 13.5188 2.98119C14.1495 3.61189 14.5027 4.46807 14.5 5.36001V8.00001C14.5 10.2092 12.7091 12 10.5 12Z" fill="#252323" />
+                                    <path d="M21 6.25002H19.63V4.88002C19.63 4.4658 19.2942 4.13002 18.88 4.13002C18.4658 4.13002 18.13 4.4658 18.13 4.88002V6.25002H16.77C16.3558 6.25002 16.02 6.5858 16.02 7.00002C16.02 7.41423 16.3558 7.75002 16.77 7.75002H18.13V9.12002C18.13 9.53423 18.4658 9.87002 18.88 9.87002C19.2942 9.87002 19.63 9.53423 19.63 9.12002V7.75002H21C21.4142 7.75002 21.75 7.41423 21.75 7.00002C21.75 6.5858 21.4142 6.25002 21 6.25002Z" fill="#252323" />
+                                  </svg>
+                                </Button>
+                              </Tooltip>
+                  }
 
-              <Tooltip showArrow color='primary' content={<div>הוספת יחצנים {events?.name}</div>}>
-                <Button variant='ffe' onPress={() => { onOpen5() }} isIconOnly>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.65 22H5.35999C4.34955 21.9639 3.40833 21.4774 2.79458 20.6739C2.18083 19.8704 1.95901 18.8344 2.18999 17.85L2.41999 16.71C2.69603 15.1668 4.02261 14.0327 5.58999 14H14.41C15.9797 14.0319 17.3096 15.1652 17.59 16.71L17.82 17.85C18.0472 18.834 17.8239 19.8679 17.2109 20.6704C16.5979 21.4729 15.659 21.9604 14.65 22Z" fill="#252323" />
-                    <path d="M10.5 12H9.49999C7.29085 12 5.49999 10.2092 5.49999 8.00001V5.36001C5.49999 3.50434 7.00431 2.00001 8.85999 2.00001H11.14C12.0319 1.99735 12.8881 2.35049 13.5188 2.98119C14.1495 3.61189 14.5027 4.46807 14.5 5.36001V8.00001C14.5 10.2092 12.7091 12 10.5 12Z" fill="#252323" />
-                    <path d="M21 6.25002H19.63V4.88002C19.63 4.4658 19.2942 4.13002 18.88 4.13002C18.4658 4.13002 18.13 4.4658 18.13 4.88002V6.25002H16.77C16.3558 6.25002 16.02 6.5858 16.02 7.00002C16.02 7.41423 16.3558 7.75002 16.77 7.75002H18.13V9.12002C18.13 9.53423 18.4658 9.87002 18.88 9.87002C19.2942 9.87002 19.63 9.53423 19.63 9.12002V7.75002H21C21.4142 7.75002 21.75 7.41423 21.75 7.00002C21.75 6.5858 21.4142 6.25002 21 6.25002Z" fill="#252323" />
-                  </svg>
-                </Button>
-              </Tooltip>
               <Tooltip showArrow color='primary' content={'הצעת מחיר לספקים'}>
                 <Button variant='ffe' onPress={() => { onOpen6() }} isIconOnly>
                   <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1617,7 +1791,7 @@ export const Team = ({ admin2 }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">שם העמודה</ModalHeader>
               <ModalBody>
                 <Input onChange={(e) => { setColumn(e.target.value) }} />
               </ModalBody>
