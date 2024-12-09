@@ -183,7 +183,6 @@ export const Team = ({ admin2 }) => {
   const changeGrisdByIndex = (arr) => {
     
     const arr1 = [...arr]
-    console.log("🚀 ~ changeGrisdByIndex ~ arr1:", arr1)
     
     arr.map((items, index)=>{
       if(items.field === "name" || items.headerName === "Profile"){
@@ -246,9 +245,23 @@ export const Team = ({ admin2 }) => {
           headerName: items?.headerName || items?.field,
           cellRenderer: dateColumn,
           type: "date",
+          resizable: false,
+          width: 170,
           cellRendererParams: {name: items?.headerName || items?.field}
         }
-        console.log(arr1[index])
+ 
+      }
+      if(items?.type === "time"){
+        arr1[index] = {
+  
+          headerName: items?.headerName || items?.field,
+          cellRenderer: timeColumn,
+          width: 90,
+          resizable: false,
+          type: "time",
+          cellRendererParams: {name: items?.headerName || items?.field}
+        }
+ 
       }
     })
 
@@ -264,6 +277,7 @@ export const Team = ({ admin2 }) => {
       const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
       setNewWorker(getAllEvents.data.workers)
     }
+
     useEffect(() => {
       getEvents()
     }, [])
@@ -288,10 +302,57 @@ export const Team = ({ admin2 }) => {
     }
 
     return(
-      <div>
+      <div style={{paddingTop: "8px"}}>
         {date.length === 0 ?
-        <DatePicker onChange={handleChangeDate} />:
-        <DatePicker onChange={handleChangeDate} value={parseDate(date)}/>
+        <DatePicker color='primary' onChange={handleChangeDate} />:
+        <DatePicker color='primary' onChange={handleChangeDate} value={parseDate(date)}/>
+        }
+      </div>
+    )
+  }
+  const timeColumn = (params)=>{
+    const { data, name } = params;
+    const theJson = checkJsonValue(data,name)
+    console.log("🚀 ~ dateColumn ~ theJson:", theJson)
+    const [date, setDate] = useState(theJson || "")
+    const [newWorker, setNewWorker] = useState([])
+    const getEvents = async () => {
+      const getAllEvents = await axios.get(`http://localhost:9020/getevent/${getStringAfterSecondSlash(path)}`)
+      setNewWorker(getAllEvents.data.workers)
+    }
+    
+    useEffect(() => {
+      getEvents()
+    }, [])
+    const handleUpdateworker = async (data) => {
+      const result = await axios.patch(`http://localhost:9020/updateworker/${getStringAfterSecondSlash(path)}`, { team: data })
+      const theRole = result.data.workers
+      setNewWorker(theRole)
+    }
+    const index3 = findIndexById(data.key, newWorker)
+    const parseTime2 = (dateString) => {
+      const date = new Date(dateString); // Create a Date object from the string
+      console.log("🚀 ~ parseTime2 ~ date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });:", date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }))
+      return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }); // Format time (24-hour format)
+    };
+    const parse3 = (time)=>{
+      return `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
+    }
+    const handleChangeDate = (e) => {
+      const arr = newWorker
+      const newDate = parse3(e)
+      console.log("🚀 ~ handleChangeDate ~ e:", newDate)
+      const newjson = updateJsonValue(arr[index3],name,newDate)
+      arr[index3] = newjson
+      handleUpdateworker(arr)
+      setDate(newDate)
+    }
+
+    return(
+      <div style={{paddingTop: "8px"}}>
+        {date.length === 0 ?
+        <TimeInput color='secondary' onChange={handleChangeDate} />:
+        <TimeInput color='secondary' onChange={handleChangeDate} value={parseTime(date)}/>
         }
       </div>
     )
@@ -971,6 +1032,13 @@ export const Team = ({ admin2 }) => {
                     onOpen4()
                     setColumnType("place")
                   }}>מיקום</div>
+
+                </div>
+                <div className='w-full flex flex-row '>
+                  <div className='inputtype-5 w-full'onClick={()=>{
+                    onOpen4()
+                    setColumnType("checkbox")
+                  }}>תיבת סימון</div>
 
                 </div>
               </div>
