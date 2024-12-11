@@ -109,14 +109,23 @@
     font-family: var(--italic-nunito);
     
 }
+.isuserEdit-css{
+  background-color: white;
+  cursor: pointer;
 
+  border-bottom: 1px solid rgb(203 213 225);
+}
+.isuserEdit-css:hover{
+  background-color: rgb(203 213 225);
+  border-radius: 8px;
+}
 .event-modal-container{
 
     color: #252323;
 }
 
 .navbar-event{
-    margin-top: 7%;
+    margin-top: 3%;
     height: 50px;
 
 }

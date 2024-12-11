@@ -170,7 +170,7 @@ export const Team = ({ admin2 }) => {
   
     // Traverse the object structure using the split keys
     for (let i = 0; i < keys.length; i++) {
-      if (obj && obj.hasOwnProperty(keys[i])) {
+      if (obj && obj?.hasOwnProperty(keys[i])) {
         obj = obj[keys[i]];  // Move deeper into the object
       } else {
         console.log(`Key "${keys[i]}" not found in the object.`);
@@ -312,8 +312,10 @@ export const Team = ({ admin2 }) => {
   }
   const timeColumn = (params)=>{
     const { data, name } = params;
+    console.log("🚀 ~ timeColumn ~ name:", name)
+
     const theJson = checkJsonValue(data,name)
-    console.log("🚀 ~ dateColumn ~ theJson:", theJson)
+
     const [date, setDate] = useState(theJson || "")
     const [newWorker, setNewWorker] = useState([])
     const getEvents = async () => {
@@ -324,17 +326,14 @@ export const Team = ({ admin2 }) => {
     useEffect(() => {
       getEvents()
     }, [])
+    
     const handleUpdateworker = async (data) => {
       const result = await axios.patch(`http://localhost:9020/updateworker/${getStringAfterSecondSlash(path)}`, { team: data })
       const theRole = result.data.workers
       setNewWorker(theRole)
     }
     const index3 = findIndexById(data.key, newWorker)
-    const parseTime2 = (dateString) => {
-      const date = new Date(dateString); // Create a Date object from the string
-      console.log("🚀 ~ parseTime2 ~ date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });:", date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }))
-      return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }); // Format time (24-hour format)
-    };
+
     const parse3 = (time)=>{
       return `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
     }
@@ -344,13 +343,13 @@ export const Team = ({ admin2 }) => {
       console.log("🚀 ~ handleChangeDate ~ e:", newDate)
       const newjson = updateJsonValue(arr[index3],name,newDate)
       arr[index3] = newjson
-      handleUpdateworker(arr)
       setDate(newDate)
+      handleUpdateworker(arr)
     }
-
     return(
       <div style={{paddingTop: "8px"}}>
-        {date.length === 0 ?
+        
+        {date.length <5 ?
         <TimeInput color='secondary' onChange={handleChangeDate} />:
         <TimeInput color='secondary' onChange={handleChangeDate} value={parseTime(date)}/>
         }
@@ -946,7 +945,7 @@ export const Team = ({ admin2 }) => {
 
   return (
 
-    <div className=' flex justify-center w-full h-full items-center flex-col'
+    <div className=' flex justify-center w-full items-center flex-col'
       style={{ gap: '20px', paddingRight: '5px', paddingLeft: '5px', paddingBottom: '3%' }}>
       <Modal size='5xl' isOpen={isOpen2} onOpenChange={onOpenChange2}>
         <ModalContent>
@@ -969,8 +968,8 @@ export const Team = ({ admin2 }) => {
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
           borderRadiusR: '15px', color: 'black', gap: '20px', borderRadius: "15px", padding: "15px"
         }}>
-        <div className='flex flex-col ag-theme-quartz'
-          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%', }}>
+        <div className='flex flex-col  ag-theme-quartz'
+          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%',minHeight: "700px" , overflowY: "auto"}}>
 
           <div className='w-full h-full relative flex flex-row ' style={{ padding: '5px' }} >
             <Tooltip isOpen={isColumnOpen} placement='bottom' content={<div className='flex flex-col' style={{ gap: "10px", padding: "7px" }}>
@@ -1085,7 +1084,7 @@ export const Team = ({ admin2 }) => {
 
             </div>
           </div>
-          <AgGridReact rowData={team} columnDefs={columnDefs} onCellValueChanged={onCellValueChanged} domLayout="autoHeight">
+          <AgGridReact rowData={team} columnDefs={columnDefs} onCellValueChanged={onCellValueChanged} domLayout="autoHeight" >
 
           </AgGridReact>
         </div>

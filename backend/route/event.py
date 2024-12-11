@@ -13,13 +13,19 @@ def addEvent(id, owner):
         id,
         owner,
         event["name"],
-        event["start_date"],
-        event["end_date"],
+        event["dateRange"],
         event["startTime"],
         event["endTime"],
         event["place"],
         event["id"],
         event["ticket"],
+        event["round"],
+        event["description"],
+        event["type"],
+        event["age"],
+        event["image"],
+        event["public"]
+        
     )
 
 
@@ -114,12 +120,29 @@ def update_cupponss(id):
 def get_connection_event(id):
     return events_api.get_events_by_connection(id)
 
+@events_blueprint.route("/missionbyid/<string:id>", methods=["GET"])
+def get_mission_by_id(id):
+    return events_api.get_mission_by_id(id)
+
+@events_blueprint.route("/sellPage/<string:id>", methods=["PATCH"])
+def update_sellPage(id):
+    event = request.get_json()
+    return events_api.update_sellPage( event["sellPage"],id)
+
+@events_blueprint.route("/endPage/<string:id>", methods=["PATCH"])
+def update_endPage(id):
+    event = request.get_json()
+    return events_api.update_endPage( event["endPage"],id)
+
+@events_blueprint.route("/promoPage/<string:id>", methods=["PATCH"])
+def update_promoPage(id):
+    event = request.get_json()
+    return events_api.update_promoPage( event["promoPage"],id)
 
 @events_blueprint.route("/description/<string:id>", methods=["PATCH"])
 def update_description(id):
     event = request.get_json()
     return events_api.update_description(id, event["description"])
-
 
 @events_blueprint.route("/budget/<string:id>", methods=["PATCH"])
 def update_budget(id):

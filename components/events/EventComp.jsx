@@ -8,7 +8,11 @@ import { Team } from './Team'
 import Cuppons from './Cuppons'
 import {
   Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip,
-  Input, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
+  Input, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
 } from "@nextui-org/react";
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -18,9 +22,14 @@ import Budgets from './Budgets'
 import Calendar from './Calendar'
 import { list } from 'postcss'
 import Image from 'next/image'
+import Design from './Design'
+import SellPage from './SellPage'
+import PromoPage from './PromoPage'
+import EndPage from './EndPage'
 const EventComp = ({ }) => {
   const [isDroped, setIsDroped] = useState(false)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const [socket, setSocket] = useState(null);
   const [cookie, setCookie, removeCookie] = useCookies()
   const [messages, setMessages] = useState([]);
@@ -159,8 +168,25 @@ const EventComp = ({ }) => {
 
   return (
     <div className='dashboard-container  flex flex-col'>
-      <div className='w-full navbar-event flex flex-row items-center   ' style={{ paddingRight: '5%' }}>
-        <Tooltip placement='bottom' isOpen={isDroped} content={<div className='flex flex-row cursor-default flex-wrap'
+      <div className='w-full navbar-event flex flex-row items-center   '  style={{ paddingRight: '5%' }}>
+
+
+          <Button variant='bordered' isIconOnly onPress={() => onOpen2()} >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.62 11H6C5.44772 11 5 10.5523 5 10C5 9.44772 5.44772 9 6 9H15.62C16.1723 9 16.62 9.44772 16.62 10C16.62 10.5523 16.1723 11 15.62 11Z" fill="black" />
+              <path d="M6 14H18.82C19.3723 14 19.82 14.4477 19.82 15C19.82 15.5523 19.3723 16 18.82 16H6C5.44772 16 5 15.5523 5 15C5 14.4477 5.44772 14 6 14Z" fill="black" />
+            </svg>
+
+          </Button>
+
+
+        <Drawer placement='top' isOpen={isOpen2} onOpenChange={onOpenChange2}>
+        <DrawerContent>
+          {(onClose) => (
+            <>
+              <DrawerHeader className="flex flex-col gap-1"></DrawerHeader>
+          <DrawerBody>
+          <div className='flex flex-row cursor-default flex-wrap'
           style={{ padding: "10px", rowGap: "20px", columnGap: "50px" }}>
           <div className='flex h-24' style={{ width: '200px', height: '100px' }} onClick={() => {
             router.push(`${path}`)
@@ -216,16 +242,15 @@ const EventComp = ({ }) => {
               סורק
             </div>
           }
-        </div>}>
-          <Button variant='bordered' isIconOnly onPress={() => setIsDroped(!isDroped)} >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.62 11H6C5.44772 11 5 10.5523 5 10C5 9.44772 5.44772 9 6 9H15.62C16.1723 9 16.62 9.44772 16.62 10C16.62 10.5523 16.1723 11 15.62 11Z" fill="black" />
-              <path d="M6 14H18.82C19.3723 14 19.82 14.4477 19.82 15C19.82 15.5523 19.3723 16 18.82 16H6C5.44772 16 5 15.5523 5 15C5 14.4477 5.44772 14 6 14Z" fill="black" />
-            </svg>
+        </div>
+          </DrawerBody>
+              <DrawerFooter>
 
-          </Button>
-        </Tooltip>
-
+              </DrawerFooter>
+            </>
+          )}
+        </DrawerContent>
+      </Drawer>
 
         <Tooltip showArrow color='primary' content={<div>היומן של {events?.name}</div>}>
           <Button variant='ffe' onPress={() => { router.push(`${path}?section=calendar`) }} isIconOnly>
@@ -374,10 +399,12 @@ const EventComp = ({ }) => {
             )}
           </ModalContent>
         </Modal>
-        {!section && <Main data={events} admin={admin} />}
-
+        {!section && <Design />}
         {(events.isTicketSale && section === 'tickets') && <Tickets admin={admin} />}
         {section === "team" && <Team admin2={admin} />}
+        {section === "sellpage" && <SellPage/>}
+        {section === "promo" && <PromoPage/>}
+        {section === "endpage" && <EndPage/>}
         {section === "cuppons" && <Cuppons admin={admin} />}
         {section === "add" && <Adds admin2={admin} />}
         {section === "mission" && <Missions admin={admin} />}

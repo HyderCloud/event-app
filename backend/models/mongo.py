@@ -36,6 +36,42 @@ class EventsDB:
         else:
             print("No document found with the given email.")
 
+    def update_sellPage_by_id(self, sellPage, _id):
+        new_data = {
+            "$set": {
+                "sellPage": sellPage,
+            }
+        }
+        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_promoPage_by_id(self, promoPage, _id):
+        new_data = {
+            "$set": {
+                "promoPage": promoPage,
+            }
+        }
+        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
+    def update_endPage_by_id(self, endPage, _id):
+        new_data = {
+            "$set": {
+                "endPage": endPage,
+            }
+        }
+        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_ticket_settings_by_id(self, ticket_settings, _id):
         new_data = {
             "$set": {
@@ -180,6 +216,13 @@ class EventsDB:
             documents_list.append(document)
         if not documents_list:
             return None
+        return documents_list
+
+    def get_mission_by_id(self, id):
+        documents_list = missionCollection.find_one({"_id": ObjectId(id)})
+        if documents_list is None:
+            return None
+        documents_list["_id"] = str(documents_list["_id"])
         return documents_list
 
     def get_events_by_connection(self, key):

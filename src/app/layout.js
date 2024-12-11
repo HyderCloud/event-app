@@ -32,7 +32,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const session = await auth()
   return (
-    <html lang="en">
+    <html style={{overflow: 'hidden'}} lang="en">
                <head>
           <script
             async

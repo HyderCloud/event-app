@@ -19,43 +19,37 @@ class Events:
         id,
         owner,
         name,
-        start_date,
-        end_date,
+        dateRange,
         start_time,
         end_time,
         place,
         user_id,
         ticket,
+        round,
+        description,
+        type2,
+        age,
+        thubnail,
+        public
     ):
         try:
             doccument = {
                 "key": id,
                 "owner": owner,
                 "name": name,
-                "start_date": start_date,
-                "end_date": end_date,
+                "dateRange": dateRange,
                 "start_time": start_time,
                 "end_time": end_time,
                 "place": place,
-                "description": "",
-                "tubnail": "",
+                "description": description,
+                "tubnail": thubnail,
                 "tickets": "ללא הגבלה",
                 "clients": [],
                 "images": [],
                 "isTicketSale": ticket,
                 "cuppons": [],
                 "roles": [],
-                "rounds": [
-                    {
-                        "name": "",
-                        "startDate": "",
-                        "endDate": "",
-                        "startTime": "",
-                        "endTime": "",
-                        "price": "",
-                        "amount": "",
-                    }
-                ],
+                "rounds": round,
                 "budget": [
                     {
                         "name": "תקציב",
@@ -73,9 +67,15 @@ class Events:
                     }
                 ],
                 "status": "in progress",
-                "age": "",
-                "type": "",
-                "mode": True,
+                "age": age,
+                "type": type2,
+                "sellPage": {"workers": [],
+                              "mission": []},
+                "promoPage": {"workers": [],
+                              "mission": []},
+                "endPage": {"workers": [],
+                              "mission": []},
+                "mode": public,
                 "grid": [
                     {"field": "_id"},
                     {"field": "name"},
@@ -101,7 +101,7 @@ class Events:
             }
             result = api_events.insert_event(doccument)
             if result:
-                return jsonify({"acknowledge": True}), 200
+                return jsonify({"acknowledge": True, "link": f"/{name}/{result}"}), 200
         except Exception as e:
             return jsonify({"message": "error-" + str(e)}), 501
 
@@ -248,12 +248,46 @@ class Events:
         except Exception as e:
             return jsonify({"message": "error-" + str(e)}), 501
 
-    def get_events_by_connection(self, key):
+    def update_sellPage(self,  doccument,id):
         try:
-            result = api_events.get_events_by_connection(key)
+            is_updated = api_events.update_sellPage_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"sellPage": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": "error-" + str(e)}), 501
+
+    def update_endPage(self,  doccument,id):
+        try:
+            is_updated = api_events.update_endPage_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"endPage": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": "error-" + str(e)}), 501
+
+    def update_promoPage(self,  doccument,id):
+        try:
+            is_updated = api_events.update_promoPage_by_id(doccument, id)
+            if is_updated:
+                return jsonify({"promoPage": doccument}), 200
+        except Exception as e:
+            return jsonify({"message": "error-" + str(e)}), 501
+
+    def get_events_by_connection(self, id):
+        try:
+            result = api_events.get_events_by_connection(id)
             if result == None:
                 return jsonify({"events": []}), 200
             else:
                 return jsonify({"events": result}), 200
+        except Exception as e:
+            return jsonify({"message": "error-" + str(e)}), 501
+
+    def get_mission_by_id(self, key):
+        try:
+            result = api_events.get_mission_by_id(key)
+            if result == None:
+                return jsonify({"mission": []}), 200
+            else:
+                return jsonify({"mission": result}), 200
         except Exception as e:
             return jsonify({"message": "error-" + str(e)}), 501
