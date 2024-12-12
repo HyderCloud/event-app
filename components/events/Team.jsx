@@ -945,8 +945,8 @@ export const Team = ({ admin2 }) => {
 
   return (
 
-    <div className=' flex justify-center w-full items-center flex-col'
-      style={{ gap: '20px', paddingRight: '5px', paddingLeft: '5px', paddingBottom: '3%' }}>
+    <div className=' flex  w-full items-center flex-col'
+      style={{ gap: '20px'}}>
       <Modal size='5xl' isOpen={isOpen2} onOpenChange={onOpenChange2}>
         <ModalContent>
           {(onClose) => (
@@ -963,13 +963,13 @@ export const Team = ({ admin2 }) => {
 
 
       </div>
-      <div className=' text-white flex flex-col w-full h-full bg-white'
+      <div className=' text-white flex flex-col w-full bg-white'
         style={{
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
           borderRadiusR: '15px', color: 'black', gap: '20px', borderRadius: "15px", padding: "15px"
         }}>
         <div className='flex flex-col  ag-theme-quartz'
-          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%',minHeight: "700px" , overflowY: "auto"}}>
+          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%',minHeight: "600px" , overflowY: "auto"}}>
 
           <div className='w-full h-full relative flex flex-row ' style={{ padding: '5px' }} >
             <Tooltip isOpen={isColumnOpen} placement='bottom' content={<div className='flex flex-col' style={{ gap: "10px", padding: "7px" }}>

@@ -406,7 +406,7 @@ const Budgets = ({admin}) => {
                       {item.name}
                     </div>
 
-                    <div className='w-full justify-center flex glass-background2'>
+                    <div className='w-full justify-center flex '>
                       {waiting[index2]?.role}
                     </div>
                     <div className='w-full'>
@@ -718,9 +718,13 @@ const Budgets = ({admin}) => {
         <div className='w-full'>{events?.name}</div>
         {icon}
         </div>
-        <div className='eventrise-finance-promo glass-background'></div>
+        <div className='eventrise-finance-promo bg-white'></div>
         </div>
-        <div className='w-full glass-background flex flex-col' style={{borderRadius: '20px', padding: '5%',gap: '25px'}}>
+        <div style={{width: "86%"}}>
+
+        <div className='w-full bg-white flex flex-col' style={{borderRadius: '20px', padding: '5%',gap: '25px',
+          boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset'
+        }}>
         <div className='w-full flex flex-row' style={{ gap: '20px'}}>
         <div>
         <Button onPress={onOpen} isDisabled={budget?.length > 1} color='primary'>הגדר את תקציב האירוע</Button>
@@ -735,11 +739,9 @@ const Budgets = ({admin}) => {
         <div className='style-lable-amount '>סכום התקציב הכולל</div>
         {icon}
         <div className='style-lable-amount-display '>{amount}</div>
-        <div style={{height: '30px'}}></div>
         <Divider className='bg-white'/>
         </div>
             </div>
-        <div style={{height:'20px'}}></div>
         <div className='w-full flex justify-center flex-col items-center' style={{paddingLeft: '12%', paddingRight: '12%'}} 
         onMouseEnter={()=>{setGraphHover(true)}} onMouseLeave={()=>{setGraphHover(false)}}>
             {(grapghHover && budget[0]?.y > 0 || budget.length > 1)  &&
@@ -754,7 +756,7 @@ const Budgets = ({admin}) => {
             </div>
             }
               <div
-        className="ag-theme-quartz-dark"
+        className="ag-theme-quartz"
         style={{
           width: '420px',
           overflowX: 'auto', // Enable horizontal scrolling
@@ -782,7 +784,7 @@ const Budgets = ({admin}) => {
                                 </div>
                                     }
                                               <div
-                            className="ag-theme-quartz-dark"
+                            className="ag-theme-quartz"
                             style={{
             
                               width: '420px',
@@ -807,7 +809,8 @@ const Budgets = ({admin}) => {
             })}
         </div>
         </div>
-        <div style={{height: '200px'}}>
+        </div>
+        <div style={{height: '50px'}}>
         
         </div>
     </div>

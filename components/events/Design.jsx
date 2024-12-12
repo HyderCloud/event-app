@@ -125,10 +125,10 @@ const Design = ({ admin }) => {
         gethandleMission()
     }, [])
     return (
-        <div className='w-full h-screen' style={{ paddingBottom: "80px" }}>
-            <div className='flex h-full w-full flex-col bg-white'
-                style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", padding: "30px", overflowY: "auto" }}>
-                <div className='h-screen flex flex-row'
+        <div className='w-full' style={{paddingTop: '20px' }}>
+            <div className='flex  w-full flex-col bg-white'
+                style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", padding: "30px" }}>
+                <div className='flex flex-row'
                     style={{ padding: "10px" }}>
 
                 </div>

@@ -35,7 +35,7 @@ const StoreSlide = () => {
     }else{
 
         return (
-          <div className='flex flex-col flex-wrap gap-4 w-full  items-center justify-center '
+          <div className='flex flex-col flex-wrap gap-4 w-full h-screen fixed items-center justify-center '
           style={{width: '80px', backgroundColor: '#fefbf9', gap: '20px', overflowY: 'hidden'}}>
             <div  className="flex h-full items-center justify-center flex-wrap gap-10">
 <Tabs isVertical variant='light'  isS size='lg' 

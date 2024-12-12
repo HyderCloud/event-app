@@ -98,7 +98,8 @@ const Calendar = () => {
     setEvents(updatedEvents);
   };
   return (
-    <div style={{ direction: 'rtl' }}>
+    
+    <div style={{ direction: 'rtl'}}>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

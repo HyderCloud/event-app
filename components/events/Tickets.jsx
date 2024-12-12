@@ -393,9 +393,7 @@ const Tickets = ({ admin }) => {
                     )}
                 </DrawerContent>
             </Drawer>
-            <div className=' flex  w-full h-full flex-col ' style={{ gap: "50px", }}>
-                <div style={{ height: "30px" }}></div>
-
+            <div className=' flex  w-full  flex-col ' style={{ paddingTop: "20px" }}>
                 <div className='flex flex-row w-full  justify-center bg-white' style={{
                     padding: "2%",
                     borderRadius: "15px", paddingRight: "8%"
@@ -868,7 +866,7 @@ const Tickets = ({ admin }) => {
                     </Modal>
                 </div>
             </div>
-            <div style={{ height: '200px' }}></div>
+          
         </div>
     )
 }
