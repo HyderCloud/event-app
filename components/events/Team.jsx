@@ -969,7 +969,7 @@ export const Team = ({ admin2 }) => {
           borderRadiusR: '15px', color: 'black', gap: '20px', borderRadius: "15px", padding: "15px"
         }}>
         <div className='flex flex-col  ag-theme-quartz'
-          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%',minHeight: "600px" , overflowY: "auto"}}>
+          style={{ gap: '0', overflow: 'auto', whiteSpace: 'nowrap', width: '100%' , overflowY: "auto"}}>
 
           <div className='w-full h-full relative flex flex-row ' style={{ padding: '5px' }} >
             <Tooltip isOpen={isColumnOpen} placement='bottom' content={<div className='flex flex-col' style={{ gap: "10px", padding: "7px" }}>

@@ -1,7 +1,23 @@
 .glass-background {
-    background:#ebe6de;
+    background:#ffffff;
   }
 
+.slot-menue-drawer{
+background: #ffffff;
+border-radius: 15px;
+padding: 10px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+.slot-menue-drawer:hover{
+  background: #F0F0F0;
+}
+.borderSlot{
+  width: 5px;
+  background-color: rgb(226 232 240);
+  height: 100%;
+  border-radius: 20px;
+}
   .glass-background-chat {
     background: #34a8539e; /* White background with 20% opacity */ /* White background with 20% opacity */
     backdrop-filter: blur(10px); /* Apply blur to the backdrop */

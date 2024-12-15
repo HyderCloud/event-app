@@ -72,6 +72,7 @@ const Tickets = ({ admin }) => {
     const [ticketSet, SetTicketSet] = useState({})
     const [cash, setCash] = useState(false)
     const [payment, setPayment] = useState(false)
+    const [paymentTool, setPaymentTool] = useState(false)
     const [ID, setID] = useState(false)
     const [isdate, setIsdate] = useState(false)
     const [gender, setGender] = useState(false)
@@ -122,7 +123,7 @@ const Tickets = ({ admin }) => {
         const keys2 = Object.keys(obj2);
         console.log(obj1, obj2)
         // Check if the number of keys is the same
-        if (keys1.length !== keys2.length) {
+        if (keys1?.length !== keys2?.length) {
             return false;
         }
 
@@ -201,52 +202,8 @@ const Tickets = ({ admin }) => {
         setRounds([...rounds, round])
         handleroundUpdate([...rounds, round])
     }
-    const handleEndTime = (time) => {
-        const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
-        setStartTime(formattedTime)
-    }
-    const handleStartTime = (time) => {
-        const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
-        setEndTime(formattedTime)
-    }
-    const handleDate = (newRange) => {
-        const data = {
-            start: new Date(newRange.start),
-            end: new Date(newRange.end)
-        };
-        const formattedDateStart = data.start.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
-        const formattedDateEnd = data.end.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
-        setEndDate(formattedDateEnd)
-        setStartDate(formattedDateStart)
 
-    }
-    const handleDateForAi = (newRange) => {
-        const data = {
-            start: new Date(newRange.start),
-            end: new Date(newRange.end)
-        };
-        const formattedDateStart = data.start.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
-        const formattedDateEnd = data.end.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
-        setEndDateForAi(formattedDateEnd)
-        setStartDateForAi(formattedDateStart)
 
-    }
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
         return parts[2] || null; // Returns the third part, or null if it doesn't exist
@@ -322,8 +279,7 @@ const Tickets = ({ admin }) => {
                         <>
                             <ModalHeader className="flex flex-col gap-1">הגבלת כמות הכרטיסים לרכישה</ModalHeader>
                             <ModalBody >
-                                <Input onChange={(e) => { setTicketsAmount(e.target.value) }}
-                                    type='number' label={'כמות הכרטיסים'} value={ticketsAmout} />
+                            
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="light" onPress={onClose}>
@@ -347,7 +303,7 @@ const Tickets = ({ admin }) => {
                 <DrawerContent>
                     {(onClose) => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">Rise AI</DrawerHeader>
+                            <DrawerHeader className="flex flex-col gap-1">Risy</DrawerHeader>
                             <DrawerBody className='flex flex-col items-center'>
                                 <div>
                                     תתן ל- Risy לעשות לך את זה
@@ -367,27 +323,27 @@ const Tickets = ({ admin }) => {
                                         gap: "40px"
                                     }}>
                                     <div className='w-full'>
-                                        <DatePicker label='תאריך התחלת המכירה'/>
+                                        <DatePicker label='תאריך התחלת המכירה' />
                                     </div>
                                     <div className='flex flex-col'>
-                                    <Chip variant='dot' color='secondary'>הגדרת טוות מחירים</Chip>
-                                    <div className='w-full flex flex-row items-center gap-4'>
-                                        <Input color='secondary' type='number'  variant='underlined' label='מחיר מקסימום'/>
-                                        <div>-</div>
-                                        <Input color='secondary'  type='number' variant='underlined' 
-                                         label='מחיר מינימום'/>
-                                    </div>
+                                        <Chip variant='dot' color='secondary'>הגדרת טוות מחירים</Chip>
+                                        <div className='w-full flex flex-row items-center gap-4'>
+                                            <Input color='secondary' type='number' variant='underlined' label='מחיר מקסימום' />
+                                            <div>-</div>
+                                            <Input color='secondary' type='number' variant='underlined'
+                                                label='מחיר מינימום' />
+                                        </div>
                                     </div>
                                     <div className='px-4'>
-                                    <Input color='secondary' labelPlacement='outside'  type='number' label='כמות כרטיסים כוללת למכירה'/>
+                                        <Input color='secondary' labelPlacement='outside' type='number' label='כמות כרטיסים כוללת למכירה' />
                                     </div>
-                                    <div className='w-full' style={{paddingLeft: "25%", paddingRight: "25%", marginTop: "35px"}}>
+                                    <div className='w-full' style={{ paddingLeft: "25%", paddingRight: "25%", marginTop: "35px" }}>
                                         <Button className='w-full' color='secondary'>צור לי מכירה</Button>
                                     </div>
                                 </div>
                             </DrawerBody>
                             <DrawerFooter>
-                
+
                             </DrawerFooter>
                         </>
                     )}
@@ -395,11 +351,11 @@ const Tickets = ({ admin }) => {
             </Drawer>
             <div className=' flex  w-full  flex-col ' style={{ paddingTop: "20px" }}>
                 <div className='flex flex-row w-full  justify-center bg-white' style={{
-                    padding: "2%",
-                    borderRadius: "15px", paddingRight: "8%"
+                    padding: "20px",
+                    borderRadius: "15px"
                 }}>
-                    <div className='flex flex-col gap-2' style={{ width: '20%' }}>
-                        <div style={{ height: "80px" }}></div>
+                    <div className='flex flex-col gap-2 items-end' style={{ width: '20%', paddingRight: "18px" }}>
+                        <div style={{ height: "50px" }}></div>
                         <div className='flex flex-col items-center '
                             style={{
                                 width: '100%', height: '450px',
@@ -418,24 +374,53 @@ const Tickets = ({ admin }) => {
 
 
                                 </div>
-                                <Tooltip color='primary' placement='right'
+                                <Tooltip showArrow placement='top'
                                     content={<div>כמות הרכישות שניתן לבצע: {ticketsAmout}</div>}>
                                     <div className='flex flex-row w-full justify-between  setting-tickets' style={{ gap: '15px', fontSize: '16px', fontWeight: 'bolder' }} >
                                         <div>
 
                                             <div>הגבלת רכישה:</div></div>
-                                        <Switch onClick={() => {
-                                            if (payment == false) {
-                                                onOpen5()
-                                            }
-                                        }} style={{ direction: 'ltr' }} isSelected={payment} isDisabled={(admin === 'מפיק' || admin === 'בעלים' || admin === "יוצר") ? false : true}
-                                            onChange={async () => {
-                                                if (payment) {
-                                                    await handleTicketsAmountUpdate('ללא הגבלה')
-                                                    setPayment(!payment)
-                                                    setTicketsAmount('ללא הגבלה')
-                                                }
-                                            }} aria-label="Automatic updates" />
+                                        <Tooltip isOpen={paymentTool} showArrow placement='bottom' 
+                                        content={<div className='flex flex-col'
+                                         style={{height: '200px', width: '300px', padding: '15px', gap: '20px'}}>
+                                            <div>
+                                            הגבלת כמות הכרטיסים לרכישה
+                                            </div>
+                                            <div className='w-full'>
+                                            <Input color='primary' onChange={(e) => { setTicketsAmount(e.target.value) }}
+                                    type='number' label={'כמות הכרטיסים'} value={ticketsAmout} />
+                                            </div>
+                                            <div className='w-full flex justify-center items-center'>
+                                            <Button color="primary" onPress={async () => {
+                                    if (ticketsAmout > 0) {
+                                        await handleTicketsAmountUpdate(ticketsAmout)
+                                        
+                                        setPayment(!payment)
+                                        setPaymentTool(false)
+                                    }else{
+                                        
+                                        setPayment(false)
+                                        setPaymentTool(false)
+                                    }
+                                }}>
+                                    שמירה
+                                </Button>
+                                            </div>
+                                        </div>}>
+                                            <Switch 
+                                            style={{ direction: 'ltr' }} isSelected={payment} isDisabled={(admin === 'מפיק' || admin === 'בעלים' || admin === "יוצר") ? false : true}
+                                                onChange={async () => {
+                                                    if (payment) {
+                                                        await handleTicketsAmountUpdate('ללא הגבלה')
+                                                        setPayment(!payment)
+                                                        setPaymentTool(false)
+                                                        setTicketsAmount('ללא הגבלה')
+                                                    } else {
+                                                        setPaymentTool(true)
+                                                    }
+                                                }} aria-label="Automatic updates" />
+
+                                        </Tooltip>
 
                                     </div>
                                 </Tooltip>
@@ -481,7 +466,7 @@ const Tickets = ({ admin }) => {
 
                     <div className='flex w-full flex-col  justify-center items-center gap-2' >
                         <div className='flex flex-row w-full items-end' style={{
-                            height: "80px", paddingRight: "440px", gap: "10px",
+                            height: "50px", paddingRight: "30%", gap: "10px",
                             paddingBottom: "5px"
                         }}>
                             <div className='flex flex-row justify-between ' style={{
@@ -489,18 +474,18 @@ const Tickets = ({ admin }) => {
                                 borderRadius: "25px",
                                 backgroundColor: "#f2f2f2",
                             }}>
-                                       <Tooltip showArrow content={"כרטיס חדש"} color='success'>
-                                <Button isIconOnly onPress={handleAddRound} color='success' radius='full' variant='flat'
-                                    isDisabled={admin === 'מפיק' || admin === 'בעלים' || admin === "יוצר" ? false : true}>
+                                <Tooltip showArrow content={"כרטיס חדש"} color='success'>
+                                    <Button isIconOnly onPress={handleAddRound} color='success' radius='full' variant='flat'
+                                        isDisabled={admin === 'מפיק' || admin === 'בעלים' || admin === "יוצר" ? false : true}>
 
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.44 2H12.56C17.7736 2 22 6.22643 22 11.44V12.56C22 17.7736 17.7736 22 12.56 22H11.44C6.22643 22 2 17.7736 2 12.56V11.44C2 6.22643 6.22643 2 11.44 2ZM12.75 12.75H16C16.4142 12.75 16.75 12.4142 16.75 12C16.75 11.5858 16.4142 11.25 16 11.25H12.75V8C12.75 7.58579 12.4142 7.25 12 7.25C11.5858 7.25 11.25 7.58579 11.25 8V11.25H8C7.58579 11.25 7.25 11.5858 7.25 12C7.25 12.4142 7.58579 12.75 8 12.75H11.25V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V12.75Z" fill="#34a853" />
-                                    </svg>
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.44 2H12.56C17.7736 2 22 6.22643 22 11.44V12.56C22 17.7736 17.7736 22 12.56 22H11.44C6.22643 22 2 17.7736 2 12.56V11.44C2 6.22643 6.22643 2 11.44 2ZM12.75 12.75H16C16.4142 12.75 16.75 12.4142 16.75 12C16.75 11.5858 16.4142 11.25 16 11.25H12.75V8C12.75 7.58579 12.4142 7.25 12 7.25C11.5858 7.25 11.25 7.58579 11.25 8V11.25H8C7.58579 11.25 7.25 11.5858 7.25 12C7.25 12.4142 7.58579 12.75 8 12.75H11.25V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V12.75Z" fill="#34a853" />
+                                        </svg>
 
-                                </Button>
-                                       </Tooltip>
-                                <Tooltip showArrow placement='bottom' 
-                                 isOpen={isOpenDelete}
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip showArrow placement='bottom'
+                                    isOpen={isOpenDelete}
                                     content={<div className='flex flex-col gap-2'
                                         style={{ height: "300px", width: "250px", padding: "5px" }}>
                                         <div className='w-full' style={{ height: "30px" }}>
@@ -538,7 +523,7 @@ const Tickets = ({ admin }) => {
                                     </div>}>
                                     <div>
                                         <Tooltip showArrow content={"מחיקת כרטיס"} color='danger'
-                                      >
+                                        >
                                             <Button isIconOnly onPress={() => setIsOpenDelete(!isOpenDelete)}
                                                 color='danger' radius='full' variant='flat'>
                                                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -550,11 +535,11 @@ const Tickets = ({ admin }) => {
                                 </Tooltip>
                             </div>
                             <Tooltip showArrow content={"צפייה מוקדמת"} color='warning'>
-                            <Button isIconOnly color='warning' radius='full' variant='flat'>
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.0276 7.64929L21.2076 10.9893C21.4779 11.2056 21.6352 11.5331 21.6352 11.8793C21.6352 12.2255 21.4779 12.5529 21.2076 12.7693L17.0276 16.1093C14.2726 18.3083 10.3626 18.3083 7.60761 16.1093L3.42761 12.7693C3.15733 12.5529 3 12.2255 3 11.8793C3 11.5331 3.15733 11.2056 3.42761 10.9893L7.60761 7.64929C10.3626 5.45024 14.2726 5.45024 17.0276 7.64929ZM10.0176 11.8793C10.0176 13.1495 11.0474 14.1793 12.3176 14.1793C13.5879 14.1793 14.6176 13.1495 14.6176 11.8793C14.6176 10.609 13.5879 9.57929 12.3176 9.57929C11.0474 9.57929 10.0176 10.609 10.0176 11.8793Z" fill="#fbbc05" />
-                                </svg>
-                            </Button>
+                                <Button isIconOnly color='warning' radius='full' variant='flat'>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.0276 7.64929L21.2076 10.9893C21.4779 11.2056 21.6352 11.5331 21.6352 11.8793C21.6352 12.2255 21.4779 12.5529 21.2076 12.7693L17.0276 16.1093C14.2726 18.3083 10.3626 18.3083 7.60761 16.1093L3.42761 12.7693C3.15733 12.5529 3 12.2255 3 11.8793C3 11.5331 3.15733 11.2056 3.42761 10.9893L7.60761 7.64929C10.3626 5.45024 14.2726 5.45024 17.0276 7.64929ZM10.0176 11.8793C10.0176 13.1495 11.0474 14.1793 12.3176 14.1793C13.5879 14.1793 14.6176 13.1495 14.6176 11.8793C14.6176 10.609 13.5879 9.57929 12.3176 9.57929C11.0474 9.57929 10.0176 10.609 10.0176 11.8793Z" fill="#fbbc05" />
+                                    </svg>
+                                </Button>
                             </Tooltip>
                             <Tooltip showArrow isOpen={isOpenLink} placement='bottom'
                                 content={<div className='flex flex-col justify-center items-center gap-4' style={{ height: "200px", width: "250px" }}>
@@ -573,9 +558,9 @@ const Tickets = ({ admin }) => {
                                 </div>
                             </Tooltip>
                             <Tooltip showArrow content={"Risy"} color='secondary'>
-                            <Button isIconOnly color='secondary' radius='full' onPress={() => { onOpen() }} variant='flat'>
-                                AI
-                            </Button>
+                                <Button isIconOnly color='secondary' radius='full' onPress={() => { onOpen() }} variant='flat'>
+                                    AI
+                                </Button>
                             </Tooltip>
                         </div>
                         <Swiper
@@ -866,7 +851,7 @@ const Tickets = ({ admin }) => {
                     </Modal>
                 </div>
             </div>
-          
+
         </div>
     )
 }

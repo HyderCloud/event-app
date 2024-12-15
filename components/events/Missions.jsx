@@ -242,7 +242,7 @@ const Missions = ({ admin }) => {
             <SwiperSlide key={index} >
               <div className=' flex flex-col'
                 style={{
-                  height: '550px', width: '350px', borderRadius: '15px', padding: '10px', gap: '10px', backgroundColor: 'white',
+                  height: '450px', width: '350px', borderRadius: '15px', padding: '10px', gap: '10px', backgroundColor: 'white',
                   boxShadow: "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px"
                 }}>
                 <div className='w-full flex flex-row items-center justify-between' style={{ height: '50px', borderBottom: '1px solid white', paddingLeft: '45%' }}>
@@ -276,7 +276,7 @@ const Missions = ({ admin }) => {
                       </AccordionItem>
                     </Accordion>
                     <div className='flex justify-center items-center'
-                      style={{ paddingTop: '20px', }}>
+                      style={{}}>
                       <Tooltip showArrow color='success' content={<div style={{}}>מרחב העבודה</div>}>
                         <Button isIconOnly className='flex justify-center items-center workspace-style'
                           style={{ borderRadius: '100px', height: '45px', width: "45px", }}>

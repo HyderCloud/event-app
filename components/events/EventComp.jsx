@@ -8,11 +8,13 @@ import { Team } from './Team'
 import Cuppons from './Cuppons'
 import {
   Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip,
-  Input, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,  Drawer,
+  Input, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Drawer,
   DrawerContent,
   DrawerHeader,
+  Avatar,
   DrawerBody,
   DrawerFooter,
+  AvatarGroup,
 } from "@nextui-org/react";
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -29,7 +31,7 @@ import EndPage from './EndPage'
 const EventComp = ({ }) => {
   const [isDroped, setIsDroped] = useState(false)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
+  const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
   const [socket, setSocket] = useState(null);
   const [cookie, setCookie, removeCookie] = useCookies()
   const [messages, setMessages] = useState([]);
@@ -168,89 +170,245 @@ const EventComp = ({ }) => {
 
   return (
     <div className='dashboard-container  flex flex-col'>
-      <div className='w-full navbar-event flex flex-row items-center   '  style={{ paddingRight: '5%' }}>
+      <div className='w-full navbar-event flex flex-row items-center   ' style={{ paddingRight: '5%' }}>
 
 
-          <Button variant='bordered' isIconOnly onPress={() => onOpen2()} >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.62 11H6C5.44772 11 5 10.5523 5 10C5 9.44772 5.44772 9 6 9H15.62C16.1723 9 16.62 9.44772 16.62 10C16.62 10.5523 16.1723 11 15.62 11Z" fill="black" />
-              <path d="M6 14H18.82C19.3723 14 19.82 14.4477 19.82 15C19.82 15.5523 19.3723 16 18.82 16H6C5.44772 16 5 15.5523 5 15C5 14.4477 5.44772 14 6 14Z" fill="black" />
-            </svg>
+        <Button variant='bordered' isIconOnly onPress={() => onOpen2()} >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.62 11H6C5.44772 11 5 10.5523 5 10C5 9.44772 5.44772 9 6 9H15.62C16.1723 9 16.62 9.44772 16.62 10C16.62 10.5523 16.1723 11 15.62 11Z" fill="black" />
+            <path d="M6 14H18.82C19.3723 14 19.82 14.4477 19.82 15C19.82 15.5523 19.3723 16 18.82 16H6C5.44772 16 5 15.5523 5 15C5 14.4477 5.44772 14 6 14Z" fill="black" />
+          </svg>
 
-          </Button>
+        </Button>
 
 
         <Drawer placement='top' isOpen={isOpen2} onOpenChange={onOpenChange2}>
-        <DrawerContent>
-          {(onClose) => (
-            <>
-              <DrawerHeader className="flex flex-col gap-1"></DrawerHeader>
-          <DrawerBody>
-          <div className='flex flex-row cursor-default flex-wrap'
-          style={{ padding: "10px", rowGap: "20px", columnGap: "50px" }}>
-          <div className='flex h-24' style={{ width: '200px', height: '100px' }} onClick={() => {
-            router.push(`${path}`)
-            setIsDroped(false)
-          }} key="main">ראשי</div>
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר' && events.isTicketSale) &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=tickets`)
-              setIsDroped(false)
-            }} key="tickets">כרטיסים</div>
-          }
-          {(admin === 'בעלים' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=budget`)
-              setIsDroped(false)
-            }} key="5">תקציבים</div>
-          }
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=statistics`)
-              setIsDroped(false)
-            }} key="4">סטטיסטיקה</div>
-          }
-          {(admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=team`)
-              setIsDroped(false)
-            }} key="3">צוות</div>
-          }
-          {(admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=client`)
-              setIsDroped(false)
-            }} key="2">לקוחות</div>
-          }
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'עובד כללי' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=add`)
-              setIsDroped(false)
-            }} key="2">פרסום</div>
-          }
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} onClick={() => {
-              router.push(`${path}?section=cuppons`)
-              setIsDroped(false)
-            }} key="2">קופונים</div>
-          }
-          {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'עובד כללי' || admin === 'יוצר') &&
-            <div className='flex' style={{ width: '200px', height: '100px' }} key="delete" onClick={() => {
-              router.push(`${path}?section=scanner`)
-              setIsDroped(false)
-            }} >
-              סורק
-            </div>
-          }
-        </div>
-          </DrawerBody>
-              <DrawerFooter>
+          <DrawerContent>
+            {(onClose) => (
+              <>
 
-              </DrawerFooter>
-            </>
-          )}
-        </DrawerContent>
-      </Drawer>
+                <DrawerBody>
+                  <div className='flex flex-row cursor-default flex-wrap '
+                    style={{ padding: "10px", rowGap: "20px", columnGap: "10px" }}>
+                    <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                      router.push(`${path}`)
+                      onClose()
+                    }} key="main">
+                      <div className='w-full flex flex-col gap-1 relative'>
+                        <div>
+                        עיצוב
+                        </div>
+                        <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                       <div>עצבו דפי נחיתה מותאמים אישית בקלות עם כלי עיצוב אינטואיטיביים ותבניות גמישות</div>
+                       <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                        <AvatarGroup max={2}>
+                        <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        </AvatarGroup>
+                       </div>
+                        </div>
+                      </div>
+                      <div className='borderSlot'></div>
+                    </div>
+                    {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר' && events.isTicketSale) &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=tickets`)
+                        onClose()
+                      }} key="tickets">         <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      כרטיסים
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '84px'}}>
+                     <div>צרו כרטיסים דיגיטליים מותאמים אישית במהירות ובקלות עם כלים פשוטים ו-AI</div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'בעלים' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=budget`)
+                        onClose()
+                      }} key="5">         <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      תקציבים
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                     <div>נהלו תקציבים בקלות וביעילות עם כלים חכמים ותצוגה נוחה להתאמה אישית</div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=statistics`)
+                        onClose()
+                      }} key="4">        <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      אנליזה
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                     <div>נתחו נתונים בקלות עם כלים מתקדמים ותובנות ברורות בזמן אמת</div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=team`)
+                        onClose()
+                      }} key="3">         <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      צוות
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                     <div>נהלו את צוותכם ביעילות עם כלים נוחים לתקשורת, שיתוף פעולה וניהול ספקים</div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=client`)
+                        onClose()
+                      }} key="2">     <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      לקוחות
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '85px'}}>
+                     <div>נהלו את לקוחותיכם בצורה חכמה עם כלים לניהול קשרי לקוחות ותובנות AI </div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    <div style={{width: '30px'}}></div>
+                    {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'עובד כללי' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=add`)
+                        onClose()
+                      }} key="2">        <div className='w-full flex flex-col gap-1 relative'>
+                      <div>
+                      פרסום
+                      </div>
+                      <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '84px'}}>
+                     <div>נהלו קמפיינים פרסומיים בקלות עם כלים מתקדמים ותובנות לשיפור הביצועים</div>
+                     <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                      <AvatarGroup max={2}>
+                      <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                      </AvatarGroup>
+                     </div>
+                      </div>
+                    </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                        router.push(`${path}?section=cuppons`)
+                        onClose()
+                      }} key="2">
+                            <div className='w-full flex flex-col gap-1 relative'>
+                        <div>
+                        קופונים
+                        </div>
+                        <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                       <div>צרו וניהלו קופונים בקלות עם כלים גמישים להתאמה אישית</div>
+                       <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                        <AvatarGroup max={2}>
+                        <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        </AvatarGroup>
+                       </div>
+                        </div>
+                      </div>
+                        <div className='borderSlot'></div></div>
+                    }
+                    {(admin === 'יחצן' || admin === 'מפיק' || admin === 'בעלים' || admin === 'עובד כללי' || admin === 'יוצר') &&
+                      <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} key="delete" onClick={() => {
+                        router.push(`${path}?section=scanner`)
+                      
+                        onClose()
+                      }} >
+                            <div className='w-full flex flex-col gap-1 relative'>
+                        <div>
+                        סורק
+                        </div>
+                        <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '84px'}}>
+                       <div>סרקו כרטיסים בקלות ובמהירות עם כלי סריקה מתקדמים ונוחים לשימוש</div>
+                       <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                        <AvatarGroup max={2}>
+                        <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        </AvatarGroup>
+                       </div>
+                        </div>
+                      </div>
+                        <div className='borderSlot'></div>
+                      </div>
+                    }
+                  </div>
+                </DrawerBody>
+
+              </>
+            )}
+          </DrawerContent>
+        </Drawer>
 
         <Tooltip showArrow color='primary' content={<div>היומן של {events?.name}</div>}>
           <Button variant='ffe' onPress={() => { router.push(`${path}?section=calendar`) }} isIconOnly>
@@ -402,9 +560,9 @@ const EventComp = ({ }) => {
         {!section && <Design />}
         {(events.isTicketSale && section === 'tickets') && <Tickets admin={admin} />}
         {section === "team" && <Team admin2={admin} />}
-        {section === "sellpage" && <SellPage/>}
-        {section === "promo" && <PromoPage/>}
-        {section === "endpage" && <EndPage/>}
+        {section === "sellpage" && <SellPage />}
+        {section === "promo" && <PromoPage />}
+        {section === "endpage" && <EndPage />}
         {section === "cuppons" && <Cuppons admin={admin} />}
         {section === "add" && <Adds admin2={admin} />}
         {section === "mission" && <Missions admin={admin} />}
