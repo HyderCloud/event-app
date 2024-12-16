@@ -28,7 +28,7 @@ const StoreSlide = () => {
         router.push(`/signout`)
     }
 
-    if(pathName.split('/')[1] === 'dashbord'){
+    if(pathName.split('/')[1] === 'dashbord' || pathName === '/buisness'){
         return(<div>
             
         </div>)

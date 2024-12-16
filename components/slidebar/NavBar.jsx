@@ -4,13 +4,14 @@ import { User } from "@nextui-org/user";
 import axios from 'axios';
 import { useJwt } from "react-jwt";
 import { useCookies } from "react-cookie";
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Input, Tooltip, Button } from '@nextui-org/react';
 
 import Image from 'next/image';
 
 const NavBar = () => {
+  const pathName = usePathname()
   const [cookie, setCookie, removeCookie] = useCookies('user')
   const [data, setData] = useState('')
   const [logOut, setlogOut] = useState(false)
@@ -45,6 +46,11 @@ const NavBar = () => {
       getUser()
     }
   }, [decodedToken])
+  if(pathName.split('/')[1] === 'dashbord' || pathName === '/buisness'){
+    return(<div>
+        
+    </div>)
+}else{
   return (
     <div className='nav-bar flex flex-row items-center text-white ' style={{ gap: '50px', paddingTop: '0.5%', width: '100%', paddingLeft: '7%', paddingRight: '15%' }}>
 
@@ -103,6 +109,8 @@ const NavBar = () => {
 
     </div>
   )
+}
+
 }
 
 export default NavBar

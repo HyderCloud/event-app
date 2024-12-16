@@ -49,7 +49,7 @@ def add_message():
 
 @team_blueprint.route('/missions/<string:id>', methods=['GET'])
 def get_missions(id):
-    print(get_missions)
+    print('hello')
     return team_api.get_mission_by_key(id)
 
 @team_blueprint.route('/chat/<string:id>', methods=['GET'])

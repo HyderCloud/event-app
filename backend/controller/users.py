@@ -119,13 +119,14 @@ def auth_user(user):
                 return jsonify({"massage": "icorrect password"}), 400
     except Exception as e:
         return jsonify({"message": "error-" + str(e)}), 501
-
+   
 
 def user_google(user):
     try:
+        print(user)
         new_doccument = {
             "email": user["email"],
-            "username": user["username"],
+            "username": "",
             "password": "",
             "pr_image": user["pr_image"],
             "profession": "",
@@ -139,7 +140,7 @@ def user_google(user):
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
             }
             token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-            if len(user_checker["profession"]) > 0:
+            if len(user_checker["username"]) > 0:
                 store_checker = store_api.get_store_by_key(user_checker["_id"])
                 print(store_checker)
                 payload2 = {

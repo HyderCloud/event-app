@@ -13,6 +13,11 @@ def auth():
     print(user)
     return auth_user(user)  
 
+@users_blueprint.route('/updateusername', methods=['POST'])
+def updateusername():
+    user = request.get_json()
+    return update_by_email(user["email"],user["username"])  
+
 @users_blueprint.route('/googleauth', methods=['POST'])
 def auth_google():
     user = request.get_json()

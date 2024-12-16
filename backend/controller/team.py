@@ -40,9 +40,12 @@ class TeamC:
 
     def get_mission_by_key(self, key):
         try:
+            print(key)
             mission = team_api.get_missions_by_key(key)
             if mission:
                 return jsonify({"missions": mission}), 200
+            else: 
+                     return jsonify({"missions": []}), 200
         except Exception as e:
             return jsonify({"message": "error-" + str(e)}), 501
 

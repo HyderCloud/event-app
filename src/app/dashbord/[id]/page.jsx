@@ -34,10 +34,14 @@ const page =  () => {
     const fetchData = async () => {
         try {
           const response = await axios.get(`http://localhost:9020/getuser/${decodedToken.email}`);
-          setData(response.data); // Set fetched data in the state
+          setData(response.data); 
+          if(response.data.username !== ""){
+            window.location.href = '/'
+          }
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
+    
       };
     useEffect(() => {
 
@@ -47,21 +51,10 @@ const page =  () => {
         }
       }, [decodedToken ]);
     
-    if (cookie.store){
-      console.log(cookie)
-      router.push('/home')
-    } else
-    if ( usernameParam === null&& professionParam === null){
-        return (<UsernameSection  onUsername={handleUsername} />)
-    }
-    else if( usernameParam === 'access' && professionParam === null){
-        return(<ProfessionSection  onProfession={handleProfession}/>)
-    }
-    else if ( professionParam === 'access'){
-        return(<StoreSection id={decodedToken?.user_id} email={decodedToken?.email} username={username} profession={profession}/>)
-    }
-    else{
-        return (<div>hello</div>)
+    if(decodedToken){
+   
+        return (<UsernameSection email={decodedToken?.email}/>)
+  
     }
 }
 
