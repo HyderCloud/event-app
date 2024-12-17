@@ -81,7 +81,7 @@ const StoreSection = ({ username, id, profession, email }) => {
           <section className="multi_step_form w-full">
       <form id="msform">
         <ul id="progressbar">
-        <li className={step >= 3 ? 'active' : ''}>סיום</li>
+        <li className={step >= 4 ? 'active' : ''}>סיום</li>
           <li className={step >= 3 ? 'active' : ''}>הגדרות מתקדמות</li>
           <li className={step >= 2 ? 'active' : ''}>סוג העסק</li>
           <li className={step >= 1 ? 'active' : ''}>פרטי העסק</li>
