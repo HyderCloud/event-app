@@ -1,7 +1,13 @@
 .glass-background {
     background:#ffffff;
   }
-
+  .greeting-text {
+    font-size: 3rem;
+    font-weight: bold;
+    width: 300px;
+    color: #ffffff;  /* צבע טקסט אפור כהה */
+    transition: transform 0.3s ease-out;
+}
 .slot-menue-drawer{
 background: #ffffff;
 border-radius: 15px;

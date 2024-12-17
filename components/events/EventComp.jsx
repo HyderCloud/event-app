@@ -190,8 +190,31 @@ const EventComp = ({ }) => {
                 <DrawerBody>
                   <div className='flex flex-row cursor-default flex-wrap '
                     style={{ padding: "10px", rowGap: "20px", columnGap: "10px" }}>
-                    <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                         <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
                       router.push(`${path}`)
+                      onClose()
+                    }} key="main">
+                      <div className='w-full flex flex-col gap-1 relative'>
+                        <div>
+                        ראשי
+                        </div>
+                        <div className='flex flex-col' style={{opacity: '50%', fontSize: '13px', paddingLeft: '74px'}}>
+                       <div>עצבו דפי נחיתה מותאמים אישית בקלות עם כלי עיצוב אינטואיטיביים ותבניות גמישות</div>
+                       <div className='absolute' style={{bottom: '0', left: '5px', direction: 'ltr'}}>
+                        <AvatarGroup max={2}>
+                        <Avatar className="w-6 h-6 text-tiny" size='sm' src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
+                        </AvatarGroup>
+                       </div>
+                        </div>
+                      </div>
+                      <div className='borderSlot'></div>
+                    </div>
+                    <div className='flex flex-row h-24 slot-menue-drawer' style={{ width: '230px', height: '130px' }} onClick={() => {
+                      router.push(`${path}?section=design`)
                       onClose()
                     }} key="main">
                       <div className='w-full flex flex-col gap-1 relative'>
@@ -557,7 +580,8 @@ const EventComp = ({ }) => {
             )}
           </ModalContent>
         </Modal>
-        {!section && <Design />}
+        {!section && <Main admin={admin} />}
+        {section === "design" && <Design/>}
         {(events.isTicketSale && section === 'tickets') && <Tickets admin={admin} />}
         {section === "team" && <Team admin2={admin} />}
         {section === "sellpage" && <SellPage />}

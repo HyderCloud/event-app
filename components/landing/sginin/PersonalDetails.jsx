@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button, Input, Tooltip } from "@nextui-org/react";
+import { Button, Input, Tooltip, InputOtp, Checkbox } from "@nextui-org/react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { app } from '@/src/app/firebase-config'
 
@@ -14,6 +14,7 @@ const PersonalDetails = ({ uploadData }) => {
     const router = useRouter()
     const search = useSearchParams()
     const [isLoad, setIsLoad] = useState(false)
+    const [isLoad2, setIsLoad2] = useState(false)
     const [data, setData] = useState({
         firsName: '',
         lastName: '',
@@ -25,19 +26,27 @@ const PersonalDetails = ({ uploadData }) => {
         phone: ''
     })
 
+    useEffect(() => {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+            "size": 'invisible',
+            "callback": (response) => {
+            },
+            'expired-callback': () => {
+            }
+        }, auth)
+        window.recaptchaVerifier.render().then(() => {
+            console.log('reCAPTCHA rendered');
+        }).catch((error) => {
+            console.error('Error rendering reCAPTCHA:', error);
+        });
+    }, [])
+
     const handleChange = (key) => (e) => {
         if (key === 'phone') {
             let inputValue = e.target.value;
-
-            // Remove non-digit characters
             inputValue = inputValue.replace(/\D/g, '');
-
-            // Ensure the value starts with "05" and allow only 10 digits in total
             inputValue = `05${inputValue.replace(/^05/, '').slice(0, 8)}`;
-
-            // Format the input with hyphens after every 3 digits
             let formattedValue = inputValue.slice(0, 3) + (inputValue.length > 3 ? '-' : '') + inputValue.slice(3, 6) + (inputValue.length > 6 ? '-' : '') + inputValue.slice(6, 10);
-
             setData({
                 ...data,
                 [key]: formattedValue,
@@ -89,10 +98,13 @@ const PersonalDetails = ({ uploadData }) => {
     };
     const handleSendOtp = async () => {
         try {
-            const e164PhoneNumber = convertToE164(phone);
-            const confirmation = await signInWithPhoneNumber(auth, e164PhoneNumber, window.recaptcharVarifier)
+
+            const e164PhoneNumber = convertToE164(data.phone);
+            const confirmation = await signInWithPhoneNumber(auth, e164PhoneNumber, window.recaptchaVerifier)
+            console.log("OTP sent:", confirmation);
             setConfirmationResult(confirmation)
             setOtpSent(true)
+
 
         } catch (error) {
             console.log("🚀 ~ handleSendOtp ~ error:", error)
@@ -102,149 +114,144 @@ const PersonalDetails = ({ uploadData }) => {
     const handleSubmit = async () => {
         try {
             if (validateForm()) {
-                await confirmationResult.confirm(otp)
-                setOtp('')
-                router.push('?sec=varification');
+                setIsLoad(true)
+                await handleSendOtp()
+
             }
         } catch (error) {
 
         }
 
     };
-    useEffect(() => {
-        window.recaptcharVarifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-            "size": 'normal',
-            "callback": (response) => {
 
-            },
-            'expired-callback': () => {
+    const handleOtpSubmit = async () => {
+        try {
+            await confirmationResult.confirm(otp)
+            setOtp('')
+            router.push('?sec=varification');
+        } catch (error) {
 
-            }
-        })
-    }, [auth])
+        }
+    }
+
     return (
         <div>
-            {!otpSent ? (
-                <div id="recaptcha-container"></div>
-            ) : null}
+
             <div className='glass-background w-screen h-screen'>
                 <div className=' body2 flex flex-row ' >
 
                     {otpSent ?
-                        <div className="form-container">
+                        <div className='flex  justify-center' style={{ width: '60%' }}>
+                            <div className="form-container">
 
-                            <h1 className="title"> בואו נכיר טוב יותר</h1>
-                            <h4 className='w-full text-center font-semibold '>פרטים אישיים</h4>
-                            <form className="form">
-                                <div className="input-group">
-                                    <label htmlFor="firsName" className="username">
-                                        שם פרטי
-                                    </label>
+                                <h1 className="title"> שלב האימות   </h1>
+                                <h4 className='w-full text-center font-semibold '> </h4>
+                                <form className="form">
+                                    <div className="input-group">
+                                        <label htmlFor="firsName" className="username">
+                                            קוד האימות
+                                        </label>
+                                        <div>
+                                            <InputOtp
+                                                isRequired
+                                                color='secondary'
+                                                style={{ direction: 'ltr' }}
+                                                value={otp}
+                                                length={6}
+                                                required
+                                                onValueChange={setOtp}
+                                                description="הכנס את קוד ה-6 ספרות שנשלח לטלפון שלך"
+                                            />
+                                        </div>
 
-                                    <input
-                                        type="text"
-                                        value={data.firsName}
-                                        name="firsName"
-                                        required
-                                        onChange={handleChange('firsName')}
-                                        style={{
-                                            borderColor: errors.firsName ? 'red' : '',
-                                            borderWidth: errors.firsName ? '2px' : ''
-                                        }}
-                                    />
+                                    </div>
+                                    <div style={{ height: '20px' }}></div>
+                                    <Button type="button" color='primary' onPress={handleOtpSubmit} className="sign-in w-full">
+                                        {isLoad2 === false && "אימות"}
+                                    </Button>
+                                    <div className="social-messages">
+                                        <div className="line"></div>
 
-                                </div>
-
-                                <Button type="button" color='primary' onPress={handleSubmit} className="sign-in">
-                                    {isLoad === false && "הבא"}
-                                </Button>
-                                <div className="social-messages">
-                                    <div className="line"></div>
-
-                                    <div className="line"></div>
-                                </div>
-                            </form>
+                                        <div className="line"></div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         :
-                        <div className='flex  justify-center' style={{width: '60%'}}>
-                        <div className="form-container">
+                        <div className='flex  justify-center' style={{ width: '60%' }}>
+                            <div className="form-container" >
 
-                            <h1 className="title"> בואו נכיר טוב יותר</h1>
-                            <h4 className='w-full text-center font-semibold '>פרטים אישיים</h4>
-                            <form className="form">
-                                <div className="input-group">
-                                    <label htmlFor="firsName" className="username">
-                                        שם פרטי
-                                    </label>
+                                <h1 className="title"> בואו נכיר טוב יותר</h1>
+                                <h4 className='w-full text-center font-semibold '>פרטים אישיים</h4>
+                                <form className="form flex flex-col" style={{ gap: '30px' }}>
+                                    <div className="flex  ">
 
-                                    <input
-                                        type="text"
-                                        value={data.firsName}
-                                        name="firsName"
-                                        required
-                                        onChange={handleChange('firsName')}
-                                        style={{
-                                            borderColor: errors.firsName ? 'red' : '',
-                                            borderWidth: errors.firsName ? '2px' : ''
-                                        }}
-                                    />
 
-                                </div>
+                                        <Input
+                                            color={'primary'}
+                                            variant='underlined'
+                                            errorMessage="אנא הכנס שם פרטי תקין"
+                                            isInvalid={errors.firsName}
+                                            type="text"
+                                            label='שם פרטי'
+                                            isRequired
+                                            value={data.firsName}
+                                            name="firsName"
+                                            required
+                                            onChange={handleChange('firsName')}
 
-                                <div className="input-group">
-                                    <label htmlFor="lastName" className="username">
-                                        שם משפחה
-                                    </label>
+                                        />
 
-                                    <input
-                                        type="text"
-                                        value={data.lastName}
-                                        name="lastName"
-                                        required
-                                        onChange={handleChange('lastName')}
-                                        style={{
-                                            borderColor: errors.lastName ? 'red' : '',
-                                            borderWidth: errors.lastName ? '2px' : ''
-                                        }}
-                                    />
+                                    </div>
 
-                                </div>
+                                    <div className="flex ">
+                                        <Input
+                                            label='שם משפחה'
+                                            errorMessage="אנא הכנס שם משפחה תקין"
+                                            isInvalid={errors.lastName}
+                                            color={'primary'}
+                                            variant='underlined'
+                                            type="text"
+                                            value={data.lastName}
+                                            name="lastName"
+                                            isRequired
+                                            onChange={handleChange('lastName')}
 
-                                <div className="input-group">
-                                    <label htmlFor="phone" className="username">
-                                        טלפון
-                                    </label>
+                                        />
 
-                                    <input
-                                        type="text"
-                                        value={data.phone}
+                                    </div>
 
-                                        name="phone"
-                                        required
-                                        onChange={handleChange('phone')}
-                                        style={{
-                                            textAlign: 'left', direction: 'ltr',
-                                            borderColor: errors.phone ? 'red' : '',
-                                            borderWidth: errors.phone ? '2px' : ''
-                                        }}
-                                    />
+                                    <div className="flex">
+                                        <Input
+                                            type="tel"
+                                            variant='faded'
+                                            label='טלפון'
+                                            value={data.phone}
+                                            color={'primary'}
+                                            errorMessage="אנא הכנס שם טלפון תקין"
+                                            isInvalid={errors.phone}
+                                            isRequired
+                                            onChange={handleChange('phone')}
+                                            style={{
+                                                textAlign: 'left', direction: 'ltr',
 
-                                </div>
-                                <div style={{height: '20px'}}></div>
-                                <Button type="button" color='primary' onPress={handleSubmit} className="sign-in w-full ">
-                                    {isLoad === false && "הבא"}
-                                </Button>
-                                <div className="social-messages">
-                                    <div className="line"></div>
+                                            }}
+                                        />
 
-                                    <div className="line"></div>
-                                </div>
-                            </form>
-                        </div>
+                                    </div>
+
+                                    <Button type="button" color='primary' isLoading={isLoad} onPress={handleSubmit} className="sign-in w-full ">
+                                        {isLoad === false && "הבא"}
+                                    </Button>
+
+
+                                </form>
+                                <div id="recaptcha-container"></div>
+                            </div>
                         </div>
                     }
                     <div className='flex justify-center w-full items-center h-full bg-white'  >
-                   
+
                     </div>
                 </div>
             </div>

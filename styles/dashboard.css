@@ -4,7 +4,10 @@
     display: flex;
     align-items: center; 
     justify-content: center; 
-    padding: 80px;
+    padding-top: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-bottom: 80px;
     box-sizing: border-box; 
     overflow-y: auto; 
     background: #F8FAFC;

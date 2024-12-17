@@ -440,3 +440,139 @@ body{
     font-weight: bold;
     color: #000;
 }
+/* Variables for fonts and colors */
+$roboto: 'Roboto', sans-serif;
+$bc: #5cb85c;
+$heading: #405867;
+$pfont: #5f6771;
+
+/* Mixins for transition and placeholders */
+@mixin transition($property: all, $duration: 300ms, $animate: linear, $delay: 0s) {
+  transition: $property $duration $animate $delay;
+}
+
+@mixin placeholder {
+  &.placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &::-webkit-input-placeholder {
+    @content;
+  }
+}
+
+/* Base styling */
+.multi_step_form {
+
+  display: block;
+  overflow: hidden;
+
+  #msform {
+    text-align: center;
+    position: relative;
+
+    margin: 0 auto;
+    background: #ffffff;
+    z-index: 1;
+
+    #progressbar {
+      margin-bottom: 30px;
+      overflow: hidden;
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+
+      li {
+        list-style-type: none;
+        color: #99a2a8;
+        font-size: 9px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        font: 500 13px/1 $roboto;
+
+        &:before {
+          content: "\f1fa";
+          font: normal normal normal 30px/50px Ionicons;
+          width: 50px;
+          height: 50px;
+          line-height: 50px;
+          display: block;
+          background: #eaf0f4;
+          border-radius: 50%;
+          margin: 0 auto 10px;
+        }
+
+        &.active {
+          color: $bc;
+          &:before {
+            background: $bc;
+            color: white;
+          }
+        }
+
+        &:after {
+          content: '';
+          width: 100%;
+          height: 10px;
+          background: #eaf0f4;
+          position: absolute;
+          left: -50%;
+          top: 21px;
+          z-index: -1;
+        }
+        &.active {
+          color: $bc;
+          &:after {
+            background: $bc;
+            color: white;
+          }
+        }
+        &:last-child {
+          &:after {
+            width: 150%;
+          }
+        }
+      }
+    }
+
+    /* Buttons */
+    .action-button {
+      background: $bc;
+      color: white;
+      border: 0 none;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: 130px;
+      font: 700 14px/40px $roboto;
+      border: 1px solid $bc;
+      margin: 0 5px;
+      text-transform: uppercase;
+      display: inline-block;
+
+      &:hover,
+      &:focus {
+        background: $heading;
+        border-color: $heading;
+      }
+    }
+
+    .previous_button {
+      background: transparent;
+      color: #99a2a8;
+      border-color: #99a2a8;
+
+      &:hover,
+      &:focus {
+        background: $heading;
+        border-color: $heading;
+        color: white;
+      }
+    }
+  }
+}

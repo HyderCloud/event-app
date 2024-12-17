@@ -23,6 +23,9 @@ def post_user(user):
             "pr_image": "",
             "profession": "",
             "description": "",
+            "firstName": "",
+            "lastName": "",
+            "phone": "",
         }
         if hashed_password:
             result = user_api.insert_user(doccument)

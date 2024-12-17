@@ -52,7 +52,7 @@ const NavBar = () => {
     </div>)
 }else{
   return (
-    <div className='nav-bar flex flex-row items-center text-white ' style={{ gap: '50px', paddingTop: '0.5%', width: '100%', paddingLeft: '7%', paddingRight: '15%' }}>
+    <div className='nav-bar flex flex-row items-center text-white ' style={{ gap: '50px', paddingTop: '0.5%', width: '100%', paddingLeft: '7%', paddingRight: '20%' }}>
 
       <div className='flex flex-row items-center' style={{ width: "100%", gap: '3%' }}>
         <div className='flex' style={{ width: '350px', height: '30px' }}>
