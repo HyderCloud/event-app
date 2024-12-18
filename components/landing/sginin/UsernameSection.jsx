@@ -8,6 +8,8 @@ import Image from 'next/image'
 import axios from 'axios';
 
 const UsernameSection = ({ email }) => {
+      const [cookie, setCookie, removeCookie] = useCookies(['store'])
+      const {decodedToken, isExpired} = useJwt(cookie.user)
   const path = usePathname()
   const [checked, setChecked] = useState(false);
   const [isContentCheck, setIsContetntCheck] = useState(false)
@@ -33,10 +35,13 @@ const UsernameSection = ({ email }) => {
     setIsLoad(true)
     if (username.length > 2 && error.terms) {
       const result = await axios.post('http://localhost:9020/updateusername',
-        { username: username, email: email, terms: checked, sellContent: isContentCheck })
+        { username: username, email: email, terms: checked, sellContent: isContentCheck, id: decodedToken?.user_id })
       if (result.data.acknowledge) {
+        setCookie("store",result?.data?.token, {path: '/',secure: true})
+        console.log("🚀 ~ handleSubmit ~ result.data.token:", result.data.token)
         router.push(`/?isbuissness=true`)
       }
+
 
     } else if (error.terms === false && username.length <= 2) {
       setError((prevError) => ({

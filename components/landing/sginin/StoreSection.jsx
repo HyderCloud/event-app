@@ -1,26 +1,60 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { Button, Divider, Input } from "@nextui-org/react";
+import { Button, Input, Card, CardHeader, CardBody, CardFooter, Divider, Link } from "@nextui-org/react";
 import { useCookies } from 'react-cookie';
 import { signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import axios from 'axios';
-
+import proType from "@/db/proType.json"
 
 const StoreSection = ({ username, id, profession, email }) => {
+  const [cardIndex, setCardIndex] = useState(null)
   const [cookies, setCookie, removeCookie] = useCookies(['store']);
+  const [attractions, setAttractions] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
   const router = useRouter()
   const [isLoad, setIsLoad] = useState(false)
-  const [store, setStore] = useState('')
-  const handleChange = (e) => {
-    setStore(e.target.value)
-  }
+  const [store, setStore] = useState({
+    storeName: '',
+    email: '',
+    phone: '05',
 
+  })
+  const handleClick = (section) => {
+    setActiveSection(activeSection === section ? null : section); // Toggle the section visibility
+  };
+  const [storeErr, setStoreErr] = useState({
+    storeName: '',
+    email: '',
+    phone: '05',
 
+  })
+  useEffect(() => {
 
-  // Function to get styles for each step based on its state
+    setAttractions(proType.event_attractions);
+
+    console.log("🚀 ~ useEffect ~ proType.event_attractions:", proType.event_attractions)
+  }, []);
+  const handleChange = (key) => (e) => {
+    if (key === 'phone') {
+      let inputValue = e.target.value;
+      inputValue = inputValue.replace(/\D/g, '');
+      inputValue = `05${inputValue.replace(/^05/, '').slice(0, 8)}`;
+      let formattedValue = inputValue.slice(0, 3) + (inputValue.length > 3 ? '-' : '') + inputValue.slice(3, 6) + (inputValue.length > 6 ? '-' : '') + inputValue.slice(6, 10);
+      setStore({
+        ...store,
+        [key]: formattedValue,
+      });
+    } else {
+      setStore({
+        ...store,
+        [key]: e.target.value,
+      });
+    }
+  };
+
   const [step, setStep] = useState(0);
 
   const handleNext = () => {
@@ -32,13 +66,16 @@ const StoreSection = ({ username, id, profession, email }) => {
   };
   const handleSubmit = async () => {
     setIsLoad(true)
-    const addStore = await axios.patch(`http://localhost:9020/insertstore/${id}`, { store: store, username: username, profession: profession, email: email })
-    if (addStore?.data?.acknowledge) {
-      setCookie('store', addStore?.data?.token, {
-        path: '/'
-      })
-      console.log(addStore?.data?.token)
-      router.push(`/${addStore?.data?.username}`)
+    if (step === 0) {
+      if (store.storeName.length <= 2) {
+        setStoreErr({ ...store, storeName: true })
+      } else {
+        handleNext()
+        setIsLoad(false)
+      }
+
+
+
     }
   }
   if (isLoad) {
@@ -51,98 +88,121 @@ const StoreSection = ({ username, id, profession, email }) => {
       <div className='glass-background w-screen h-screen'>
         <div className=' body2 flex flex-row' >
           <div className='flex  justify-center' style={{ width: '60%' }}>
-            <div className="form-container">
-              <h1 className="title">בואו נגדיר את העסק</h1>
-              <form className="form flex flex-col" style={{ gap: '30px' }}>
-                <div className="">
+            {step === 0 &&
+              <div className="form-container">
+                <h1 className="title">בואו נגדיר את העסק</h1>
+                <form className="form flex flex-col" style={{ gap: '30px' }}>
+                  <div className="">
 
-                  <Input type="text" label='שם העסק' isRequired color='secondary' variant='underlined' name="username" required />
-                </div>
-                <div className="">
-                  <Input type="text" label=' כתובת אימייל של העסק' color='secondary'
-                    variant='underlined' labelPlacement='outside' placeholder='אופציונלי' />
-                </div>
-                <div className="" >
-                  <Input type="text" label=' מספר טלפון של העסק' color='secondary'
-                    variant='faded' labelPlacement='outside' placeholder='אופציונלי' style={{
-                      textAlign: 'left', direction: 'ltr',
+                    <Input type="text" label='שם העסק' value={store?.storeName} isRequired color='primary' onChange={handleChange("storeName")}
+                      variant='underlined' name="username" required />
+                  </div>
+                  <div className="">
+                    <Input type="text" value={store?.email} label=' כתובת אימייל של העסק' color='primary' onChange={handleChange("email")}
+                      variant='underlined' labelPlacement='outside' placeholder='אופציונלי' />
+                  </div>
+                  <div className="" >
+                    <Input type="text" value={store?.phone} label=' מספר טלפון של העסק' color='primary' onChange={handleChange("phone")}
+                      variant='faded' labelPlacement='outside' placeholder='אופציונלי' style={{
+                        textAlign: 'left', direction: 'ltr',
 
-                    }} />
+                      }} />
+                  </div>
+                  <div>
+                  </div>
+                  <Button type="button" color='primary' onPress={handleSubmit} className="sign-in w-full">
+                    הבא
+                  </Button>
+                </form>
+              </div>
+            }
+            {step === 1 &&
+              <div className='flex flex-col w-full h-full'>
+                <h1>Event Attractions</h1>
+                <div className='flex flex-row flex-wrap w-full justify-center items-center' style={{ gap: '20px', height: '600px', overflowY: 'auto',
+                  paddingTop: '20px', paddingBottom: '10px'
+                 }}>
+
+                  {Object.keys(attractions).map((sectionKey) => {
+                    const section = attractions[sectionKey];
+                    return (
+                      <Card key={sectionKey} color={'primary'} shadow='sm'  onPress={() => handleClick(sectionKey)} onMouseEnter={()=>{
+                        console.log(sectionKey)
+                        setCardIndex(sectionKey)
+                      }}
+                      onMouseLeave={()=>{ setCardIndex(null)}}
+                        style={{
+                          width: '280px', height: '120px', borderRadius: '20px',
+                          backgroundColor: sectionKey === cardIndex? "#006FEE": '#fff',
+                          color: sectionKey === cardIndex? "#fff": '#252323',
+                          cursor: 'pointer',
+                          transition: "background-color 0.7s ease",
+                        }}>
+                
+                        <CardBody>
+                          <div className='flex flex-col' style={{ textAlign: 'right', gap: '5px'}}>
+                          <div style={{fontWeight: 'bold'}}> {section.value}</div>
+                          <div style={{fontSize: '13px', opacity: '70%'}}>{section.description}</div>
+                          </div>
+                        
+                        </CardBody>
+
+
+                        {/* Check if the section is the active one, if so, display the subsubjects */}
+                        {activeSection === sectionKey && (
+                          <div style={{ paddingLeft: '20px' }}>
+                            <p>{section.description}</p>
+                            <div>
+                              {Array.isArray(section.subsubject) &&
+                                section.subsubject.map((sub, index) => (
+                                  <div key={index}>{sub}</div>
+                                ))}
+                            </div>
+                          </div>
+                        )}
+                      </Card>
+                    );
+                  })}
+
                 </div>
-                <div>
-                </div>
-                <Button type="button" color='secondary' onPress={handleSubmit} className="sign-in w-full">
-                  הבא
-                </Button>
-              </form>
-            </div>
+                  <div>
+
+                  </div>
+              </div>
+            }
           </div>
-          <div className='flex w-full flex-col items-center h-full bg-white' style={{paddingTop: '30px'}} >
-          <section className="multi_step_form w-full">
-      <form id="msform">
-        <ul id="progressbar">
-        <li className={step >= 4 ? 'active' : ''}>סיום</li>
-          <li className={step >= 3 ? 'active' : ''}>הגדרות מתקדמות</li>
-          <li className={step >= 2 ? 'active' : ''}>סוג העסק</li>
-          <li className={step >= 1 ? 'active' : ''}>פרטי העסק</li>
-        </ul>
+          <div className='flex w-full flex-col items-center h-full bg-white' style={{ paddingTop: '30px' }} >
+            <section className="multi_step_form w-full">
+              <form id="msform">
+                <ul id="progressbar">
+                  <li className={step >= 4 ? 'active' : ''}>סיום</li>
+                  <li className={step >= 3 ? 'active' : ''}>הגדרות מתקדמות</li>
+                  <li className={step >= 2 ? 'active' : ''}>סוג העסק</li>
+                  <li className={step >= 1 ? 'active' : ''}>פרטי העסק</li>
+                </ul>
 
-   
-        {step === 1 && (
-          <fieldset>
-            <h3>Step 1: Verify Phone</h3>
-            {/* Your form fields for step 1 */}
-            <button
-              type="button"
-              className="action-button next"
-              onClick={handleNext}
-            >
-              Continue
-            </button>
-          </fieldset>
-        )}
 
-        {/* Step 2 */}
-        {step === 2 && (
-          <fieldset>
-            <h3>Step 2: Upload Documents</h3>
-            {/* Your form fields for step 2 */}
-            <button
-              type="button"
-              className="action-button previous previous_button"
-              onClick={handleBack}
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              className="action-button next"
-              onClick={handleNext}
-            >
-              Continue
-            </button>
-          </fieldset>
-        )}
+                {step === 1 && (
+                  <fieldset>
 
-        {/* Step 3 */}
-        {step === 3 && (
-          <fieldset>
-            <h3>Step 3: Security Questions</h3>
-            {/* Your form fields for step 3 */}
-            <button
-              type="button"
-              className="action-button previous previous_button"
-              onClick={handleBack}
-            >
-              Back
-            </button>
-            <a href="#" className="action-button">
-              Finish
-            </a>
-          </fieldset>
-        )}
-      </form>
-    </section>
+                  </fieldset>
+                )}
+
+                {/* Step 2 */}
+                {step === 2 && (
+                  <fieldset>
+
+                  </fieldset>
+                )}
+
+                {/* Step 3 */}
+                {step === 3 && (
+                  <fieldset>
+
+                  </fieldset>
+                )}
+              </form>
+            </section>
           </div>
         </div>
       </div>

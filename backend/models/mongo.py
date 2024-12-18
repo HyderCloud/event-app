@@ -385,6 +385,16 @@ class Users:
         else:
             print("No document found with the given email.")
 
+    def update_personal_det(self, first, last, phone, id):
+        new_data = {"$set": {"firsName": first,
+                             "lastName": last,
+                             "phone": phone}}
+        result = collectionUsers.update_one({"_id": ObjectId(id)}, new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_by_email_proffesion(self, email, data):
         new_data = {
             "$set": {

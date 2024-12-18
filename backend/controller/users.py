@@ -137,7 +137,8 @@ def user_google(user):
             "firstName": "",
             "lastName": "",
             "terms": "",
-            "sellContent": ""
+            "sellContent": "",
+            "phone": ""
         }
         user_checker = user_api.get_user_by_email(user["email"])
         if user_checker["email"] == user["email"]:
@@ -188,9 +189,37 @@ def get_user_by_email(email):
         return jsonify({"message": "error-" + str(e)}), 501
 
 
-def update_by_email(email, data, terms, sell):
+def update_by_email(email, data, terms, sell, id):
     try:
-        return jsonify({"acknowledge": user_api.update_by_email(email, data, terms, sell)}), 200
+        ack = user_api.update_by_email(email, data, terms, sell)
+        if ack:
+              store = {
+            "key": id,
+            "name": data,
+            "profile_img": "",
+            "bunner": "",
+            "slogen": "",
+            "description": "",
+            "links": [],
+            "email": "",
+            "phone": "",
+            "address": [],
+            "folowers": [],
+            "profession": "",
+            "type": "user"
+        }
+        result = store_api.insert_store(store)
+        username = user_api.get_user_by_email(email)
+        if result:
+            get_Token = store_api.get_store_by_name(data)
+            if data == get_Token["name"]:
+                payload = {
+                        "store_id": get_Token["_id"],
+                        "name": get_Token["name"],
+                        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+                    }
+                token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+            return jsonify({"acknowledge": ack, "token": token}), 200
     except Exception as e:
         return jsonify({"message": "error-" + str(e)}), 501
 
@@ -199,6 +228,17 @@ def update_by_email_profession(email, data):
     try:
         return (
             jsonify({"acknowledge": user_api.update_by_email_proffesion(email, data)}),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"message": "error-" + str(e)}), 501
+    
+
+def update_personal_det(first_name, last_name, phone, id):
+    try:
+        ack = user_api.update_personal_det(first_name, last_name, phone, id)
+        return (
+            jsonify({"acknowledge": ack}),
             200,
         )
     except Exception as e:

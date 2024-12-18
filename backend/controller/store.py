@@ -102,7 +102,7 @@ def get_store_by_username(name, user):
         return jsonify({"message": "error-" + str(e)}), 501
 
 
-def set_new_store(id, name, username, profession, email):
+def set_new_store(id, name, email):
     try:
         store = {
             "key": id,
@@ -112,28 +112,27 @@ def set_new_store(id, name, username, profession, email):
             "slogen": "",
             "description": "",
             "links": [],
-            "email": email,
+            "email": "",
             "phone": "",
             "address": [],
             "folowers": [],
-            "profession": profession,
+            "profession": "",
+            "type": "user"
         }
-        updated = users_api.update_by_email(email, username, profession)
-        if updated:
-            result = store_api.insert_store(store)
-            username = users_api.get_user_by_email(email)
-            if result:
-                get_Token = store_api.get_store_by_name(name)
-                if name == get_Token["name"]:
-                    payload = {
+        result = store_api.insert_store(store)
+        username = users_api.get_user_by_email(email)
+        if result:
+            get_Token = store_api.get_store_by_name(name)
+            if name == get_Token["name"]:
+                payload = {
                         "store_id": get_Token["_id"],
                         "name": get_Token["name"],
                         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
                     }
-                    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-                    return (
-                        jsonify(
-                            {"acknowledge": True, "username": name, "token": token}
+                token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+                return (
+                    jsonify(
+                        {"acknowledge": True, "username": name, "token": token}
                         ),
                         200,
                     )

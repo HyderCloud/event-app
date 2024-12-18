@@ -4,13 +4,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Input, Tooltip, InputOtp, Checkbox } from "@nextui-org/react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { app } from '@/src/app/firebase-config'
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useJwt } from 'react-jwt';
 
 const PersonalDetails = ({ uploadData }) => {
     const [otp, setOtp] = useState('')
+    const [cookie, setCookie, removeCookie] = useCookies()
+    const {decodedToken, isExpired} = useJwt(cookie.user)
     const [confirmationResult, setConfirmationResult] = useState(null)
     const [otpSent, setOtpSent] = useState(false)
     const auth = getAuth(app)
-
+    const [step, setStep] = useState(0);
     const router = useRouter()
     const search = useSearchParams()
     const [isLoad, setIsLoad] = useState(false)
@@ -25,7 +30,15 @@ const PersonalDetails = ({ uploadData }) => {
         lastName: '',
         phone: ''
     })
-
+    const handleNext = () => {
+        setStep(step + 1);
+    };
+    const handlePersonalData = async ()=>{
+        const result = await axios.post(`http://localhost:9020/personaldetails`, {data: data, id: decodedToken?.user_id})
+        if(result.data.acknowledge){
+            router.push('?sec=varification');
+        }
+    }
     useEffect(() => {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
             "size": 'invisible',
@@ -107,8 +120,6 @@ const PersonalDetails = ({ uploadData }) => {
 
 
         } catch (error) {
-            console.log("🚀 ~ handleSendOtp ~ error:", error)
-
         }
     }
     const handleSubmit = async () => {
@@ -116,6 +127,7 @@ const PersonalDetails = ({ uploadData }) => {
             if (validateForm()) {
                 setIsLoad(true)
                 await handleSendOtp()
+                handleNext(step +1)
 
             }
         } catch (error) {
@@ -126,9 +138,12 @@ const PersonalDetails = ({ uploadData }) => {
 
     const handleOtpSubmit = async () => {
         try {
-            await confirmationResult.confirm(otp)
+          const result =  await confirmationResult.confirm(otp)
+            handleNext(step+1)
             setOtp('')
-            router.push('?sec=varification');
+            if(result){
+                await handlePersonalData()
+              }
         } catch (error) {
 
         }
@@ -250,8 +265,36 @@ const PersonalDetails = ({ uploadData }) => {
                             </div>
                         </div>
                     }
-                    <div className='flex justify-center w-full items-center h-full bg-white'  >
+                    <div className='flex w-full flex-col items-center h-full bg-white' style={{paddingTop: '30px'}}  >
+                        <section className="multi_step_form w-full">
+                            <form id="msform">
+                                <ul id="progressbar">
+                                    <li className={step >= 2 ? 'active' : ''}> אימות</li>
+                                    <li className={step >= 1 ? 'active' : ''}>פרטים אישיים </li>
+                                </ul>
 
+
+                                {step === 1 && (
+                                    <fieldset>
+                             
+                                        {/* Your form fields for step 1 */}
+
+                                    </fieldset>
+                                )}
+
+                                {/* Step 2 */}
+                                {step === 2 && (
+                                    <fieldset>
+                                  
+                                        {/* Your form fields for step 2 */}
+                                   
+                                    </fieldset>
+                                )}
+                            </form>
+                        </section>
+                    <div className='h-full '>
+
+                    </div>
                     </div>
                 </div>
             </div>
