@@ -16,7 +16,7 @@ def auth():
 @users_blueprint.route('/updateusername', methods=['POST'])
 def updateusername():
     user = request.get_json()
-    return update_by_email(user["email"],user["username"])  
+    return update_by_email(user["email"],user["username"],user["terms"], user["sellContent"])  
 
 @users_blueprint.route('/googleauth', methods=['POST'])
 def auth_google():

@@ -134,6 +134,10 @@ def user_google(user):
             "pr_image": user["pr_image"],
             "profession": "",
             "description": "",
+            "firstName": "",
+            "lastName": "",
+            "terms": "",
+            "sellContent": ""
         }
         user_checker = user_api.get_user_by_email(user["email"])
         if user_checker["email"] == user["email"]:
@@ -184,9 +188,9 @@ def get_user_by_email(email):
         return jsonify({"message": "error-" + str(e)}), 501
 
 
-def update_by_email(email, data):
+def update_by_email(email, data, terms, sell):
     try:
-        return jsonify({"acknowledge": user_api.update_by_email(email, data)}), 200
+        return jsonify({"acknowledge": user_api.update_by_email(email, data, terms, sell)}), 200
     except Exception as e:
         return jsonify({"message": "error-" + str(e)}), 501
 

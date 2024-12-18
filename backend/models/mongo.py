@@ -375,8 +375,10 @@ class Users:
         documents_list["_id"] = str(documents_list["_id"])
         return documents_list
 
-    def update_by_email(self, email, username):
-        new_data = {"$set": {"username": username}}
+    def update_by_email(self, email, username, terms, sell):
+        new_data = {"$set": {"username": username,
+                             "terms": terms,
+                             "sellContent": sell}}
         result = collectionUsers.update_one({"email": email}, new_data)
         if result.matched_count > 0:
             return True

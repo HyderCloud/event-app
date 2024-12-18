@@ -9,17 +9,59 @@ import axios from 'axios';
 
 const UsernameSection = ({ email }) => {
   const path = usePathname()
+  const [checked, setChecked] = useState(false);
+  const [isContentCheck, setIsContetntCheck] = useState(false)
+
   const router = useRouter()
   const [isLoad, setIsLoad] = useState(false)
+  const [error, setError] = useState({
+    username: false,
+    terms: false,
+  })
   const [username, setUsername] = useState('')
   const handleChange = (e) => {
     setUsername(e.target.value)
   }
+
+  const handleChangeTerms = () => {
+    setChecked(!checked)
+  };
+  const handleChangeContent = () => {
+    setIsContetntCheck(!isContentCheck)
+  };
   const handleSubmit = async (e) => {
     setIsLoad(true)
-    const result = await axios.post('http://localhost:9020/updateusername', { username: username, email: email })
-    if (result.data.acknowledge) {
-      router.push(`/?isbuissness=true`)
+    if (username.length > 2 && error.terms) {
+      const result = await axios.post('http://localhost:9020/updateusername',
+        { username: username, email: email, terms: checked, sellContent: isContentCheck })
+      if (result.data.acknowledge) {
+        router.push(`/?isbuissness=true`)
+      }
+
+    } else if (error.terms === false && username.length <= 2) {
+      setError((prevError) => ({
+        ...prevError,
+        username: true
+      }));
+      setError((prevError) => ({
+        ...prevError,
+        terms: true
+      }));
+      setIsLoad(false)
+
+    }
+    else if (username.length <= 2) {
+      setError((prevError) => ({
+        ...prevError,
+        username: true
+      }));
+      setIsLoad(false)
+    } else if (error.terms === false) {
+      setError((prevError) => ({
+        ...prevError,
+        terms: true
+      }));
+      setIsLoad(false)
     }
 
   }
@@ -29,40 +71,38 @@ const UsernameSection = ({ email }) => {
       <div className=' body2 flex flex-row' >
         {console.log(email)}
         <div className='flex  justify-center' style={{ width: '60%' }}>
-          <div className="form-container">
+          <div className="form-container " >
             <h1 className="title">Username</h1>
-            <form className="form">
+            <form className="form flex flex-col" style={{ gap: '30px' }}>
               <div className="input-group">
-                <label htmlFor="username" className="username" >
-                  שם משתמש
-                </label>
-                <input type="text" name="username" required onChange={handleChange} />
+                <Input isRequired variant='underlined' isInvalid={error.username} errorMessage={'יש להכניס שם משתמש תקין'}
+                  label="שם משתמש" color='primary' type="text" name="username" required onChange={handleChange} />
               </div>
-              <Checkbox radius='large'>
-                קבלת תוכן שיווקי
-              </Checkbox>
-              <Checkbox radius='large'>
-                תנאי שימוש
-              </Checkbox>
-              <Button isLoading={isLoad} type="button" color='primary' onPress={handleSubmit} className="sign-in w-full">
-                לשלב הבא
-              </Button>
-              <div className="social-messages">
-                <div className="line"></div>
+              <div className='flex flex-col' style={{ gap: '10px' }}>
+                <Checkbox radius='large' value={isContentCheck} onChange={handleChangeContent}>
+                  קבלת תוכן שיווקי
+                </Checkbox>
+                <div>
+                  <Checkbox radius='large' isInvalid={error.terms} isRequired
+                    errorMessage={'יש לאשר את תנאי השימוש'} value={checked} onChange={handleChangeTerms}>
+                    תנאי שימוש
+                  </Checkbox>
+                  {error.terms && <div style={{ fontSize: '12px', color: '#F31260' }} >יש לאשר את תנאי השימוש</div>}
+                </div>
+              </div>
+              <div style={{ paddingTop: '20px' }}>
+                <Button isLoading={isLoad} type="button" color='primary' onPress={handleSubmit} className="sign-in w-full">
+                  לשלב הבא
+                </Button>
+              </div>
 
-                <div className="line"></div>
-              </div>
 
 
             </form>
           </div>
         </div>
         <div className='w-full bg-white h-full flex justify-center items-center'>
-          <div className='user-interaction flex flex-col bg-white' style={{
-            width: '700px', height: '450px', borderRadius: '20px',
-            boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset'
-          }}>
-          </div>
+
 
         </div>
       </div>
