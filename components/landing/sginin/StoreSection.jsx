@@ -11,6 +11,8 @@ import proType from "@/db/proType.json"
 
 const StoreSection = ({ username, id, profession, email }) => {
   const [cardIndex, setCardIndex] = useState(null)
+  const [mainSections, setMainSections] = useState(false) 
+  const [subSection, setSubSection] = useState(false)
   const [cookies, setCookie, removeCookie] = useCookies(['store']);
   const [attractions, setAttractions] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
@@ -33,7 +35,7 @@ const StoreSection = ({ username, id, profession, email }) => {
   })
   useEffect(() => {
 
-    setAttractions(proType.event_attractions);
+    setAttractions(proType);
 
     console.log("🚀 ~ useEffect ~ proType.event_attractions:", proType.event_attractions)
   }, []);
@@ -123,11 +125,17 @@ const StoreSection = ({ username, id, profession, email }) => {
                   paddingTop: '20px', paddingBottom: '10px'
                  }}>
 
-                  {Object.keys(attractions).map((sectionKey) => {
+                  {Object.keys(attractions).map((sectionKey, index) => {
                     const section = attractions[sectionKey];
                     return (
-                      <Card key={sectionKey} color={'primary'} shadow='sm'  onPress={() => handleClick(sectionKey)} onMouseEnter={()=>{
-                        console.log(sectionKey)
+                      <div  onClick={() => {
+                        const section2 = section
+                        delete section2.value
+                        setMainSections(false)
+                        setSubSection(true)
+                        setAttractions(section2)
+                      }}>
+                      <Card key={sectionKey} color={'primary'} shadow='sm'  onMouseEnter={()=>{
                         setCardIndex(sectionKey)
                       }}
                       onMouseLeave={()=>{ setCardIndex(null)}}
@@ -146,23 +154,13 @@ const StoreSection = ({ username, id, profession, email }) => {
                           </div>
                         
                         </CardBody>
-
-
-                        {/* Check if the section is the active one, if so, display the subsubjects */}
-                        {activeSection === sectionKey && (
-                          <div style={{ paddingLeft: '20px' }}>
-                            <p>{section.description}</p>
-                            <div>
-                              {Array.isArray(section.subsubject) &&
-                                section.subsubject.map((sub, index) => (
-                                  <div key={index}>{sub}</div>
-                                ))}
-                            </div>
-                          </div>
-                        )}
                       </Card>
+                      </div>
                     );
+      
+                       
                   })}
+
 
                 </div>
                   <div>

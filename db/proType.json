@@ -1,5 +1,6 @@
 {
     "event_attractions": {
+        "value": " אטרקציות לאירועים",
       "photo_booths": {
         "value": "דוכני צילום",
         "description": "התקנים לצילום תמונות, כולל מגנטים, עמדות סלפי, מצלמות 360 ועמדות וידאו מיידי.",
@@ -95,6 +96,7 @@
       }
     },
     "event_venues": {
+        "value": "אולמות וגני אירועים",
       "small_venues": {
         "value": "אולמות קטנים",
         "description": "אולמות לאירועים אינטימיים כמו חתונות, ימי הולדת ומפגשי עסקים.",
@@ -141,6 +143,7 @@
       }
     },
     "technical_equipment": {
+        "value": "ציוד טכני",
       "sound_and_amplification": {
         "value": "הגברה וסאונד",
         "description": "מערכות סאונד לצורך הגברה ושמע באירועים.",
@@ -187,8 +190,9 @@
       }
     },
     "food_and_drinks": {
+        "value": "ציוד טכני",
       "event_catering": {
-        "value": "קייטרינג לאירועים",
+        "value": "אוכל ומשקאות",
         "description": "מנות שף ומנות קלות לאורחים.",
         "subsubject": [
           "מנות שף",
@@ -233,6 +237,7 @@
       }
     },
     "artistic_services": {
+        "value": "שירותים אמנותיים",
       "photographers": {
         "value": "צלמים",
         "description": "שירותי צילום לאירועים, כולל מגנטים, וידאו וסטילס.",
@@ -271,6 +276,7 @@
       }
     },
     "event_logistics_and_management": {
+        "value": "לוגיסטיקה וניהול אירוע",
       "event_managers": {
         "value": "מנהלי אירוע",
         "description": "מנהלים בפועל של האירוע, מנחי קהל.",
