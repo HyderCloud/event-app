@@ -16,6 +16,7 @@
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@nextui-org/react": "^2.6.8",
+    "@react-google-maps/api": "^2.20.3",
     "ag-grid-community": "^32.3.3",
     "ag-grid-react": "^32.3.3",
     "axios": "^1.7.7",

@@ -9,24 +9,26 @@ import Image from 'next/image'
 import axios from 'axios';
 import proType from "@/db/proType.json"
 
+
 const StoreSection = ({ username, id, profession, email }) => {
   const [cardIndex, setCardIndex] = useState(null)
   const [mainSections, setMainSections] = useState(false) 
   const [subSection, setSubSection] = useState(false)
   const [cookies, setCookie, removeCookie] = useCookies(['store']);
   const [attractions, setAttractions] = useState(null);
+  const [activeReturn, setActiveReturn] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [address, setAddress] = useState('');
   const router = useRouter()
   const [isLoad, setIsLoad] = useState(false)
   const [store, setStore] = useState({
     storeName: '',
     email: '',
     phone: '05',
-
+    profession: '',
   })
-  const handleClick = (section) => {
-    setActiveSection(activeSection === section ? null : section); // Toggle the section visibility
-  };
+
   const [storeErr, setStoreErr] = useState({
     storeName: '',
     email: '',
@@ -34,11 +36,17 @@ const StoreSection = ({ username, id, profession, email }) => {
 
   })
   useEffect(() => {
-
     setAttractions(proType);
 
-    console.log("🚀 ~ useEffect ~ proType.event_attractions:", proType.event_attractions)
   }, []);
+    
+  const handlePlaceChanged = (autocomplete) => {
+    const place = autocomplete.getPlace();
+    if (place.geometry) {
+      setSelectedLocation(place.geometry.location);
+      setAddress(place.formatted_address);
+    }
+  };
   const handleChange = (key) => (e) => {
     if (key === 'phone') {
       let inputValue = e.target.value;
@@ -111,6 +119,9 @@ const StoreSection = ({ username, id, profession, email }) => {
                       }} />
                   </div>
                   <div>
+                    
+                  </div>
+                  <div>
                   </div>
                   <Button type="button" color='primary' onPress={handleSubmit} className="sign-in w-full">
                     הבא
@@ -119,50 +130,87 @@ const StoreSection = ({ username, id, profession, email }) => {
               </div>
             }
             {step === 1 &&
-              <div className='flex flex-col w-full h-full'>
-                <h1>Event Attractions</h1>
-                <div className='flex flex-row flex-wrap w-full justify-center items-center' style={{ gap: '20px', height: '600px', overflowY: 'auto',
-                  paddingTop: '20px', paddingBottom: '10px'
+              <div className='flex flex-col w-full h-full' style={{ gap: '20px'}}>
+                <div className=' felx flex w-full row justify-between' style={{paddingRight: '80px', paddingLeft: '80px'}}>
+                <h1 style={{fontSize: '24px', fontWeight: 'bold'}}>{subSection ? "בחר את הקטגוריה המתאימה עבורך": "בחר את סוג העסק שלך"}</h1>
+            
+                  <Button  color={activeReturn ? 'primary' : 'default'} radius='full' onMouseEnter={()=>setActiveReturn(true)}
+                      onMouseLeave={()=>setActiveReturn(null)}
+                      isIconOnly onPress={()=>{
+                        if(subSection){
+                          setAttractions(proType)
+                          setActiveReturn(null)
+                           setSubSection(false)
+                        }else{handleBack()
+                          setActiveReturn(null)
+                        }
+                      }}><svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.94981 15.5201C8.0931 15.6553 8.28278 15.7304 8.47981 15.7301C8.6761 15.7318 8.86434 15.6521 8.99981 15.5101C9.14276 15.3708 9.22338 15.1797 9.22338 14.9801C9.22338 14.7805 9.14276 14.5894 8.99981 14.4501L3.29975 8.75H16.52C16.9342 8.75 17.27 8.41421 17.27 8C17.27 7.58579 16.9342 7.25 16.52 7.25H3.29756L9.00981 1.52006C9.15276 1.38077 9.23338 1.18965 9.23338 0.990063C9.23338 0.790475 9.15276 0.59935 9.00981 0.460063C8.71699 0.167609 8.24263 0.167609 7.94981 0.460063L0.949809 7.46006C0.657355 7.75288 0.657355 8.22724 0.949809 8.52006L7.94981 15.5201Z" fill={activeReturn ?'white': `#252323`}/>
+                      </svg>
+                      </Button>
+                    
+             
+                </div>
+                <div style={{height: '500px', overflowY: 'auto'}}>
+                <div className='flex flex-row flex-wrap w-full justify-center items-center' style={{ gap: '20px', overflowY: 'auto',
+                  paddingTop: '20px', paddingBottom: '20px'
                  }}>
 
                   {Object.keys(attractions).map((sectionKey, index) => {
                     const section = attractions[sectionKey];
-                    return (
-                      <div  onClick={() => {
-                        const section2 = section
-                        delete section2.value
-                        setMainSections(false)
-                        setSubSection(true)
-                        setAttractions(section2)
-                      }}>
-                      <Card key={sectionKey} color={'primary'} shadow='sm'  onMouseEnter={()=>{
-                        setCardIndex(sectionKey)
-                      }}
-                      onMouseLeave={()=>{ setCardIndex(null)}}
+                      return (
+                        <>
+                        {(subSection && index === 0)? <div className='absolute'>
+                          </div>:
+                        <div style={{width: '280px', height: '120px',}} onClick={() => {
+                          if(subSection){
+                            handleNext()
+                            setStore({
+                              ...store,
+                              profession: attractions[sectionKey].value,
+                            })
+                          }else{
+                            const section2 = section
+                            setMainSections(false)
+                            setSubSection(true)
+                            setAttractions(section2)
+                          }
+                        }}
+                      >
+                        <Card key={sectionKey} color={'primary'} shadow='sm'  onMouseEnter={()=>{
+                          setCardIndex(sectionKey)
+                        }}
+                        onMouseLeave={()=>{ setCardIndex(null)}}
                         style={{
                           width: '280px', height: '120px', borderRadius: '20px',
                           backgroundColor: sectionKey === cardIndex? "#006FEE": '#fff',
                           color: sectionKey === cardIndex? "#fff": '#252323',
                           cursor: 'pointer',
                           transition: "background-color 0.7s ease",
-                        }}>
-                
-                        <CardBody>
-                          <div className='flex flex-col' style={{ textAlign: 'right', gap: '5px'}}>
-                          <div style={{fontWeight: 'bold'}}> {section.value}</div>
-                          <div style={{fontSize: '13px', opacity: '70%'}}>{section.description}</div>
-                          </div>
-                        
-                        </CardBody>
-                      </Card>
-                      </div>
-                    );
+                        }}
+                   >
+                  
+                          <CardBody>
+                            <div className='flex flex-col' style={{ textAlign: 'right', gap: '5px'}}>
+                            <div style={{fontWeight: 'bold'}}> {section.value}</div>
+                            <div style={{fontSize: '13px', opacity: '70%'}}>{section.description}</div>
+                            </div>
+                          
+                          </CardBody>
+                        </Card>
+                        </div>
+                        }
+                        </>
+                      );
+                    
       
                        
                   })}
 
-
                 </div>
+                </div>
+
+
                   <div>
 
                   </div>
