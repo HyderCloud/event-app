@@ -26,14 +26,14 @@ const UsernameSection = ({ email }) => {
   }
 
   const handleChangeTerms = () => {
-    setChecked(!checked)
+    setChecked(true)
   };
   const handleChangeContent = () => {
     setIsContetntCheck(!isContentCheck)
   };
   const handleSubmit = async (e) => {
     setIsLoad(true)
-    if (username.length > 2 && error.terms) {
+    if (username.length > 2 && checked) {
       const result = await axios.post('http://localhost:9020/updateusername',
         { username: username, email: email, terms: checked, sellContent: isContentCheck, id: decodedToken?.user_id })
       if (result.data.acknowledge) {
@@ -43,7 +43,7 @@ const UsernameSection = ({ email }) => {
       }
 
 
-    } else if (error.terms === false && username.length <= 2) {
+    } else if (checked === false && username.length <= 2) {
       setError((prevError) => ({
         ...prevError,
         username: true
@@ -61,7 +61,7 @@ const UsernameSection = ({ email }) => {
         username: true
       }));
       setIsLoad(false)
-    } else if (error.terms === false) {
+    } else if (checked === false) {
       setError((prevError) => ({
         ...prevError,
         terms: true

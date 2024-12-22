@@ -253,6 +253,26 @@ class Store:
         else:
             print("No document found with the given email.")
 
+    def update_store_sign(self, phone, name, email, profession,link, slogen, terms , profile, _id):
+        new_data = {
+            "$set": {
+                "name": name,
+                "email": email,
+                "phone": phone,
+                "profession": profession,
+                "link": [link],
+                "slogen":slogen,
+                "terms": terms,
+                "pr_image": profile,
+                "type": "buisness",
+            }
+        }
+        result = storeCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        if result.matched_count > 0:
+            return True
+        else:
+            print("No document found with the given email.")
+
     def update_bunner_by_store(self, bunner, name):
         new_data = {
             "$set": {
@@ -384,6 +404,7 @@ class Users:
             return True
         else:
             print("No document found with the given email.")
+
 
     def update_personal_det(self, first, last, phone, id):
         new_data = {"$set": {"firsName": first,

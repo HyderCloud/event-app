@@ -13,6 +13,7 @@ import Image from 'next/image';
 const NavBar = () => {
   const pathName = usePathname()
   const [cookie, setCookie, removeCookie] = useCookies('user')
+
   const [data, setData] = useState('')
   const [logOut, setlogOut] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
