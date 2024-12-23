@@ -7,13 +7,14 @@ import Highcharts3D from 'highcharts/highcharts-3d';
 // import { Button } from '@nextui-org/react';
 
 
-const PieChart3D = ({title, data}) =>{
+const PieChart3D = ({title, data, title2}) =>{
 
 Highcharts3D(Highcharts);
 
 const options = {
   chart: {
     type: 'pie',
+    height: title,
     options3d: {
       enabled: true,
       alpha: 45,
@@ -22,9 +23,9 @@ const options = {
     backgroundColor: '#0000', // Change background here
   },
   title: {
-    text: title,
+    text: title2,
     style: {
-        color: '#ffff', // Change the title text color here
+        color: '#252323', // Change the title text color here
         fontSize: '26px',
       },
   },
@@ -45,7 +46,7 @@ const options = {
 };
     
     return (
-            <HighchartsReact highcharts={Highcharts} options={options} />
+            <HighchartsReact  highcharts={Highcharts} options={options} />
 );}
 
 export default PieChart3D;

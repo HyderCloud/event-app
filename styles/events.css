@@ -8,6 +8,15 @@
     color: #ffffff;  /* צבע טקסט אפור כהה */
     transition: transform 0.3s ease-out;
 }
+
+.onUserHover{
+  background-color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.onUserHover:hover{
+  background-color: #f4f4f4;
+}
 .slot-menue-drawer{
 background: #ffffff;
 border-radius: 15px;

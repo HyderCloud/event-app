@@ -35,7 +35,7 @@ const router = useRouter()
                     alt="nextui logo"
                     height={40}
                     radius="sm"
-                    src={store.profile_img}
+                    src={store?.profile_img}
                     style={{backgroundSize: 'cover',
                       backgroundPosition: 'center'}}
                     width={40}
@@ -48,7 +48,6 @@ const router = useRouter()
                     </div>
                   </div>
                   <div className='flex flex-row'>
-
                     <div>{item?.status === 'in progress' ? 
                       <div style={{width: '10px', height: '10px', borderRadius: '100px', backgroundColor: '#F5A524'}}></div>:
                   item?.status === 'active'  ? <div style={{width: '10px', height: '10px', borderRadius: '100px', backgroundColor: '#17C964'}}></div>:
@@ -63,9 +62,7 @@ const router = useRouter()
                     router.push(`/${item?.name}/${item?._id}`) }}
                     alt="Woman listing to music"
                     className="object-cover"
-
                   ></div>
-
                 <Divider />
                 <div style={{paddingLeft: '25%'}}>
                 <CardFooter className="glass-background text-right items-center border-white/20 border-1  py-1 absolute before: shadow-small z-10"  style={{bottom: '30px', width: '240px', borderBottomRightRadius: '0'}}>
@@ -74,8 +71,6 @@ const router = useRouter()
                     router.push(`/${item?.name}/${item?._id}`) }} className="text-tiny text-white "  color="primary" radius="lg" size="sm">
                 גלה עוד
               </Button>
-              
-
       </CardFooter>
                 </div>
               </Card>
