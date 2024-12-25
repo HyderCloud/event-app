@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from controller.store import set_new_store, get_store_by_username,get_store_by_storeusername,update_bunner_by_name,update_profile_by_name, update_phone_by_name,update_slogen_by_name,update_links_by_name, update_email_by_name,update_description_by_name
+from controller.store import set_new_store, get_store_by_username, get_store_by_id3,get_store_by_storeusername,update_bunner_by_name,update_profile_by_name, update_phone_by_name,update_slogen_by_name,update_links_by_name, update_email_by_name,update_description_by_name
 stores_blueprint = Blueprint('store', __name__)
 
 @stores_blueprint.route('/insertstore/<string:id>', methods=['PATCH'])
@@ -7,9 +7,11 @@ def insert_store(id):
     user = request.get_json()
     return set_new_store(id, user["store"],user["username"], user["profession"],user["email"])
 
-@stores_blueprint.route('/getstores/<string:name>/<string:user>', methods=['GET'])
-def get_store_by_name(name,user):
-    return get_store_by_username(name, user)
+@stores_blueprint.route('/getstorebyid/<string:id>', methods=['GET'])
+def get_store_by_ids(id):
+    print(id)
+    return get_store_by_id3(id)
+
 
 @stores_blueprint.route('/<string:name>', methods=['GET'])
 def get_store_by_storename_(name):

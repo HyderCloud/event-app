@@ -102,6 +102,13 @@ def get_store_by_username(name, user):
         return jsonify({"message": "error-" + str(e)}), 501
 
 
+def get_store_by_id3(id):
+    try:
+        result = store_api.get_store_by_id(id)
+        return jsonify({"store": result}), 200
+    except Exception as e:
+        return jsonify({"message": "error-" + str(e)}), 501
+
 def set_new_store(id, name, email):
     try:
         store = {
