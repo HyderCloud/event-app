@@ -19,7 +19,7 @@ const EventSlider = ({ data, store }) => {
     console.log("🚀 ~ getEvents ~ getAllEvents.data?.team:", getAllEvents.data?.team)
   }
  useEffect(()=>{
-  if(data[0]?._id){
+  if(data?.length > 0){
     getEvents()
   }
  },[data])
