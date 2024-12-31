@@ -47,9 +47,10 @@ const StoreSection = ({ username, id, profession, email }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleAddBuissness = async () => {
-
     const result = await axios.post(`http://localhost:9020/addbuisness/${decodedToken?.store_id}`, store)
     if (result.data.ack) {
+      setCookie("type", "buisness",{path: '/',secure: true})
+      setCookie("myoffice", result.data.token,{path: '/',secure: true})
       window.location.href = `http://localhost:3000/myoffice/${result.data.name}`;
     }
   }

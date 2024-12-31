@@ -45,6 +45,7 @@ const EventManneger = ({ }) => {
     const [endDate, setEndDate] = useState('')
     const [data, setData] = useState('')
     const [events, setEvents] = useState([])
+    const [team, setTeam] = useState([])
     const [formData, setFormData] = useState({
         cardName: "",
         dateRange: "",
@@ -101,6 +102,7 @@ const EventManneger = ({ }) => {
     };
 
     const storeName = usePathname()
+    console.log("🚀 ~ EventManneger ~ storeName:", storeName.slice(1))
     const getStore = async () => {
         const store = await axios.get(`http://localhost:9020/${storeName.slice(1)}`)
         setData(store.data.store)
@@ -108,6 +110,7 @@ const EventManneger = ({ }) => {
     const getEvents = async () => {
         const getAllEvents = await axios.get(`http://localhost:9020/getevents/${decodedToken?.store_id}`)
         setEvents(getAllEvents.data.events)
+        setTeam(getAllEvents.data.team)
     }
     const getEventConnection = async () => {
         const getAllEvents = await axios.get(`http://localhost:9020/geteventconnection/${decodedTokens?.user_id}`)
@@ -183,7 +186,7 @@ const EventManneger = ({ }) => {
         setDateRange({ start: start, end: end })
     }
     return (
-        <div className='dashboard-container flex flex-col ' >
+        <div className='flex flex-col ' >
             <div className='add-event-container flex flex-col '>
 
                 <div className='flex flex-row w-full h-full  gap-48' style={{ paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>

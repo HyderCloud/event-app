@@ -192,8 +192,28 @@ def get_user_by_email(email):
 def update_store_login(phone, name, email, profession,link, slogen, terms , profile, _id):
     try:
         result = store_api.update_store_sign(phone, name, email, profession,link, slogen, terms , profile, _id)
-        if result:
-            return jsonify({"ack": result, "name": name}), 200
+        office = {
+            "key": _id,
+            "budget": [],
+            "chat": [],
+            "missions": [],
+            "analitycs": [],
+            "calendar": [],
+            "workers": [],
+            "subconstractors": [],
+            "events": [],
+            "adds": [],
+            "finance": [],
+            "bills": []
+        }
+        result2 = store_api.insert_office(office)
+        payload = {
+                "user_id": result2,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+            }
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+        if result and token:
+            return jsonify({"ack": result, "name": name, "token": token}), 200
     except Exception as e:
         return jsonify({"message": "error-" + str(e)}), 501
 

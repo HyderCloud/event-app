@@ -2,11 +2,11 @@
 import { TimeInput, Divider,DatePicker, Input, Switch,Calendar,CheckboxGroup ,Tooltip,Checkbox,Select, SelectItem,RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import React, { useState, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
-
+import { useAdmin } from '../contexts/admin/AdminEventsProvider';
 import { useJwt } from 'react-jwt';
 import { usePathname } from 'next/navigation';
 import axios from 'axios'
-const Cuppons = ({admin}) => {
+const Cuppons = () => {
     const path = usePathname()
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
@@ -20,6 +20,7 @@ const Cuppons = ({admin}) => {
     const [isUse, setIsUse] = useState(false)
     const [isDate, setIsDate] = useState(false)
     const [startDate, setStartDate] = useState('')
+    const { admin, setAdmin } = useAdmin();
     const [endDate, setEndDate] = useState('')
     const [useCount, setUseCount] = useState('')
     const [cupponName, setName] = useState('')
@@ -73,7 +74,7 @@ const Cuppons = ({admin}) => {
     }
     function getStringAfterSecondSlash(path) {
             const parts = path.split('/');
-            return parts[2] || null; // Returns the third part, or null if it doesn't exist
+            return parts[3] || null; // Returns the third part, or null if it doesn't exist
           }
     const handleDiscount = (e) => {
             const inputValue = e.target.value;

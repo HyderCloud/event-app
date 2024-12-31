@@ -20,12 +20,12 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import 'swiper/css';
-
+import { useAdmin } from '../contexts/admin/AdminEventsProvider';
 import 'swiper/css/pagination';
 import 'swiper/css/parallax';
 import { Navigation, Pagination, Parallax } from 'swiper/modules';
 import Link from 'next/link'
-const Budgets = ({ admin }) => {
+const Budgets = () => {
   const icon = <div >
     <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="18" height="4" rx="2" fill="#4285F4" />
@@ -34,12 +34,13 @@ const Budgets = ({ admin }) => {
     { field: 'name', width: 200 },
     { field: 'budget', width: 200 },
   ]);
+  const { admin, setAdmin } = useAdmin();
   const swiper = useSwiper();
   const [index, setIndex] = useState(null)
   const [isUserOpen, setIsUserOpen] = useState(false)
-
   const [isUserOpenBudget, setIsUserOpenBudget] = useState(false)
   const [isUserOpenBudgetHover, setIsUserOpenBudgetHover] = useState(false)
+
   const [section1, setSection1] = useState(false)
   const [section2, setSection2] = useState(false)
   const [isCake, setIsCake] = useState(false)
@@ -68,6 +69,7 @@ const Budgets = ({ admin }) => {
   const [eventBudget, setEventBudget] = useState('')
   const [newBudget, setNewBudget] = useState(0)
   const [budget, setBudget] = useState([])
+  console.log("🚀 ~ budget:", budget)
   const [changedField, setChangeField] = useState('')
   const [indexBud, setIndexBud] = useState(false)
   const [teamBudget, setTeamBudget] = useState([])
@@ -87,6 +89,9 @@ const Budgets = ({ admin }) => {
   const [waitWorkers, setWaitWorkers] = useState([])
   const [searchTem, setSearchTerm] = useState('')
   const [teamBud, setTeamBud] = useState([])
+  const [team2, setTeam2] = useState([])
+
+  
   function removeByName(array, name) {
     return array.filter(item => item.name !== name);
   }
@@ -116,7 +121,7 @@ const Budgets = ({ admin }) => {
 
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
-    return parts[2] || null; // Returns the third part, or null if it doesn't exist
+    return parts[3] || null; // Returns the third part, or null if it doesn't exist
   }
   function removeMatchingObjects(arr1, arr2) {
     // Create a new array to store removed objects
@@ -140,7 +145,6 @@ const Budgets = ({ admin }) => {
   const updateBudget = async (data) => {
     const result = await axios.patch(`http://localhost:9020/budget/${getStringAfterSecondSlash(path)}`, { budget: data })
     if (result.data.acknowledge) {
-      console.log('hi')
       await handleUpdatemission()
     }
   }
@@ -725,9 +729,9 @@ const Budgets = ({ admin }) => {
                   onMouseEnter={() => { setGraphHover(true) }} onMouseLeave={() => { setGraphHover(false) }}>
 
                   <div className='flex flex-col  h-full items-center ' style={{ width: "20%", borderLeft: "1px solid #11111126", paddingLeft: "10px" }}>
-                    {(budget[0]?.y > 0 || budget.length > 1) &&
+                   
                       <div className='flex flex-col w-full h-full ' style={{ gap: '10px' }}>
-                        {budget?.length < 1 &&
+                        {budget[0]?.y === 0 &&
                           <div className='flex flex-col items-center'>
                             <Button variant='flat' onPress={onOpen} isDisabled={budget?.length > 1} isIconOnly color='primary'>
                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -737,7 +741,9 @@ const Budgets = ({ admin }) => {
                             <div style={{ fontSize: "12px" }}>   יצירת תקציב</div>
                           </div>
                         }
-                        <div className='flex flex-col items-center'>
+                         {(budget[0]?.y > 0 || budget.length > 1) &&
+                        <>
+  <div className='flex flex-col items-center'>
                           <Button onPress={onOpen2} isIconOnly variant='flat'
                             isDisabled={budget[0]?.y <= 0} color='success'>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -780,8 +786,10 @@ const Budgets = ({ admin }) => {
                           </Button>
                           <div style={{ fontSize: "12px" }}> {isCake ? "הצגה בטבלה" : "הצגה בגרף"}</div>
                         </div>
+                        </>}
+                      
                       </div>
-                    }
+                   
                   </div>
                   <div
                     className="ag-theme-quartz"

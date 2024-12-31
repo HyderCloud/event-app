@@ -18,7 +18,7 @@ eventsCollection = db.events
 requestCollection = db.request
 connectionsCollection = db.connections
 chatCollection = db.chat
-
+officeCollection= db.myoffice
 
 class EventsDB:
     def __init__(self):
@@ -347,6 +347,11 @@ class Store:
 
     def insert_store(self, doccument):
         result = storeCollection.insert_one(doccument)
+        inserted_id = result.inserted_id
+        return str(inserted_id)
+
+    def insert_office(self, doccument):
+        result = officeCollection.insert_one(doccument)
         inserted_id = result.inserted_id
         return str(inserted_id)
 

@@ -17,19 +17,21 @@ import DragAndDrop from '../DragImage';
 import { CalendarDate } from '@internationalized/date';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { useAdmin } from '../contexts/admin/AdminEventsProvider';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination'
 import 'swiper/css/effect-cards';
 import { EffectCards, Navigation, Pagination } from 'swiper/modules';
 import { parseTime } from '@internationalized/date';
 import { parseDate } from '@internationalized/date';
-const Tickets = ({ admin }) => {
+const Tickets = () => {
     const isFetch = useRef(false)
     const icon = <div >
         <svg width="20" height="4" viewBox="0 0 20 4" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="18" height="4" rx="2" fill="#FBB03B" />
         </svg> </div>
     const [roundForAi, setRoundForAi] = useState(1)
+    const { admin, setAdmin } = useAdmin();
     const [budgetdForAi, setBudgetdForAi] = useState([1, 100])
     const [groupSelected, setGroupSelected] = useState(["credit"]);
     const [ticketsAmout, setTicketsAmount] = useState('ללא הגבלה')
@@ -206,7 +208,7 @@ const Tickets = ({ admin }) => {
 
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
-        return parts[2] || null; // Returns the third part, or null if it doesn't exist
+        return parts[3] || null; // Returns the third part, or null if it doesn't exist
     }
     function removeElementAtIndex(arr, index) {
         // Check if the index is within bounds
@@ -271,8 +273,7 @@ const Tickets = ({ admin }) => {
         setRounds(result.data.rounds)
     }
     return (
-        <div className=''>
-
+        <div className='w-full bg-white' style={{borderRadius: "15px"}}>
             <Modal className='glass-background' style={{ color: 'white' }} isOpen={isOpen5} onOpenChange={onOpenChange5}>
                 <ModalContent>
                     {(onClose) => (
@@ -349,7 +350,7 @@ const Tickets = ({ admin }) => {
                     )}
                 </DrawerContent>
             </Drawer>
-            <div className=' flex  w-full  flex-col ' style={{ paddingTop: "20px" }}>
+            <div className=' flex  w-full  flex-col' style={{ paddingTop: "20px" }}>
                 <div className='flex flex-row w-full  justify-center bg-white' style={{
                     padding: "20px",
                     borderRadius: "15px"
@@ -720,9 +721,6 @@ const Tickets = ({ admin }) => {
                     </div>
 
                 </div>
-
-
-
                 <div>
                     <Modal size='4xl' className='event-modal-container' isOpen={isOpen2} onOpenChange={onOpenChange2} style={{ background: 'black' }}>
                         <ModalContent>

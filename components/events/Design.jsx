@@ -14,8 +14,10 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
-const Design = ({ admin }) => {
+import { useAdmin } from '../contexts/admin/AdminEventsProvider'
+const Design = () => {
     const [isLoadingSelect, setIsLoadingSelect] = useState(false)
+      const { admin, setAdmin } = useAdmin();
     const router = useRouter()
     const status_u = [{ text: "בתהליך", color: '#fbbc05' }, { text: "בהמתנה", color: '#71717A' }, { text: "סיום", color: '#34a853' }, { text: "ביטול", color: '#ae4335' }]
     const [cookie, setCookie, removeCookie] = useCookies('')
@@ -43,6 +45,7 @@ const Design = ({ admin }) => {
     const [missionConnection3, setMissionConnection3] = useState([])
     const [searchTem, setSearchTerm] = useState('')
     const [searchTem2, setSearchTerm2] = useState('')
+    
     const handleUpdateStatus = async (status, id) => {
         const result = await axios.patch(`http://localhost:9020/updatestatus/${getStringAfterSecondSlash(path)}`, { status: status, id: id })
         if (result?.data?.acknowledge) {
@@ -118,7 +121,7 @@ const Design = ({ admin }) => {
     }
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
-        return parts[2] || null; // Returns the third part, or null if it doesn't exist
+        return parts[3] || null; // Returns the third part, or null if it doesn't exist
     }
     useEffect(() => {
         getEvents()

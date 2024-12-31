@@ -2,16 +2,66 @@
     height: 100vh; 
     width: 100vw;  
     display: flex;
-    align-items: center; 
     justify-content: center; 
-    padding-top: 20px;
-    padding-left: 80px;
-    padding-right: 80px;
-    padding-bottom: 80px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 180px;
     box-sizing: border-box; 
     overflow-y: auto; 
     overflow-x: hidden;
-    background: #F8FAFC;
+    background: #ffffff;
+}
+
+.navbar-cube{
+    width: 40px;
+    height: 40px;
+    background-color: #F7F7F7;
+    border-radius: 6px;
+}
+.buttonSideBar2{
+    background-color: #2196F3;
+    color: #BFDEFF;
+    border-radius: 6px;
+    height: 45px;
+    width: 100%;
+    padding-right: 10px;
+    cursor: pointer;
+}
+.buttonSideBar{
+    background-color: #fff;
+    border-radius: 6px;
+    color: #9095A1;
+    height: 45px;
+    width: 100%;
+    padding-right: 10px;
+    cursor: pointer;
+}
+.buttonSideBar:hover{
+    background-color: #2196F3;
+    color: #BFDEFF;
+   
+}
+.buttonSidebar-sub{
+    background-color: #fff;
+    border-radius: 6px;
+    color: #9095A1;
+    height: 40px;
+    width: 100%;
+    padding-right: 10px;
+    cursor: pointer;
+}
+.buttonSidebar-sub2{
+    background-color: #F3F4F6;
+    color: #2196F3;
+    border-radius: 6px;
+    height: 40px;
+    width: 100%;
+    padding-right: 10px;
+    cursor: pointer;
+}
+.buttonSidebar-sub:hover{
+    background-color: #F3F4F6;
+    color: #2196F3;
 }
 
 .dashboard-container2{
@@ -56,7 +106,6 @@
       justify-content: center;
     
   }
-  
   
 .apply-coupon{
     position: absolute;

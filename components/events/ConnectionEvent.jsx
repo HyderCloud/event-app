@@ -60,7 +60,7 @@ const router = useRouter()
                   <div style={{height: '250px', cursor: 'pointer', background: `url(${item?.tubnail})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'}} onClick={()=>{
-                    router.push(`/${item?.name}/${item?.origin}`) }}
+                    router.push(`/events/main/${item?.origin}`) }}
                     alt="Woman listing to music"
                     className="object-cover"
 
@@ -71,7 +71,7 @@ const router = useRouter()
                 <CardFooter className="glass-background text-right items-center border-white/20 border-1  py-1 absolute before: shadow-small z-10"  style={{bottom: '30px', width: '240px', borderBottomRightRadius: '0'}}>
                 <div  className="text-right text-tiny w-full text-black"></div>
               <Button onClick={()=>{
-                    router.push(`/${item?.name}/${item?.origin}`) }} className="text-tiny text-white "  color="primary" radius="lg" size="sm">
+                    router.push(`/events/main/${item?.origin}`) }} className="text-tiny text-white "  color="primary" radius="lg" size="sm">
                 explore
               </Button>
               

@@ -1,7 +1,7 @@
 import React, { useCallback,useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-const DragAndDrop = ({label, onFileUpload}) => {
+const DragAndDrop = ({ onFileUpload}) => {
   const onDrop = useCallback((acceptedFiles) => {
     if (onFileUpload && acceptedFiles.length > 0) {
       const file = acceptedFiles[0]; // Get the first file in the array
@@ -26,23 +26,25 @@ const DragAndDrop = ({label, onFileUpload}) => {
     <div
       {...getRootProps()}
       style={{
+        height: "100%",
+        display: "flex",
         border: '2px dashed #0070f3',
-        padding: '50px',
+        justifyContent: "center",
         textAlign: 'center',
         borderRadius: '10px',
-        backgroundColor: isDragActive ? '#27272A' : '#27272A',
-        position: 'relative',
-        color: 'white',
-        
+        backgroundColor: isDragActive ? '#27272A' : 'white',
+        position: 'relative', 
+        padding: "20px",
+        cursor: "pointer"
       }}
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p className='opacity-70'>... שחרר את ה{label} כאן </p>
+        <p className='opacity-70'>... שחרר את התמונה כאן </p>
       ) : (
-        <div>
+        <div className='flex justify-center items-center flex-col'>
           <p className='opacity-70'>
-          גרור ושחרר את {label} ההפקה כאן, או לחץ כדי לבחור </p>
+          גרור ושחרר את תמונה ההפקה כאן, או לחץ כדי לבחור </p>
           <div className='h-5'></div>
           <button
             onClick={() => document.querySelector('input[type="file"]').click()}
@@ -55,7 +57,7 @@ const DragAndDrop = ({label, onFileUpload}) => {
               cursor: 'pointer',
             }}
           >
-             הוסף   {label}
+             הוסף   תמונה
           </button>
         </div>
       )}

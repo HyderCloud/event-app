@@ -14,8 +14,10 @@ import DragPerson from '../DragPerson';
 import { saveAs } from 'file-saver';
 import { parseDate } from "@internationalized/date";
 import { parseTime } from "@internationalized/date";
-export const Team = ({ admin2 }) => {
+import { useAdmin } from '../contexts/admin/AdminEventsProvider';
+export const Team = () => {
   const [columnType,setColumnType] = useState('')
+  const { admin, setAdmin } = useAdmin();
   const [isColumnOpen, setIsColumnOpen] = useState(false)
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -67,6 +69,7 @@ export const Team = ({ admin2 }) => {
   const [paymentDataAmount, setPaymentDataAmount] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("כרטיס אשראי")
   const [signature, setSignature] = useState('')
+  
   const [formData, setFormData] = useState({
     cancellationDate: null,
     offerExpiryDate: null,
@@ -813,7 +816,7 @@ export const Team = ({ admin2 }) => {
 
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
-    return parts[2] || null;
+    return parts[3] || null;
   }
   function removeElementAtIndex(arr, index) {
     // Check if the index is within bounds

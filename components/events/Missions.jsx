@@ -1,3 +1,4 @@
+"use client"
 import React, { useRef, useEffect, useState } from 'react';
 import { TimeInput, Card, CardHeader, CardBody, User, Link, Accordion, AccordionItem, Textarea, Spacer, CardFooter, Divider, DatePicker, Input, Switch, Calendar, CheckboxGroup, Tooltip, Checkbox, Select, SelectItem, RadioGroup, Radio, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
 import axios from 'axios';
@@ -11,8 +12,8 @@ import 'swiper/css/effect-fade'
 import { Navigation, Pagination, Virtual } from 'swiper/modules';
 import 'swiper/css/virtual';
 import Image from 'next/image';
-
-const Missions = ({ admin }) => {
+import { useAdmin } from '../contexts/admin/AdminEventsProvider';
+const Missions = () => {
   const [isLoadingSelect, setIsLoadingSelect] = useState(false)
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -35,7 +36,7 @@ const Missions = ({ admin }) => {
   const [endTime, setEndTime] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-
+  const { admin, setAdmin } = useAdmin();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [scale, setScale] = useState(1);
   const [items, setItems] = useState([
