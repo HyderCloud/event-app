@@ -32,7 +32,7 @@ const DragAndDrop = ({ onFileUpload}) => {
         justifyContent: "center",
         textAlign: 'center',
         borderRadius: '10px',
-        backgroundColor: isDragActive ? '#27272A' : 'white',
+        backgroundColor: isDragActive ? '#F3F4F6FF' : 'white',
         position: 'relative', 
         padding: "20px",
         cursor: "pointer"
