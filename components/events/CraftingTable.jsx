@@ -216,7 +216,9 @@ const CraftingTable = () => {
 
                 </div>
               </div>
+              {events.length > 0 &&
               <EventSlider data={events} store={data} />
+              }
             </div>
           </div>
         </div>
@@ -356,10 +358,6 @@ const CraftingTable = () => {
 
                                 </div>
                               </div>
-
-
-
-
                             </div>
                           }
                           {(cont2 || cont3) &&
