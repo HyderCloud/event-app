@@ -23,16 +23,10 @@
     background-color: #FFFFFFFF;
 }
 .container-addevent {
-    margin-top: 100px;
-    width: 190px;
-    height: 190px;
-    cursor: pointer;
-    background: #FFFFFFFF;
+    margin-top: 120px;
+    width: 230px;
+    background-color: #fff;
     border-radius: 16px;
-    border-width: 4px;
-    border-color: #4285F4FF;
-    border-style: solid;
-    box-shadow: 0px 0px 1px #171a1f, 0px 0px 2px #171a1f14;
     }
 
     .form-container-new-event{

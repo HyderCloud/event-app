@@ -216,7 +216,7 @@ const StoreSlide = ({ auth, office }) => {
                                 }
                                 {checkString11(pathName)&&
                                 <>
-                                <EventSlideBar/>
+                                <EventSlideBar craftingLink={`/myoffice/craftingTable/${decodedToken?.store_id}`}/>
                                 </>
                                 }
                             </div>}

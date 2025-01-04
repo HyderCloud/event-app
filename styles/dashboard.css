@@ -59,6 +59,13 @@
     padding-right: 10px;
     cursor: pointer;
 }
+.circle-container-step{
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    border: 3px solid #2196F3;
+
+}
 .buttonSidebar-sub2{
     background-color: #F3F4F6;
     color: #2196F3;

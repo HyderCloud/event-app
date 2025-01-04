@@ -13,10 +13,11 @@ import {
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
-const EventSlideBar = () => {
+const EventSlideBar = ({craftingLink}) => {
     const pathName = usePathname()
+    const router = useRouter()
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isHover, setIsHover] = useState('')
     const [events, setEvents] = useState([])
@@ -149,6 +150,12 @@ const EventSlideBar = () => {
                                                 <div style={{ fontSize: "11px", fontWeight: "bold", color: "#9095A1", paddingRight: "3px" }}>
                                                     פרוייקטים נוספים</div>
                                             </div>
+                                        }
+                                        {otherEvents.length === 1 &&
+                                        <div  className='w-full flex flex-col justify-center items-center gap-2' style={{height: "90px"}}>
+                                            <div style={{ fontWeight: "bolder", color: "#9095A1",}}>   אין עוד פרוייקטים נוספים</div>
+                                            <div><Button color='primary' onPress={()=>{router.push(craftingLink)}} style={{height: "30px"}}>להוספה</Button></div>
+                                        </div>
                                         }
                                     </>
                                 ))}
