@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
-import { TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar } from '@nextui-org/react'
+import { TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip } from '@nextui-org/react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import ReactQuill from 'react-quill';
@@ -13,6 +13,7 @@ import EventConnection from './ConnectionEvent';
 import { parseDate } from "@internationalized/date";
 import { parseTime } from "@internationalized/date";
 import DragAndDrop from '../DragImage'
+import SearchingCraftingTableMap from '../maps/SearchingCraftingTableMap'
 
 const CraftingTable = () => {
   const router = useRouter()
@@ -32,6 +33,7 @@ const CraftingTable = () => {
   const [cont5, setCont5] = useState(false)
   const [cont6, setCont6] = useState(false)
   const [cont7, setCont7] = useState(false)
+  const [isMapOpen, setIsMapOpen] = useState(false)
   const [isMyevents, setIsMyevents] = useState("events")
   const { isOpen: isOpen3, onOpen: onOpen3, onOpenChange: onOpenChange3 } = useDisclosure();
   const [dateRange, setDateRange] = useState('')
@@ -243,6 +245,7 @@ const CraftingTable = () => {
                         </div>
                         <div className='w-full h-full flex flex-row gap-4' style={{paddingLeft: "15%", paddingRight: "7%"}}>
                         <div className='h-full justify-center flex items-center'>
+                          <Tooltip isOpen placement='bottom' content='הבא'>
                             <Button variant='ll' isIconOnly className='bg-white'
                               style={{
                                 width: "60px", height: "60px", borderRadius: "100px",
@@ -283,6 +286,7 @@ const CraftingTable = () => {
                                 <div></div>
                             </div>
                             </Button>
+                          </Tooltip>
                           </div>
                           {(cont4 && !isTicketSale) &&
                             <div className='w-full h-full flex items-center'>
@@ -485,15 +489,27 @@ const CraftingTable = () => {
                                         <path d="M19.0001 13.4138C20.0494 13.4138 20.9001 12.5632 20.9001 11.5138C20.9001 10.4645 20.0494 9.61383 19.0001 9.61383C17.9508 9.61383 17.1001 10.4645 17.1001 11.5138C17.1001 12.5632 17.9508 13.4138 19.0001 13.4138Z" stroke="#171A1F" stroke-width="2.28" stroke-miterlimit="10" stroke-linecap="square" />
                                       </svg></Button>
                                     </div>
+                                    <Popover placement="bottom" isOpen={isMapOpen} onOpenChange={(open) => setIsMapOpen(open)} style={{width: "300px", height: "300px", overflowY: "auto"}}>
+                                    <PopoverTrigger>
                                     <Input label='מיקום האירוע' color='success' value={place} onChange={handlePlace} />
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                    <SearchingCraftingTableMap/>
+                                    </PopoverContent>
+                                    </Popover>
+
                                   </div>
                                 </div>
                               </div>
 
                             </div>
                           }
+                             
+                             
                             {!cont &&
                             <div className='h-full justify-center flex items-center'>
+                               <Tooltip isOpen placement='top' content='חזור'>
+                               
                               <Button variant='ll' isIconOnly className='bg-white'
                                 style={{
                                   width: "60px", height: "60px", borderRadius: "100px",
@@ -527,8 +543,10 @@ const CraftingTable = () => {
                                 <path d="M15.9999 21.5001C15.6025 21.4987 15.2216 21.3406 14.9399 21.0601L6.93993 13.0601C6.65656 12.7802 6.49707 12.3984 6.49707 12.0001C6.49707 11.6018 6.65656 11.22 6.93993 10.9401L14.9399 2.9401C15.3139 2.5388 15.877 2.37361 16.4085 2.50933C16.94 2.64506 17.355 3.06006 17.4907 3.59153C17.6264 4.12299 17.4612 4.68616 17.0599 5.0601L10.1199 12.0001L17.0599 18.9401C17.3433 19.22 17.5028 19.6018 17.5028 20.0001C17.5028 20.3984 17.3433 20.7802 17.0599 21.0601C16.7783 21.3406 16.3974 21.4987 15.9999 21.5001Z" fill="black" />
                               </svg>
                               </Button>
+                               </Tooltip>
                             </div>
                           }
+                           
                          
                         </div>
                       </div>
