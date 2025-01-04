@@ -121,7 +121,7 @@ const Design = () => {
     }
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
-        return parts[3] || null; // Returns the third part, or null if it doesn't exist
+        return parts[4] || null; // Returns the third part, or null if it doesn't exist
     }
     useEffect(() => {
         getEvents()

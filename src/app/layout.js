@@ -15,6 +15,8 @@ import { auth } from "./auth";
 import NavBar from "@/components/bars/NavBar";
 import StoreSlideMain from "@/components/bars/StoreSlideMain";
 import AdminEventsProvider from "@/components/contexts/admin/AdminEventsProvider";
+import EventsContextProvider from "@/components/contexts/events/EventsContextProvider";
+import EventsSwitcher from "@/components/contexts/events/EventsSwitcher";
 
 const nunito = localFont({
   src: "./fonts/Nunito-Italic-VariableFont_wght.ttf",
@@ -45,6 +47,8 @@ export default async function RootLayout({ children }) {
           ></script>
         </head>
       <body className={`flex justify-center  ${nunito_v.variable} ${nunito.variable}  antialiased`}>
+        <EventsSwitcher>
+        <EventsContextProvider>
         <AdminEventsProvider>
       <NextUIProvider className='w-full' locale="he-IL">
         <div className="flex flex-row w-full">
@@ -65,6 +69,8 @@ export default async function RootLayout({ children }) {
         </div>
       </NextUIProvider>
         </AdminEventsProvider>
+        </EventsContextProvider>
+        </EventsSwitcher>
       </body>
     </html>
   );

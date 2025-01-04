@@ -13,10 +13,10 @@ import EventConnection from './ConnectionEvent';
 import { parseDate } from "@internationalized/date";
 import { parseTime } from "@internationalized/date";
 import DragAndDrop from '../DragImage'
-import SearchingCraftingTableMap from '../maps/SearchingCraftingTableMap'
 
 const CraftingTable = () => {
   const router = useRouter()
+  const {admin, setAdmin} = useAdmin()
   const [isOpenType,setIsOpenType] = useState(false)
   const [evenAge, setEvenAge] = useState('')
   const [isPrivate, setIsPrivate] = useState(false)
@@ -61,6 +61,21 @@ const CraftingTable = () => {
     price: "",
     ticketQuantity: "",
   });
+
+  const handleCheckAdmin = () => {
+      let isAdminFound = false;
+      for (let index = 0; index < team?.length; index++) {
+        const item = team[index];
+        if (item?.key === decodedToken?.user_id) {
+          setAdmin(item.admin);
+          isAdminFound = true;
+          break; // Exit the loop if condition is true
+        }
+      }
+      if (!isAdminFound) {
+        setAdmin("visitor");
+      }}
+
 
   const handleInputChange = (key) => (e) => {
     setFormData({
@@ -140,7 +155,11 @@ const CraftingTable = () => {
     }
 
   }, [decodedTokens])
-
+  useEffect(()=>{
+    if(decodedToken){
+      handleCheckAdmin()
+    }
+  },[decodedToken, admin, team])
   const handleSentImages = async () => {
     try {
       const response = await axios.post("/api/generateimage",
@@ -222,7 +241,9 @@ const CraftingTable = () => {
 
                 </div>
               </div>
+              {events.length > 0 &&
               <EventSlider data={events} store={data} />
+              }
             </div>
           </div>
         </div>
@@ -369,10 +390,6 @@ const CraftingTable = () => {
 
                                 </div>
                               </div>
-
-
-
-
                             </div>
                           }
                           {(cont2 || cont3) &&

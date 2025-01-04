@@ -6,8 +6,12 @@ import { useJwt } from 'react-jwt'
 import { Tooltip, Button, Tab, Tabs } from "@nextui-org/react";
 import Link from 'next/link'
 import axios from 'axios'
+import EventSlideBar from './EventSlideBar'
+import { useEventName } from '../contexts/events/EventsContextProvider'
+import { useEventSwich } from '../contexts/events/EventsSwitcher'
 const StoreSlide = ({ auth, office }) => {
     const [cookie, setCookie, removeCookie] = useCookies('')
+
     const [storeType, setStoreType] = useState('')
     const { decodedToken, isExpired } = useJwt(cookie.store)
     const router = useRouter()
@@ -20,10 +24,7 @@ const StoreSlide = ({ auth, office }) => {
     }
 
     function checkString2(str) {
-        // Define the regular expression pattern
-        const regex = /^\/myoffice\/[^\/]+\/[^\/]+$/;
-    
-        // Test the string against the pattern
+        const regex = /^\/myoffice\/[^\/]+\/[^\/]+(\/.*)?$/
         return regex.test(str);
       }
       function checkString3(str) {
@@ -57,30 +58,27 @@ const StoreSlide = ({ auth, office }) => {
       function checkString7(str) {
         // Define the updated regular expression pattern
         const regex = /^\/myoffice\/customers\/[^\/]+$/;
-      
-        // Test the string against the updated pattern
         return regex.test(str);
       }
       function checkString8(str) {
         // Define the updated regular expression pattern
         const regex = /^\/myoffice\/marketing\/[^\/]+$/;
-      
-        // Test the string against the updated pattern
         return regex.test(str);
       }
 
       function checkString9(str) {
         // Define the updated regular expression pattern
         const regex = /^\/myoffice\/design\/[^\/]+$/;
-      
-        // Test the string against the updated pattern
         return regex.test(str);
       }
       function checkString10(str) {
         // Define the updated regular expression pattern
         const regex = /^\/myoffice\/analitycs\/[^\/]+$/;
-      
-        // Test the string against the updated pattern
+        return regex.test(str);
+      }
+      function checkString11(str) {
+        // Define the updated regular expression pattern
+        const regex = /\/myoffice\/project/;
         return regex.test(str);
       }
     useEffect(() => {
@@ -137,6 +135,7 @@ const StoreSlide = ({ auth, office }) => {
                                 </div>
                             </Link>
                             {( checkString2(pathName)) && <div className='flex flex-col gap-1 w-full' style={{ paddingLeft: "20px", paddingTop: "4px" }}>
+                            {checkString11(pathName) === false &&
                                 <Link href={`/myoffice/main/${decodedToken?.store_id}`} className={`${checkString3(pathName)?"buttonSidebar-sub2":"buttonSidebar-sub"} flex flex-row gap-2 items-center`}>
                                     <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11 7.5C11 9.433 9.433 11 7.5 11C5.567 11 4 9.433 4 7.5C4 5.567 5.567 4 7.5 4C9.433 4 11 5.567 11 7.5Z" fill="#9095A1" />
@@ -146,10 +145,13 @@ const StoreSlide = ({ auth, office }) => {
                                     </svg></div>
                                     <div style={{ fontSize: "15px", fontWeight: "bold", }} >ראשי</div>
                                 </Link>
+                            }
                                 <Link  href={`/myoffice/craftingTable/${decodedToken?.store_id}`} className={`${checkString4(pathName)?"buttonSidebar-sub2":"buttonSidebar-sub"} flex flex-row gap-2 items-center`}>
                                     <div></div>
                                     <div style={{ fontSize: "15px", fontWeight: "bold", }} >שולחן היצירה</div>
                                 </Link>
+                                {checkString11(pathName) === false &&
+                                <>
                                 <Link href={`/myoffice/team/${decodedToken?.store_id}`} className={`${checkString5(pathName)?"buttonSidebar-sub2":"buttonSidebar-sub"} flex flex-row gap-2 items-center`}>
                                     <div><svg width="24" height="24" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.43004 10.14C5.24769 10.14 4.29004 9.18237 4.29004 8.00002C4.29004 6.81767 5.24769 5.86002 6.43004 5.86002C7.61239 5.86002 8.57004 6.81767 8.57004 8.00002C8.57004 9.18237 7.61239 10.14 6.43004 10.14Z" stroke="#9095A1" stroke-width="2.568" stroke-miterlimit="10" stroke-linecap="round" />
@@ -210,6 +212,13 @@ const StoreSlide = ({ auth, office }) => {
                                     </div>
                                     <div style={{ fontSize: "15px", fontWeight: "bold", }} >אנליטיקה</div>
                                 </Link>
+                                </>
+                                }
+                                {checkString11(pathName)&&
+                                <>
+                                <EventSlideBar/>
+                                </>
+                                }
                             </div>}
                         </div>
                         <Link href={"/wallet"} className={`flex flex-row gap-2 items-center ${pathName === '/wallet'?  "buttonSideBar2":"buttonSideBar"}`} onMouseEnter={() => setIsHover("wallet")}

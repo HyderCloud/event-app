@@ -9,7 +9,6 @@ import 'swiper/css/effect-fade'
 import { Navigation, Pagination, Virtual } from 'swiper/modules';
 import 'swiper/css/virtual';
 import axios from 'axios';
-
 const EventSlider = ({ data, store }) => {
   const router = useRouter()
   const [team, setTeam] = useState([])
@@ -19,7 +18,7 @@ const EventSlider = ({ data, store }) => {
     console.log("🚀 ~ getEvents ~ getAllEvents.data?.team:", getAllEvents.data?.team)
   }
  useEffect(()=>{
-  if(data[0]?._id){
+  if(data?.length > 0){
     getEvents()
   }
  },[data])
@@ -46,7 +45,8 @@ const EventSlider = ({ data, store }) => {
                 </div>
               </div>
               <div className='w-full'>
-                <Button className='view-button-yellow' radius='full'>
+                <Button onPress={()=>{router.push(`/myoffice/projects/main/${item?._id}`)
+              }} className='view-button-yellow' radius='full'>
                   <div className='flex flex-row items-center gap-2'>
                     <div>
                       <svg width="24" height="24" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -104,3 +104,23 @@
     .type-events-holder:hover{
         background-color:#e7e9ed ;
     }
+
+
+    .main-event-container{
+        width: 100%;
+        border-radius: 40px 40px 0px 0px;
+        overflow-y: auto;
+        background: radial-gradient(farthest-side, #F0F6FEFF 0%, #F5F8FDFF 55.00000000000001%, #FAFAFBFF 100%);
+    }
+
+    .dashboard-main-event{
+        width: 35%;
+        height: 100%;
+    }
+
+    .workspace-container{
+        height: 300px;
+        padding: 10px;
+        border-radius: 16px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    }
