@@ -12,8 +12,10 @@ import EventSlider from './EventSlider';
 import EventConnection from './ConnectionEvent';
 import { parseDate } from "@internationalized/date";
 import { parseTime } from "@internationalized/date";
+import { useAdmin } from '../contexts/admin/AdminEventsProvider'
 const EventManneger = ({ }) => {
     const router = useRouter()
+    const {admin, setAdmin} = useAdmin()
     const [evenAge, setEvenAge] = useState('')
     const [isPrivate, setIsPrivate] = useState(false)
     const [evenType, setEvenType] = useState('')
@@ -54,7 +56,20 @@ const EventManneger = ({ }) => {
         price: "",
         ticketQuantity: "",
     });
-
+    const handleCheckAdmin = () => {
+        let isAdminFound = false;
+    
+        for (let index = 0; index < team?.length; index++) {
+          const item = team[index];
+          if (item?.key === decodedToken?.user_id) {
+            setAdmin(item.admin);
+            isAdminFound = true;
+            break; // Exit the loop if condition is true
+          }
+        }
+        if (!isAdminFound) {
+          setAdmin("visitor");
+        }}
     const handleInputChange = (key) => (e) => {
         setFormData({
             ...formData,
@@ -124,6 +139,11 @@ const EventManneger = ({ }) => {
 
         }
     }, [decodedToken])
+    useEffect(()=>{
+        if(decodedToken){
+          handleCheckAdmin()
+        }
+      },[decodedToken, admin, team])
     useEffect(() => {
 
         if (decodedTokens) {

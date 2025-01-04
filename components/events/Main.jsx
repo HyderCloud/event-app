@@ -1,5 +1,5 @@
 "use client"
-import { TimeInput, Divider, Input, Switch, Calendar, Select, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, User } from '@nextui-org/react'
+import { TimeInput, Divider, Input, Switch, Calendar, Select, Tab, Tabs, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, User } from '@nextui-org/react'
 import React, { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
@@ -10,6 +10,7 @@ import DragAndDrop from '../DragImage';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { motion } from 'framer-motion';
+import EventSlideBar from '../bars/EventSlideBar';
 const Main = () => {
     const [greeting, setGreeting] = useState('');
     const icon = <div >
@@ -27,7 +28,7 @@ const Main = () => {
     const [age, setAge] = useState('')
     const { decodedToken, isExpired } = useJwt(cookie.store)
     const { decodedToken: decodedToken2, isExpired: isExpired2 } = useJwt(cookie.user)
-  const { admin, setAdmin } = useAdmin();
+    const { admin, setAdmin } = useAdmin();
     const [type, setType] = useState('')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
@@ -45,7 +46,7 @@ const Main = () => {
 
     function getStringAfterSecondSlash(path) {
         const parts = path.split('/');
-        return parts[3] || null; // Returns the third part, or null if it doesn't exist
+        return parts[4] || null; // Returns the third part, or null if it doesn't exist
     }
     const getUser = async () => {
         const result = await axios.get(`http://localhost:9020/getuser/${decodedToken2?.email}`)
@@ -86,159 +87,67 @@ const Main = () => {
     }, [decodedToken2])
 
     return (
-        <div className='flex  w-full flex-col bg-white '
-            style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", padding: "30px" }}>
-            <div className='w-full flex flex-col gap-4'>
-
-                <div className='flex flex-row w-full gap-4' style={{
-                    background: '#252323',
-                    padding: '40px', borderRadius: '20px', boxShadow: "rgba(3, 102, 214, 0.3) 0px 0px 0px 3px"
-                }}>
-
-                    <div className="flex flex-col">
-                        <motion.h1
-                            className="greeting-text"
-                            initial={{ opacity: 0, y: -50 }} // התחל מ-opacity 0 ומיקום Y שלילי
-                            animate={{ opacity: 1, y: 0 }}   // הגדר את האנימציה לאופסיטי 1 ו-Y 0
-                            transition={{ duration: 1 }}
-                        >
-                            {greeting}
-                        </motion.h1>
+        <div className='dashboard-container flex flex-row' >
+            <div className='main-event-container ' style={{ padding: "20px" }}>
+                <div className='flex flex-col gap-3'>
+                    <div className='flex flex-row w-full gap-3' style={{ height: "400px" }}>
+                        <div className='flex flex-col w-full gap-4'>
+                            <div className='flex flex-row w-full gap-4 items-center' style={{ paddingTop: "30px" }}>
+                                <div className='flex'></div>
+                                <div className='flex' style={{ color: "#BDC1CA", fontWeight: "bold", fontSize: "44px" }}>ראשי</div>
+                            </div>
+                            <div className='w-full'>
+                                <Calendar calendarWidth="100%" />
+                            </div>
+                        </div>
+                        <div className='w-full h-full flex flex-col'>
+                            <div style={{ color: "#9095A1", fontWeight: "bold", fontSize: "32px" }}>המשימות שלי</div>
+                        </div>
                     </div>
-                    <div className='flex flex-col w-full' style={{ height: '200px' }}>
-                        <motion.div
-                            className="w-full flex flex-row gap-4 justify-end"
-                            initial={{ x: -100 }} // Start from the left, off-screen
-                            animate={{ x: 0 }} // Slide to original position
-                            transition={{ duration: 0.8, ease: 'easeOut' }} // Smooth transition
-                        >
-                            <motion.div
-                                className="flex"
-                                initial={{ scale: 0.8, x: -50 }} // Start slightly smaller and shifted to the left
-                                animate={{ scale: 1, x: 0 }}    // Grow to full size and slide into place
-                                transition={{ delay: 0.2, duration: 0.5 }} // Delay to create staggered animation
-                            >
-                                <Button isIconOnly color="secondary" radius="full" variant="flat">
-                                    AI
+                    <div className='workspace-container w-full flex flex-col bg-white'>
+                        <div style={{ color: "#9095A1", fontWeight: "bold", fontSize: "32px" }}>מרחבי העבודה שלי</div>
+                    </div>
+                    <div className='flex flex-col' style={{ height: "400px" }}>
+                        <div> <Tabs aria-label="Tabs colors" color={"warning"} variant='light'>
+                            <Tab key="photos" title="אפליקציות בשימוש" />
+                            <Tab key="music" title="האפליקציות שלי" />
+                            <Tab key="videos" title=" חפש ב- CraftStore" />
+                        </Tabs></div>
+                    </div>
+                </div>
+
+            </div>
+            <div className='dashboard-main-event flex flex-col'>
+                <div className='w-full h-full flex flex-col'>
+                    <div className='header-container-main flex flex-col items-center justify-center'>
+                        <div></div>
+                        <div className='flex flex-row justify-between w-full' style={{ paddingRight: "50%" }}>
+                            <div className='flex flex-col'>
+                                <div style={{ fontSize: "20px" }}>
+                                    {events?.name}
+                                </div>
+                                <div style={{ fontSize: "16px", color: "#9095A1", paddingRight: "2px" }}>
+                                    {decodedToken?.name}
+                                </div>
+                                <div>
+
+                                </div>
+                            </div> 
+                            <div className='flex items-center'>
+                                <Button style={{width: "22px", height: "26px"}} color='primary' variant='flat' isIconOnly><svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.75 13.86L15.75 17.81C15.75 18.6826 15.0426 19.39 14.17 19.39L4.68999 19.39C3.81738 19.39 3.10999 18.6826 3.10999 17.81L3.10999 9.91002C3.10999 9.03741 3.81738 8.33002 4.68999 8.33002L7.05999 8.33002" stroke="#4285F4" stroke-width="1.896" stroke-miterlimit="10" stroke-linecap="round" />
+                                    <path d="M8.61499 14.66C8.61499 10.297 12.1519 6.76001 16.515 6.76001L18.885 6.76001" stroke="#4285F4" stroke-width="1.896" stroke-miterlimit="10" stroke-linecap="round" />
+                                    <path d="M15.71 9.95001L18.87 6.79L15.71 3.63" stroke="#4285F4" stroke-width="1.896" stroke-miterlimit="10" stroke-linecap="square" />
+                                </svg>
                                 </Button>
-                            </motion.div>
-                            <motion.div
-                                className="flex"
-                                initial={{ scale: 0.8, x: -50 }} // Start slightly smaller and shifted to the left
-                                animate={{ scale: 1, x: 0 }}    // Grow to full size and slide into place
-                                transition={{ delay: 0.4, duration: 0.5 }} // Delay to create staggered animation
-                            >
-                                <Button isIconOnly color="success" radius="full" variant="flat">
-                                    AI
-                                </Button>
-                            </motion.div>
-                            <motion.div
-                                className="flex"
-                                initial={{ scale: 0.8, x: -50 }} // Start slightly smaller and shifted to the left
-                                animate={{ scale: 1, x: 0 }}    // Grow to full size and slide into place
-                                transition={{ delay: 0.6, duration: 0.5 }} // Delay to create staggered animation
-                            >
-                                <Button isIconOnly color="warning" radius="full" variant="flat">
-                                    AI
-                                </Button>
-                            </motion.div>
-                            <motion.div
-                                className="flex"
-                                initial={{ scale: 0.8, x: -50 }} // Start slightly smaller and shifted to the left
-                                animate={{ scale: 1, x: 0 }}    // Grow to full size and slide into place
-                                transition={{ delay: 0.8, duration: 0.5 }} // Delay to create staggered animation
-                            >
-                                <Button isIconOnly radius="full" variant="flat">
-                                    i
-                                </Button>
-                            </motion.div>
-                        </motion.div>
-                        <div
-                            className='flex flex-row w-full absolute flex-wrap'
-                            style={{ marginTop: '140px', gap: '40px', paddingLeft: '20%' }}
-                        >
-                            <motion.div
-                                className='bg-white flex'
-                                style={{
-                                    width: '200px',
-                                    height: '200px',
-                                    borderRadius: '15px',
-                                    boxShadow: "#fbbc05 0px 0px 0px 3px"
-                                }}
-                                initial={{ y: -500 }}  // Start from 500px above the screen
-                                animate={{ y: 0 }}     // Fall to the normal position
-                                transition={{
-                                    type: 'spring',
-                                    stiffness: 100,
-                                    damping: 25,  // Add damping for a natural "bounce" effect
-                                    duration: 1,
+                            </div>
 
-                                }}
-                            >
-                            </motion.div>
 
-                            <motion.div
-                                className='bg-white flex'
-                                style={{
-                                    width: '400px',
-                                    height: '200px',
-                                    borderRadius: '15px',
-                                    boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-                                }}
-                                initial={{ y: -500 }}  // Start from 500px above the screen
-                                animate={{ y: 0 }}     // Fall to the normal position
-                                transition={{
-                                    type: 'spring',
-                                    stiffness: 100,
-                                    damping: 25,  // Bounce effect for a more natural fall
-                                    duration: 1,
-
-                                }}
-                            ></motion.div>
-
-                            <motion.div
-                                className='bg-white flex'
-                                style={{
-                                    width: '300px',
-                                    height: '200px',
-                                    borderRadius: '15px',
-                                    boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-                                }}
-                                initial={{ y: -500 }}  // Start from 500px above the screen
-                                animate={{ y: 0 }}     // Fall to the normal position
-                                transition={{
-                                    type: 'spring',
-                                    stiffness: 100,
-                                    damping: 25,  // Bounce effect for a more natural fall
-                                    duration: 1,
-
-                                }}
-                            ></motion.div>
-
-                            <motion.div
-                                className='bg-white flex'
-                                style={{
-                                    width: '600px',
-                                    height: '300px',
-                                    borderRadius: '15px',
-                                    boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-                                }}
-                                initial={{ y: -500 }}  // Start from 500px above the screen
-                                animate={{ y: 0 }}     // Fall to the normal position
-                                transition={{
-                                    type: 'spring',
-                                    stiffness: 100,
-                                    damping: 25,  // Bounce effect for a more natural fall
-                                    duration: 1,
-
-                                }}
-                            ></motion.div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     )
 }
 

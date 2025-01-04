@@ -121,7 +121,7 @@ const Budgets = () => {
 
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
-    return parts[3] || null; // Returns the third part, or null if it doesn't exist
+    return parts[4] || null; // Returns the third part, or null if it doesn't exist
   }
   function removeMatchingObjects(arr1, arr2) {
     // Create a new array to store removed objects

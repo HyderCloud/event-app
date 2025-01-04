@@ -816,7 +816,7 @@ export const Team = () => {
 
   function getStringAfterSecondSlash(path) {
     const parts = path.split('/');
-    return parts[3] || null;
+    return parts[4] || null;
   }
   function removeElementAtIndex(arr, index) {
     // Check if the index is within bounds
