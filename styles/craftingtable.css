@@ -118,3 +118,16 @@
         border-radius: 16px;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     }
+
+    .background-add-event{
+        background-color: #e5edfe;
+    }
+    .mid-add-events-cont{
+        border: 2px solid #d0d8eb8f ;
+        padding:  20px;
+    }
+    .header-add-events-cont{
+        height: 120px;
+      padding: 10px 40px 10px 0px ;
+        width: 100%;
+    }

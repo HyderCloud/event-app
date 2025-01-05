@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip } from '@nextui-org/react'
+import { cn, TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip, Spacer } from '@nextui-org/react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import ReactQuill from 'react-quill';
@@ -226,77 +226,153 @@ const CraftingTable = () => {
   }
   if (params.get("isadd") === "true") {
     return (
-      <div className='flex flex-col dashboard-container' style={{paddingBottom: "100px", paddingLeft: "20px"}}>
-        <div className='w-full h-full' style={{backgroundColor: "#F3F4F6", borderRadius: "6px"}}>
-    
-            <div className='w-full flex flex-row justify-between' style={{paddingRight: "30px", paddingLeft: "30px"}}>
-           <div className='flex flex-row w-full' style={{paddingTop: "20px" }}>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: ""}}>
-                <div style={{fontWeight: "bolder"}}>הגדרות בסיס</div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>1</div>
-            </div>
-            <div style={{width: "70px", border: "2px dashed #2196F3"}}></div>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: "",}}>
-                <div style={{fontWeight: "bolder"}}>הגדרת זמנים </div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>2</div>
-            </div>
-            <div style={{width: "70px", border: "2px dashed #2196F3"}}></div>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: "",}}>
-                <div style={{fontWeight: "bolder"}}>  הגדרת פרופיל </div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>3</div>
-            </div>
-            <div style={{width: "70px", border: "2px dashed #2196F3"}}></div>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: "",}}>
-                <div style={{fontWeight: "bolder"}}>   כרטיס ראשוני </div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>4</div>
-            </div>
-            <div style={{width: "70px", border: "2px dashed #2196F3"}}></div>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: "",}}>
-                <div style={{fontWeight: "bolder"}}>   תוספים ואפליקציות </div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>5</div>
-            </div>
-            <div style={{width: "70px", border: "2px dashed #2196F3"}}></div>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2 justify-center ' style={{paddingRight: "",}}>
-                <div style={{fontWeight: "bolder"}}>   סיום וסיכום </div>
-                <div className='flex flex-row items-center gap-2' style={{paddingRight: "15px"}}>
-            <div className='circle-container-step flex justify-center items-center'>
-            <div style={{fontWeight: "bolder"}}>6</div>
-            </div>
-                </div>
-              </div>
-           </div>
-              <div className='flex  flex-row justify-center' style={{padding: "5px"}}>
-            <div style={{fontWeight: "bolder", width: "100px"}}>חזרה לשולחן היצירה</div>
-            <div><Button isIconOnly onPress={()=>{router.push(storeName)}} variant='ddd'>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14.22 6.42996H8.99999L9.36999 6.05996C9.7487 5.67054 9.89088 5.10866 9.74298 4.58599C9.59508 4.06331 9.17958 3.65924 8.65298 3.52599C8.12638 3.39273 7.5687 3.55054 7.18999 3.93996L4.26999 6.86996C4.1288 7.00997 4.01666 7.17649 3.93999 7.35996C3.80711 7.71114 3.80711 8.09877 3.93999 8.44996C4.01248 8.65334 4.12465 8.84029 4.26999 8.99996L7.18999 11.93C7.56956 12.3237 8.13238 12.4814 8.6613 12.3423C9.19022 12.2031 9.60255 11.7889 9.73922 11.2593C9.87589 10.7297 9.71552 10.1677 9.31999 9.78996L8.99999 9.42996H14.27C15.9268 9.42996 17.27 10.7731 17.27 12.43V14.6C17.2821 16.1802 16.0389 17.4853 14.46 17.55H6.45999C5.63157 17.55 4.95999 18.2215 4.95999 19.05C4.95999 19.8784 5.63157 20.55 6.45999 20.55H14.46C17.6762 20.4577 20.2322 17.8175 20.22 14.6V12.38C20.1925 9.08579 17.5143 6.42984 14.22 6.42996Z" fill="black" />
-              </svg>
-            </Button>
+      <div className='flex flex-col dashboard-container' style={{ paddingBottom: "100px", paddingLeft: "20px" }}>
+        <div className='w-full h-full flex flex-col background-add-event gap-4' style={{ borderRadius: "16px", padding: "20px" }}>
 
+          <div className='w-full flex flex-row justify-between' style={{ paddingRight: "30px", paddingLeft: "30px" }}>
+            <div className='flex flex-row w-full' style={{ paddingTop: "20px" }}>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "" }}>
+                <div style={{ fontWeight: "bolder" }}>הגדרות בסיס</div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>1</div>
+                  </div>
+                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                </div>
+              </div>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
+                <div style={{ fontWeight: "bolder" }}>הגדרת זמנים </div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>2</div>
+                  </div>
+                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                </div>
+              </div>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
+                <div style={{ fontWeight: "bolder" }}>  הגדרת פרופיל </div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>3</div>
+                  </div>
+                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                </div>
+              </div>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
+                <div style={{ fontWeight: "bolder" }}>   כרטיס ראשוני </div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>4</div>
+                  </div>
+                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                </div>
+              </div>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
+                <div style={{ fontWeight: "bolder" }}>   תוספים ואפליקציות </div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>5</div>
+                  </div>
+                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                </div>
+              </div>
+              <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
+                <div style={{ fontWeight: "bolder" }}>   סיום וסיכום </div>
+                <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
+                  <div className='circle-container-step flex justify-center items-center'>
+                    <div style={{ fontWeight: "bolder" }}>6</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='flex  flex-row justify-center' style={{ padding: "5px" }}>
+              <div style={{ fontWeight: "bolder", width: "100px" }}>חזרה לשולחן היצירה</div>
+              <div><Button isIconOnly onPress={() => { router.push(storeName) }} variant='ddd'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.22 6.42996H8.99999L9.36999 6.05996C9.7487 5.67054 9.89088 5.10866 9.74298 4.58599C9.59508 4.06331 9.17958 3.65924 8.65298 3.52599C8.12638 3.39273 7.5687 3.55054 7.18999 3.93996L4.26999 6.86996C4.1288 7.00997 4.01666 7.17649 3.93999 7.35996C3.80711 7.71114 3.80711 8.09877 3.93999 8.44996C4.01248 8.65334 4.12465 8.84029 4.26999 8.99996L7.18999 11.93C7.56956 12.3237 8.13238 12.4814 8.6613 12.3423C9.19022 12.2031 9.60255 11.7889 9.73922 11.2593C9.87589 10.7297 9.71552 10.1677 9.31999 9.78996L8.99999 9.42996H14.27C15.9268 9.42996 17.27 10.7731 17.27 12.43V14.6C17.2821 16.1802 16.0389 17.4853 14.46 17.55H6.45999C5.63157 17.55 4.95999 18.2215 4.95999 19.05C4.95999 19.8784 5.63157 20.55 6.45999 20.55H14.46C17.6762 20.4577 20.2322 17.8175 20.22 14.6V12.38C20.1925 9.08579 17.5143 6.42984 14.22 6.42996Z" fill="black" />
+                </svg>
+              </Button>
+
+              </div>
             </div>
           </div>
+          <div className='flex flex-col h-full w-full bg-white' style={{ borderRadius: "12px" }}>
+            <div className='header-add-events-cont'>
+              <div style={{ color: "#6E6F71", fontWeight: "bold", fontSize: "32px" }}>הגדרות בסיס</div>
             </div>
-
+            <div className='flex flex-row w-full h-full mid-add-events-cont'>
+              <div className='flex flex-col gap-2' style={{ width: "33%", padding: "25px" }}>
+                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>שם הפרוייקט</div>
+                <div style={{ width: "300px" }}>  <Input label='שם האירוע' variant='bordered' color='primary'
+                  description="יש להעניק שם לפרוייקט, ותוכלו לקבל עזרה באמצעות האפשרויות למטה."
+                  value={name} onChange={handleName} /></div>
+              </div>
+              <div className='flex flex-col gap-1' style={{ width: "33%", padding: "15px" }}>
+                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>פרטיות & כרטיסים </div>
+                  <div >{isTicketSale ? "הגדרה זו פעילה": "הגדרה זו אינה פעילה"}</div>
+                <div style={{boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",borderRadius: "6px"}}>
+                  <Switch isSelected={isTicketSale} onChange={() => { setIsTicketSale(!isTicketSale) }}
+                    classNames={{
+                      base: cn(
+                        "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
+                        "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                        "data-[selected=true]:border-primary",
+                      ),
+                      wrapper: "p-0 h-4 overflow-visible",
+                      thumb: cn(
+                        "w-6 h-6 border-2 shadow-lg",
+                        "group-data-[hover=true]:border-primary",
+                        //selected
+                        "group-data-[selected=true]:ms-6",
+                        // pressed
+                        "group-data-[pressed=true]:w-7",
+                        "group-data-[selected]:group-data-[pressed]:ms-4",
+                      ),
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <p className="text-medium">אפשר מכירת כרטיסים בפרוייקט</p>
+                      <p className="text-tiny text-default-400">
+                      קבל גישה מלאה למערכת מכירת כרטיסים מקוונת ולכל הפיצ'רים המתקדמים שלה.
+                      </p>
+                    </div>
+                  </Switch>
+                </div>
+                <div style={{height: "30px"}}></div>
+                <div >{isPrivate ?"פרוייקט זה ציבורי": "פרוייקט זה פרטי"}</div>
+                <div style={{boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",borderRadius: "6px"}}>
+                  
+                  <Switch isSelected={isPrivate} onChange={() => { setIsPrivate(!isPrivate) }}
+                    classNames={{
+                      base: cn(
+                        "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
+                        "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                        "data-[selected=true]:border-primary",
+                      ),
+                      wrapper: "p-0 h-4 overflow-visible",
+                      thumb: cn(
+                        "w-6 h-6 border-2 shadow-lg",
+                        "group-data-[hover=true]:border-primary",
+                        //selected
+                        "group-data-[selected=true]:ms-6",
+                        // pressed
+                        "group-data-[pressed=true]:w-7",
+                        "group-data-[selected]:group-data-[pressed]:ms-4",
+                      ),
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <p className="text-medium">   פרוייקט פרטי או ציבורי</p>
+                      <p className="text-tiny text-default-400">
+                   נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
+                      </p>
+                    </div>
+                  </Switch>
+                </div>
+              </div>
+            </div>
+            <div className='flex w-full h-full'></div>
+          </div>
         </div>
       </div>
     )
