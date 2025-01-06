@@ -227,10 +227,10 @@ const CraftingTable = () => {
   if (params.get("isadd") === "true") {
     return (
       <div className='flex flex-col dashboard-container' style={{ paddingBottom: "100px", paddingLeft: "20px" }}>
-        <div className='w-full h-full flex flex-col background-add-event gap-4' style={{ borderRadius: "16px", padding: "20px" }}>
+        <div className='w-full h-full flex flex-col background-add-event gap-2' style={{ borderRadius: "16px", padding: "10px" }}>
 
           <div className='w-full flex flex-row justify-between' style={{ paddingRight: "30px", paddingLeft: "30px" }}>
-            <div className='flex flex-row w-full' style={{ paddingTop: "20px" }}>
+            <div className='flex flex-row w-full' style={{ paddingTop: "5px" }}>
               <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "" }}>
                 <div style={{ fontWeight: "bolder" }}>הגדרות בסיס</div>
                 <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
@@ -241,7 +241,7 @@ const CraftingTable = () => {
                 </div>
               </div>
               <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
-                <div style={{ fontWeight: "bolder" }}>הגדרת זמנים </div>
+                <div style={{ fontWeight: "bolder" }}>  זמנים ומיקום</div>
                 <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
                   <div className='circle-container-step flex justify-center items-center'>
                     <div style={{ fontWeight: "bolder" }}>2</div>
@@ -309,8 +309,8 @@ const CraftingTable = () => {
               </div>
               <div className='flex flex-col gap-1' style={{ width: "33%", padding: "15px" }}>
                 <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>פרטיות & כרטיסים </div>
-                  <div >{isTicketSale ? "הגדרה זו פעילה": "הגדרה זו אינה פעילה"}</div>
-                <div style={{boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",borderRadius: "6px"}}>
+                <div >{isTicketSale ? "הגדרה זו פעילה" : "הגדרה זו אינה פעילה"}</div>
+                <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
                   <Switch isSelected={isTicketSale} onChange={() => { setIsTicketSale(!isTicketSale) }}
                     classNames={{
                       base: cn(
@@ -333,15 +333,15 @@ const CraftingTable = () => {
                     <div className="flex flex-col gap-1">
                       <p className="text-medium">אפשר מכירת כרטיסים בפרוייקט</p>
                       <p className="text-tiny text-default-400">
-                      קבל גישה מלאה למערכת מכירת כרטיסים מקוונת ולכל הפיצ'רים המתקדמים שלה.
+                        קבל גישה מלאה למערכת מכירת כרטיסים מקוונת ולכל הפיצ'רים המתקדמים שלה.
                       </p>
                     </div>
                   </Switch>
                 </div>
-                <div style={{height: "30px"}}></div>
-                <div >{isPrivate ?"פרוייקט זה ציבורי": "פרוייקט זה פרטי"}</div>
-                <div style={{boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",borderRadius: "6px"}}>
-                  
+                <div style={{ height: "20px" }}></div>
+                <div >{isPrivate ? "פרוייקט זה ציבורי" : "פרוייקט זה פרטי"}</div>
+                <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
+
                   <Switch isSelected={isPrivate} onChange={() => { setIsPrivate(!isPrivate) }}
                     classNames={{
                       base: cn(
@@ -364,11 +364,35 @@ const CraftingTable = () => {
                     <div className="flex flex-col gap-1">
                       <p className="text-medium">   פרוייקט פרטי או ציבורי</p>
                       <p className="text-tiny text-default-400">
-                   נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
+                        נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
                       </p>
                     </div>
                   </Switch>
                 </div>
+              </div>
+              <div className='flex flex-col gap-2' style={{ width: "33%", padding: "5px" }}>
+                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>סוג אירוע</div>
+                <div style={{ width: "300px" }}> <Popover  isOpen={isOpenType} onOpenChange={(open) => setIsOpenType(open)} style={{ width: "300px", height: "300px", overflowY: "auto" }}>
+                  <PopoverTrigger>
+                    <Input label='  סוג אירוע' variant='faded' value={typeContent} color='primary' placeholder='חפש אירוע' />
+                  </PopoverTrigger>
+                  <PopoverContent className='' style={{ padding: "10px" }}>
+                    {eventTypes.map((items) => (
+                      <div className='w-full cursor-pointer flex items-center type-events-holder'
+                        onClick={() => {
+                          setTypeContent(items)
+                          setIsOpenType(false)
+                        }}
+                        style={{ height: "40px", borderBottom: "1px solid #e7e9ed" }}>
+                        <div>
+                          {items}
+                        </div>
+                      </div>
+                    ))}
+
+
+                  </PopoverContent>
+                </Popover></div>
               </div>
             </div>
             <div className='flex w-full h-full'></div>
@@ -569,27 +593,7 @@ const CraftingTable = () => {
                                       צעד 3 - סוג
                                     </div>
                                     <div>
-                                      <Popover placement="bottom" isOpen={isOpenType} onOpenChange={(open) => setIsOpenType(open)} style={{ width: "300px", height: "300px", overflowY: "auto" }}>
-                                        <PopoverTrigger>
-                                          <Input label='  סוג אירוע' variant='bordered' value={typeContent} color='danger' placeholder='חפש אירוע' />
-                                        </PopoverTrigger>
-                                        <PopoverContent className='' style={{ padding: "10px" }}>
-                                          {eventTypes.map((items) => (
-                                            <div className='w-full cursor-pointer flex items-center type-events-holder'
-                                              onClick={() => {
-                                                setTypeContent(items)
-                                                setIsOpenType(false)
-                                              }}
-                                              style={{ height: "40px", borderBottom: "1px solid #e7e9ed" }}>
-                                              <div>
-                                                {items}
-                                              </div>
-                                            </div>
-                                          ))}
 
-
-                                        </PopoverContent>
-                                      </Popover>
 
                                     </div>
                                   </div>
