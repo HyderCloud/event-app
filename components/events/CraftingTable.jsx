@@ -1,5 +1,6 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useCallback } from 'react'
+import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { cn, TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip, Spacer, Alert } from '@nextui-org/react'
@@ -16,6 +17,29 @@ import SearchingCraftingTableMap from '../maps/SearchingCraftingTableMap'
 import DragAndDrop from '../DragImage'
 import { useAdmin } from '../contexts/admin/AdminEventsProvider'
 const CraftingTable = () => {
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0]; // Get the first file in the array
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        setTubnail(reader.result); // Save the Base64 string in the state
+      };
+      
+      reader.readAsDataURL(file); // Read the file as a Base64-encoded string
+    }
+  }, []);
+    
+  
+    
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+      accept: 'image/*', 
+      noClick: true, // Disable default click-to-upload behavior
+      noKeyboard: true,
+    });
+  
   const router = useRouter()
   const params = useSearchParams()
   const { admin, setAdmin } = useAdmin()
@@ -227,7 +251,8 @@ const CraftingTable = () => {
   if (params.get("isadd") === "true") {
     return (
       <div className='flex flex-col dashboard-container' style={{ paddingBottom: "100px", paddingLeft: "20px" }}>
-        <div className='w-full h-full flex flex-col background-add-event gap-2' style={{ borderRadius: "16px", padding: "10px" }}>
+        <div className='w-full h-full flex flex-col background-add-event gap-2 relative' {...getRootProps()} 
+         style={{ borderRadius: "16px", padding: "10px" }}>
 
           <div className='w-full flex flex-row justify-between' style={{ paddingRight: "30px", paddingLeft: "30px" }}>
             <div className='flex flex-row w-full' style={{ paddingTop: "5px" }}>
@@ -310,6 +335,7 @@ const CraftingTable = () => {
               <div style={{ color: "#6E6F71", fontWeight: "bold", fontSize: "32px" }}>
                 {cont && "   הגדרות בסיס"}
                 {cont2 && "    זמנים ומיקום"}
+                {cont3 && "    הגדרת פרופיל"}
               </div>
             </div>
             <div className='flex flex-row w-full h-full mid-add-events-cont'>
@@ -585,6 +611,70 @@ const CraftingTable = () => {
                   </div>
                 </>
               }
+              {cont3 &&
+              <>
+               <div className='flex flex-col gap-2 ' style={{ width: "50%", padding: "5px", paddingRight: "5%" }}> 
+               <div className='' style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}> תמונת נושא</div>
+               <div className='w-full flex flex-col items-center justify-center gap-3'>
+              <div className='flex flex-row w-full gap-2'>
+            <div className='flex  items-center justify-center w-full' style={{width: "420px"}}>
+            <div className='opacity-70' style={{fontSize: "16px",}}>העלא את תמונת הנושא לפרוייקט שלך באמצעות גרור ושחרר קבצים ישירות כאן. תוכל גם להשתמש ב- AI Crafty, כלי יצירת התמונות המתקדם, כדי להפיק תמונת נושא ייחודית ואומנותית בעזרת בינה מלאכותית.</div>
+            </div>
+              </div>
+              <div className='flex flex-row w-full '  style={{gap: "50px"}}>
+               <div  onClick={() => document.querySelector('input[type="file"]').click()}
+      style={{
+        height: "300px",
+        width: "200px",
+        display: "flex",
+        justifyContent: "center",
+        textAlign: 'center',
+        borderRadius: '6px',
+        backgroundColor: '#F4F5FC',
+        position: 'relative', 
+        padding: "20px",
+        cursor: "pointer"
+      }}
+    >
+      <input {...getInputProps()} />
+  
+        <div className='flex justify-center items-center flex-col gap-3'>
+        <div className='flex flex-col' style={{height: "70px", width: "70px"}}>
+        {tubnail && <img src={tubnail} alt="Uploaded" />} 
+             </div>
+        <p className='opacity-70' style={{fontSize: "12px", fontWeight: "bolder"}}>
+       תמונת הנושא הנוכחית</p>
+          <p className='opacity-70'>
+          גרור ושחרר את תמונה הנושא כאן, או לחץ כדי לבחור </p>
+          <div className='h-5'></div>
+          <button
+            
+            style={{
+              width: "100px",
+              height: "50px",
+              backgroundColor: '#0070f3',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+             הוסף   תמונה
+          </button>
+        </div>
+    </div>
+              <div className='h-full' style={{width: "3px",background: "#e5edfe"}}></div>
+    <div className='flex flex-col justify-center items-center gap-4' 
+    style={{width: "500px", height: "300px", backgroundColor: "#F4F5FC", borderRadius: "16px", padding: "30px"}}>
+      <div>Crafty LOGO</div>
+      <div className='bg-white w-full' style={{borderRadius: "16px"}}>
+<Input variant='bordered' description="הכנס את הטקסט שברצונך לשלוח ל-Crafty, הכלי המתקדם מבית AI, לקבלת תמונה מותאמת אישית." color='secondary' label="תסמס ל-Crafty"/>
+      </div>
+</div>
+              </div>
+               </div>
+               </div>
+              </>}
             </div>
             <div className='flex w-full flex-row' style={{ height: "15%", padding: "10px" }}>
                 <div>
