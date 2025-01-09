@@ -4,23 +4,9 @@ from bson import ObjectId
 mongodb_url = "mongodb://localhost:27017/eventride"
 client = pymongo.MongoClient(mongodb_url)
 db = client.get_database()
+collection = db.events
 
-
-def reverse_array(arr):
-    return arr[::-1]
-
-
-# Select a collection
-missionCollection = db.missions
-storeCollection = db.stores
-collectionUsers = db.users
-eventsCollection = db.events
-requestCollection = db.request
-connectionsCollection = db.connections
-chatCollection = db.chat
-officeCollection= db.myoffice
-
-class EventsDB:
+class Events:
     def __init__(self):
         pass
 
@@ -30,7 +16,7 @@ class EventsDB:
                 "type": type,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -42,7 +28,7 @@ class EventsDB:
                 "sellPage": sellPage,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -54,7 +40,7 @@ class EventsDB:
                 "promoPage": promoPage,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -66,7 +52,7 @@ class EventsDB:
                 "endPage": endPage,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -78,7 +64,7 @@ class EventsDB:
                 "ticket_settings": ticket_settings,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -90,7 +76,7 @@ class EventsDB:
                 "tickets": ticket_settings,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -102,7 +88,7 @@ class EventsDB:
                 "budget": budget,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -114,7 +100,7 @@ class EventsDB:
                 "rounds": rounds,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -126,7 +112,7 @@ class EventsDB:
                 "description": rounds,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -138,7 +124,7 @@ class EventsDB:
                 "cuppons": cuppons,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -150,7 +136,7 @@ class EventsDB:
                 "tubnail": img,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -162,7 +148,7 @@ class EventsDB:
                 "age": age,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -178,7 +164,7 @@ class EventsDB:
                 "place": place,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -190,26 +176,26 @@ class EventsDB:
                 "mode": mode,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
             print("No document found with the given email.")
 
     def insert_event(self, doccument):
-        result = eventsCollection.insert_one(doccument)
+        result = collection.insert_one(doccument)
         inserted_id = result.inserted_id
         return str(inserted_id)
 
     def get_event_by_id(self, id):
-        documents_list = eventsCollection.find_one({"_id": ObjectId(id)})
+        documents_list = collection.find_one({"_id": ObjectId(id)})
         if documents_list is None:
             return None
         documents_list["_id"] = str(documents_list["_id"])
         return documents_list
 
     def get_events_by_key(self, key):
-        documents_cursor = eventsCollection.find({"key": key})
+        documents_cursor = collection.find({"key": key})
         documents_list = []
         for document in documents_cursor:
             document["_id"] = str(document["_id"])  # Convert _id to a string
@@ -439,7 +425,7 @@ class Team:
         pass
 
     def get_team_by_profession(self, profession):
-        documents_cursor = eventsCollection.find({"profession": profession})
+        documents_cursor = collection.find({"profession": profession})
         documents_list = []
         for document in documents_cursor:
             document["_id"] = str(document["_id"])
@@ -464,7 +450,7 @@ class Team:
                 "roles": role,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -476,7 +462,7 @@ class Team:
                 "workers": doc,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -488,7 +474,7 @@ class Team:
                 "grid": doc,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
@@ -500,7 +486,7 @@ class Team:
                 "waiting": waiting,
             }
         }
-        result = eventsCollection.update_one({"_id": ObjectId(_id)}, new_data)
+        result = collection.update_one({"_id": ObjectId(_id)}, new_data)
         if result.matched_count > 0:
             return True
         else:
