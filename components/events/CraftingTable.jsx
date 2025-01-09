@@ -1,8 +1,9 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useCallback } from 'react'
+import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { cn, TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip, Spacer } from '@nextui-org/react'
+import { cn, TimeInput, Divider, Input, Switch, Popover, PopoverTrigger, PopoverContent, Calendar, Tab, Tabs, Select, Progress, SelectItem, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, RangeCalendar, Tooltip, Spacer, Alert } from '@nextui-org/react'
 import { useCookies } from 'react-cookie';
 import { useJwt } from 'react-jwt';
 import ReactQuill from 'react-quill';
@@ -16,6 +17,29 @@ import SearchingCraftingTableMap from '../maps/SearchingCraftingTableMap'
 import DragAndDrop from '../DragImage'
 import { useAdmin } from '../contexts/admin/AdminEventsProvider'
 const CraftingTable = () => {
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0]; // Get the first file in the array
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        setTubnail(reader.result); // Save the Base64 string in the state
+      };
+      
+      reader.readAsDataURL(file); // Read the file as a Base64-encoded string
+    }
+  }, []);
+    
+  
+    
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+      accept: 'image/*', 
+      noClick: true, // Disable default click-to-upload behavior
+      noKeyboard: true,
+    });
+  
   const router = useRouter()
   const params = useSearchParams()
   const { admin, setAdmin } = useAdmin()
@@ -227,26 +251,36 @@ const CraftingTable = () => {
   if (params.get("isadd") === "true") {
     return (
       <div className='flex flex-col dashboard-container' style={{ paddingBottom: "100px", paddingLeft: "20px" }}>
-        <div className='w-full h-full flex flex-col background-add-event gap-2' style={{ borderRadius: "16px", padding: "10px" }}>
+        <div className='w-full h-full flex flex-col background-add-event gap-2 relative' {...getRootProps()} 
+         style={{ borderRadius: "16px", padding: "10px" }}>
 
           <div className='w-full flex flex-row justify-between' style={{ paddingRight: "30px", paddingLeft: "30px" }}>
             <div className='flex flex-row w-full' style={{ paddingTop: "5px" }}>
               <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "" }}>
                 <div style={{ fontWeight: "bolder" }}>הגדרות בסיס</div>
                 <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
-                  <div className='circle-container-step flex justify-center items-center'>
-                    <div style={{ fontWeight: "bolder" }}>1</div>
+                  <div className='circle-container-step flex justify-center items-center' style={{ background: !cont && "#2196F3" }}>
+                    <div style={{ fontWeight: "bolder" }}>
+                      {cont ? 1 : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.20948 17.5602C9.04155 17.5676 8.87603 17.5183 8.73948 17.4202L4.24948 13.7102C3.9602 13.4541 3.91665 13.0186 4.14948 12.7102C4.40515 12.4223 4.83734 12.3748 5.14948 12.6002L9.14948 15.8602L19.6495 6.15024C19.96 5.91711 20.3971 5.95953 20.657 6.24802C20.9169 6.5365 20.9136 6.97565 20.6495 7.26024L9.71948 17.3602C9.58026 17.488 9.39843 17.5593 9.20948 17.5602Z" fill="white" />
+                      </svg>}
+
+                    </div>
                   </div>
-                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                  <div style={{ width: "120px", border: cont ? "2px dashed #2196F3" : "2px solid #2196F3" }}></div>
                 </div>
               </div>
               <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
                 <div style={{ fontWeight: "bolder" }}>  זמנים ומיקום</div>
                 <div className='flex flex-row items-center gap-2' style={{ paddingRight: "15px" }}>
-                  <div className='circle-container-step flex justify-center items-center'>
-                    <div style={{ fontWeight: "bolder" }}>2</div>
+                  <div className='circle-container-step flex justify-center items-center' style={{ background: (cont3) && "#2196F3" }}>
+                    <div style={{ fontWeight: "bolder" }}>
+                    {cont3 ?  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.20948 17.5602C9.04155 17.5676 8.87603 17.5183 8.73948 17.4202L4.24948 13.7102C3.9602 13.4541 3.91665 13.0186 4.14948 12.7102C4.40515 12.4223 4.83734 12.3748 5.14948 12.6002L9.14948 15.8602L19.6495 6.15024C19.96 5.91711 20.3971 5.95953 20.657 6.24802C20.9169 6.5365 20.9136 6.97565 20.6495 7.26024L9.71948 17.3602C9.58026 17.488 9.39843 17.5593 9.20948 17.5602Z" fill="white" />
+                      </svg>: 2}
+                    </div>
                   </div>
-                  <div style={{ width: "120px", border: "2px dashed #2196F3" }}></div>
+                  <div style={{ width: "120px", border: cont3 ? "2px solid #2196F3":"2px dashed #2196F3"  }}></div>
                 </div>
               </div>
               <div className='flex flex-col gap-2 justify-center ' style={{ paddingRight: "", }}>
@@ -298,104 +332,387 @@ const CraftingTable = () => {
           </div>
           <div className='flex flex-col h-full w-full bg-white' style={{ borderRadius: "12px" }}>
             <div className='header-add-events-cont'>
-              <div style={{ color: "#6E6F71", fontWeight: "bold", fontSize: "32px" }}>הגדרות בסיס</div>
+              <div style={{ color: "#6E6F71", fontWeight: "bold", fontSize: "32px" }}>
+                {cont && "   הגדרות בסיס"}
+                {cont2 && "    זמנים ומיקום"}
+                {cont3 && "    הגדרת פרופיל"}
+              </div>
             </div>
             <div className='flex flex-row w-full h-full mid-add-events-cont'>
-              <div className='flex flex-col gap-2' style={{ width: "33%", padding: "25px" }}>
-                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>שם הפרוייקט</div>
-                <div style={{ width: "300px" }}>  <Input label='שם האירוע' variant='bordered' color='primary'
-                  description="יש להעניק שם לפרוייקט, ותוכלו לקבל עזרה באמצעות האפשרויות למטה."
-                  value={name} onChange={handleName} /></div>
-              </div>
-              <div className='flex flex-col gap-1' style={{ width: "33%", padding: "15px" }}>
-                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>פרטיות & כרטיסים </div>
-                <div >{isTicketSale ? "הגדרה זו פעילה" : "הגדרה זו אינה פעילה"}</div>
-                <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
-                  <Switch isSelected={isTicketSale} onChange={() => { setIsTicketSale(!isTicketSale) }}
-                    classNames={{
-                      base: cn(
-                        "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
-                        "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-                        "data-[selected=true]:border-primary",
-                      ),
-                      wrapper: "p-0 h-4 overflow-visible",
-                      thumb: cn(
-                        "w-6 h-6 border-2 shadow-lg",
-                        "group-data-[hover=true]:border-primary",
-                        //selected
-                        "group-data-[selected=true]:ms-6",
-                        // pressed
-                        "group-data-[pressed=true]:w-7",
-                        "group-data-[selected]:group-data-[pressed]:ms-4",
-                      ),
-                    }}
-                  >
-                    <div className="flex flex-col gap-1">
-                      <p className="text-medium">אפשר מכירת כרטיסים בפרוייקט</p>
-                      <p className="text-tiny text-default-400">
-                        קבל גישה מלאה למערכת מכירת כרטיסים מקוונת ולכל הפיצ'רים המתקדמים שלה.
-                      </p>
-                    </div>
-                  </Switch>
-                </div>
-                <div style={{ height: "20px" }}></div>
-                <div >{isPrivate ? "פרוייקט זה ציבורי" : "פרוייקט זה פרטי"}</div>
-                <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
-
-                  <Switch isSelected={isPrivate} onChange={() => { setIsPrivate(!isPrivate) }}
-                    classNames={{
-                      base: cn(
-                        "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
-                        "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-                        "data-[selected=true]:border-primary",
-                      ),
-                      wrapper: "p-0 h-4 overflow-visible",
-                      thumb: cn(
-                        "w-6 h-6 border-2 shadow-lg",
-                        "group-data-[hover=true]:border-primary",
-                        //selected
-                        "group-data-[selected=true]:ms-6",
-                        // pressed
-                        "group-data-[pressed=true]:w-7",
-                        "group-data-[selected]:group-data-[pressed]:ms-4",
-                      ),
-                    }}
-                  >
-                    <div className="flex flex-col gap-1">
-                      <p className="text-medium">   פרוייקט פרטי או ציבורי</p>
-                      <p className="text-tiny text-default-400">
-                        נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
-                      </p>
-                    </div>
-                  </Switch>
-                </div>
-              </div>
-              <div className='flex flex-col gap-2' style={{ width: "33%", padding: "5px" }}>
-                <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>סוג אירוע</div>
-                <div style={{ width: "300px" }}> <Popover  isOpen={isOpenType} onOpenChange={(open) => setIsOpenType(open)} style={{ width: "300px", height: "300px", overflowY: "auto" }}>
-                  <PopoverTrigger>
-                    <Input label='  סוג אירוע' variant='faded' value={typeContent} color='primary' placeholder='חפש אירוע' />
-                  </PopoverTrigger>
-                  <PopoverContent className='' style={{ padding: "10px" }}>
-                    {eventTypes.map((items) => (
-                      <div className='w-full cursor-pointer flex items-center type-events-holder'
-                        onClick={() => {
-                          setTypeContent(items)
-                          setIsOpenType(false)
+              {cont &&
+                <>
+                  <div className='flex flex-col gap-2' style={{ width: "33%", padding: "25px" }}>
+                    <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>שם הפרוייקט</div>
+                    <div style={{ width: "300px" }}>  <Input label='שם האירוע' variant='bordered' color='primary'
+                      description="יש להעניק שם לפרוייקט, ותוכלו לקבל עזרה באמצעות האפשרויות למטה."
+                      value={name} onChange={handleName} /></div>
+                  </div>
+                  <div className='flex flex-col gap-1' style={{ width: "33%", padding: "15px" }}>
+                    <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>פרטיות & כרטיסים </div>
+                    <div >{isTicketSale ? "הגדרה זו פעילה" : "הגדרה זו אינה פעילה"}</div>
+                    <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
+                      <Switch isSelected={isTicketSale} onChange={() => { setIsTicketSale(!isTicketSale) }}
+                        classNames={{
+                          base: cn(
+                            "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
+                            "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                            "data-[selected=true]:border-primary",
+                          ),
+                          wrapper: "p-0 h-4 overflow-visible",
+                          thumb: cn(
+                            "w-6 h-6 border-2 shadow-lg",
+                            "group-data-[hover=true]:border-primary",
+                            //selected
+                            "group-data-[selected=true]:ms-6",
+                            // pressed
+                            "group-data-[pressed=true]:w-7",
+                            "group-data-[selected]:group-data-[pressed]:ms-4",
+                          ),
                         }}
-                        style={{ height: "40px", borderBottom: "1px solid #e7e9ed" }}>
-                        <div>
-                          {items}
+                      >
+                        <div className="flex flex-col gap-1">
+                          <p className="text-medium">אפשר מכירת כרטיסים בפרוייקט</p>
+                          <p className="text-tiny text-default-400">
+                            קבל גישה מלאה למערכת מכירת כרטיסים מקוונת ולכל הפיצ'רים המתקדמים שלה.
+                          </p>
+                        </div>
+                      </Switch>
+                    </div>
+                    <div style={{ height: "20px" }}></div>
+                    <div >{isPrivate ? "פרוייקט זה ציבורי" : "פרוייקט זה פרטי"}</div>
+                    <div style={{ boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px" }}>
+
+                      <Switch isSelected={isPrivate} onChange={() => { setIsPrivate(!isPrivate) }}
+                        classNames={{
+                          base: cn(
+                            "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
+                            "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                            "data-[selected=true]:border-primary",
+                          ),
+                          wrapper: "p-0 h-4 overflow-visible",
+                          thumb: cn(
+                            "w-6 h-6 border-2 shadow-lg",
+                            "group-data-[hover=true]:border-primary",
+                            //selected
+                            "group-data-[selected=true]:ms-6",
+                            // pressed
+                            "group-data-[pressed=true]:w-7",
+                            "group-data-[selected]:group-data-[pressed]:ms-4",
+                          ),
+                        }}
+                      >
+                        <div className="flex flex-col gap-1">
+                          <p className="text-medium">   פרוייקט פרטי או ציבורי</p>
+                          <p className="text-tiny text-default-400">
+                            נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
+                          </p>
+                        </div>
+                      </Switch>
+                    </div>
+                  </div>
+                  <div className='flex flex-col gap-2 ' style={{ width: "33%", padding: "5px", paddingRight: "5%" }}>
+                    <div className='' style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>סוג אירוע</div>
+                    <div style={{ width: "300px" }}> <Popover isOpen={isOpenType} onOpenChange={(open) => setIsOpenType(open)} style={{ width: "300px", height: "300px", overflowY: "auto" }}>
+                      <PopoverTrigger>
+                        <Input label='  סוג אירוע' variant='faded' value={typeContent} color='primary' description="יש לבחור סוג אירוע מתאים." placeholder='חפש אירוע' />
+                      </PopoverTrigger>
+                      <PopoverContent className='' style={{ padding: "10px" }}>
+                        {eventTypes.map((items) => (
+                          <div className='w-full cursor-pointer flex items-center type-events-holder'
+                            onClick={() => {
+                              setTypeContent(items)
+                              setIsOpenType(false)
+                            }}
+                            style={{ height: "40px", borderBottom: "1px solid #e7e9ed" }}>
+                            <div>
+                              {items}
+                            </div>
+                          </div>
+                        ))}
+
+
+                      </PopoverContent>
+                    </Popover></div>
+                    <div className=' flex items-center' style={{ paddingTop: "10%" }}>
+                      <Button color='primary' style={{ width: "300px", }}
+                        onPress={() => {
+                          if (cont) {
+                            setCont1(false)
+
+                            setCont2(true)
+                          } else if (cont2) {
+
+                            setCont2(false)
+                            setCont3(true)
+                          } else if (cont3) {
+                            if (isTicketSale) {
+
+                            } else {
+
+                            }
+                            setCont3(false)
+                            setCont4(true)
+                          } else if (cont4 && isTicketSale) {
+                            setCont4(false)
+                            setCont5(true)
+                          } else if (cont4 && !isTicketSale) {
+
+                          }
+                          else if (cont5) {
+                            handleAddEvent()
+                          }
+                        }}>
+                        הבא
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              }
+              {cont2 &&
+                <>
+                  <div className='flex flex-col gap-4' style={{ width: "50%", padding: "25px" }}>
+                    <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>תאריך ושעה </div>
+                    <div className='w-full flex gap-4  h-full flex-row' >
+                      <div style={{ width: "300px" }}> <DateRangePicker calendarProps={{
+                        classNames: {
+                          base: "bg-background",
+                          headerWrapper: "pt-4 bg-background",
+                          prevButton: "border-1 border-default-200 rounded-small",
+                          nextButton: "border-1 border-default-200 rounded-small",
+                          gridHeader: "bg-background shadow-none border-b-1 border-default-100",
+                          cellButton: [
+                            "data-[today=true]:bg-default-100 data-[selected=true]:bg-transparent rounded-small",
+                            // start (pseudo)
+                            "data-[range-start=true]:before:rounded-l-small",
+                            "data-[selection-start=true]:before:rounded-l-small",
+                            // end (pseudo)
+                            "data-[range-end=true]:before:rounded-r-small",
+                            "data-[selection-end=true]:before:rounded-r-small",
+                            // start (selected)
+                            "data-[selected=true]:data-[selection-start=true]:data-[range-selection=true]:rounded-small",
+                            // end (selected)
+                            "data-[selected=true]:data-[selection-end=true]:data-[range-selection=true]:rounded-small",
+                          ],
+                        },
+                      }}
+                        isOpen variant='bordered' color='primary' label='תאריכי האירוע'
+                        value={dateRange !== '' &&
+                          parseDateRange(dateRange)
+                        }
+                        onChange={handleDateRange} /></div>
+                      <div className='flex flex-col gap-4 items-center justify-center' style={{ width: "600px" }}>
+                        <div className='flex flex-col gap-1' style={{ width: "300px" }}>
+                          <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "16px" }}>יש לבחור שעת התחלה</div>
+                          <TimeInput hourCycle={24} label='שעת התחלה' variant='faded'
+                            description="שדה זה מאפשר לך לבחור את שעת ההתחלה של הפרוייקט. בחר שעה בטווח של 24 שעות."
+                            onChange={handleStartTime} />
+                        </div>
+                        <div className='flex flex-col gap1' style={{ width: "300px" }}>
+                          <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "16px" }}>יש לבחור שעת סיום</div>
+                          <TimeInput color='primary' variant='bordered' hourCycle={24} label='שעת סיום' onChange={handleEndTime}
+                            description="שדה זה מאפשר לך לבחור את שעת סיום של הפרוייקט. בחר שעה בטווח של 24 שעות." />
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  </div>
+                  <div className='h-full' style={{ width: "3px", paddingTop: "3%", paddingBottom: "3%" }}>
+                    <div className='w-full h-full' style={{ backgroundColor: "#e5edfe" }}></div>
+                  </div>
+                  <div className='flex flex-col gap-4' style={{ width: "50%", padding: "25px" }}>
+                    <div style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}>מיקום</div>
+                    <div className='flex flex-col  items-center w-full'>
 
+                      <div style={{
+                        boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px", borderRadius: "6px",
+                        width: "450px"
+                      }}>
 
-                  </PopoverContent>
-                </Popover></div>
-              </div>
+                        <Switch isSelected={isPrivate} onChange={() => { setIsPrivate(!isPrivate) }}
+                          classNames={{
+                            base: cn(
+                              "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
+                              "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                              "data-[selected=true]:border-primary",
+                            ),
+                            wrapper: "p-0 h-4 overflow-visible",
+                            thumb: cn(
+                              "w-6 h-6 border-2 shadow-lg",
+                              "group-data-[hover=true]:border-primary",
+                              //selected
+                              "group-data-[selected=true]:ms-6",
+                              // pressed
+                              "group-data-[pressed=true]:w-7",
+                              "group-data-[selected]:group-data-[pressed]:ms-4",
+                            ),
+                          }}
+                        >
+                          <div className="flex flex-col gap-1 ">
+
+                            <p className="text-medium">   פרוייקט פרטי או ציבורי</p>
+                            <p className="text-tiny text-default-400">
+                              נהל פרוייקטים פרטיים שרק אתה יכול לראות, או פרוייקטים ציבוריים שכולם יכולים לגשת אליהם.
+                            </p>
+                            <div >{isPrivate ? "פרוייקט זה ציבורי" : "פרוייקט זה פרטי"}</div>
+                          </div>
+                        </Switch>
+
+                        {!isPrivate &&
+                          <div className='flex flex-col gap-4'>
+                            <div style={{ paddingLeft: "8%", paddingRight: "8%" }}>
+                              <Input
+                                label="מיקום"
+                                color='primary'
+                                variant='bordered'
+                                description="מלא את פרטי המיקום של הפרוייקט. אם מדובר בפרוייקט פרטי, המיקום לא יופיע במפת האירועים ולכן תוכל להזין מיקום פקטיבי."
+                                placeholder='בחר או הזן מיקום'
+                              />
+                            </div>
+                            <Alert>
+                              אם הפרוייקט פרטי, הוא לא יופיע במפת האירועים. לכן, ניתן להזין מיקום פקטיבי.
+                            </Alert>
+                          </div>
+                        }
+                
+                      </div>
+                      <div className=' flex items-center' style={{ paddingTop: "10%" }}>
+                      <Button color='primary' style={{ width: "300px", }}
+                        onPress={() => {
+                          if (cont) {
+                            setCont1(false)
+
+                            setCont2(true)
+                          } else if (cont2) {
+
+                            setCont2(false)
+                            setCont3(true)
+                          } else if (cont3) {
+                            if (isTicketSale) {
+
+                            } else {
+
+                            }
+                            setCont3(false)
+                            setCont4(true)
+                          } else if (cont4 && isTicketSale) {
+                            setCont4(false)
+                            setCont5(true)
+                          } else if (cont4 && !isTicketSale) {
+
+                          }
+                          else if (cont5) {
+                            handleAddEvent()
+                          }
+                        }}>
+                        הבא
+                      </Button>
+                    </div>
+                    </div>
+
+                  </div>
+                </>
+              }
+              {cont3 &&
+              <>
+               <div className='flex flex-col gap-2 ' style={{ width: "50%", padding: "5px", paddingRight: "5%" }}> 
+               <div className='' style={{ color: "#6E6F71", fontWeight: "bolder", fontSize: "20px" }}> תמונת נושא</div>
+               <div className='w-full flex flex-col items-center justify-center gap-3'>
+              <div className='flex flex-row w-full gap-2'>
+            <div className='flex  items-center justify-center w-full' style={{width: "420px"}}>
+            <div className='opacity-70' style={{fontSize: "16px",}}>העלא את תמונת הנושא לפרוייקט שלך באמצעות גרור ושחרר קבצים ישירות כאן. תוכל גם להשתמש ב- AI Crafty, כלי יצירת התמונות המתקדם, כדי להפיק תמונת נושא ייחודית ואומנותית בעזרת בינה מלאכותית.</div>
             </div>
-            <div className='flex w-full h-full'></div>
+              </div>
+              <div className='flex flex-row w-full '  style={{gap: "50px"}}>
+               <div  onClick={() => document.querySelector('input[type="file"]').click()}
+      style={{
+        height: "300px",
+        width: "200px",
+        display: "flex",
+        justifyContent: "center",
+        textAlign: 'center',
+        borderRadius: '6px',
+        backgroundColor: '#F4F5FC',
+        position: 'relative', 
+        padding: "20px",
+        cursor: "pointer"
+      }}
+    >
+      <input {...getInputProps()} />
+  
+        <div className='flex justify-center items-center flex-col gap-3'>
+        <div className='flex flex-col' style={{height: "70px", width: "70px"}}>
+        {tubnail && <img src={tubnail} alt="Uploaded" />} 
+             </div>
+        <p className='opacity-70' style={{fontSize: "12px", fontWeight: "bolder"}}>
+       תמונת הנושא הנוכחית</p>
+          <p className='opacity-70'>
+          גרור ושחרר את תמונה הנושא כאן, או לחץ כדי לבחור </p>
+          <div className='h-5'></div>
+          <button
+            
+            style={{
+              width: "100px",
+              height: "50px",
+              backgroundColor: '#0070f3',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+             הוסף   תמונה
+          </button>
+        </div>
+    </div>
+              <div className='h-full' style={{width: "3px",background: "#e5edfe"}}></div>
+    <div className='flex flex-col justify-center items-center gap-4' 
+    style={{width: "500px", height: "300px", backgroundColor: "#F4F5FC", borderRadius: "16px", padding: "30px"}}>
+      <div>Crafty LOGO</div>
+      <div className='bg-white w-full' style={{borderRadius: "16px"}}>
+<Input variant='bordered' description="הכנס את הטקסט שברצונך לשלוח ל-Crafty, הכלי המתקדם מבית AI, לקבלת תמונה מותאמת אישית." color='secondary' label="תסמס ל-Crafty"/>
+      </div>
+</div>
+              </div>
+               </div>
+               </div>
+              </>}
+            </div>
+            <div className='flex w-full flex-row' style={{ height: "15%", padding: "10px" }}>
+                <div>
+                {!cont &&
+                              <div className='h-full justify-center flex items-center'>
+                                  <Button variant='flat' color='danger' 
+                                    onPress={() => {
+                                      if (cont2) {
+                                        setCont1(true)
+                                        setCont2(false)
+                                 
+                                      } else if (cont3) {
+                                 
+                                        setCont2(true)
+                                        setCont3(false)
+                                      } else if (cont4) {
+                                        if (isTicketSale) {
+                                         
+                                        } else {
+                                    
+                                        }
+                                        setCont3(true)
+                                        setCont4(false)
+                                      } else if (cont5) {
+                                        setCont4(true)
+                                        setCont5(false)
+                                      } else if (cont6) {
+                                        setCont5(true)
+                                        setCont6(false)
+                                      }
+                                    }}>
+                                חזור
+                                  </Button>
+                        
+                              </div>
+                            }
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -451,46 +768,7 @@ const CraftingTable = () => {
                           <div className='w-full h-full flex flex-row gap-4' style={{ paddingLeft: "15%", paddingRight: "7%" }}>
                             <div className='h-full justify-center flex items-center'>
                               <Tooltip isOpen placement='bottom' content='הבא'>
-                                <Button variant='ll' isIconOnly className='bg-white'
-                                  style={{
-                                    width: "60px", height: "60px", borderRadius: "100px",
-                                    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
-                                  }}
-                                  onPress={() => {
-                                    if (cont) {
-                                      setCont1(false)
-                                      setProgress(progress + 25)
-                                      setCont2(true)
-                                    } else if (cont2) {
-                                      setProgress(progress + 25)
-                                      setCont2(false)
-                                      setCont3(true)
-                                    } else if (cont3) {
-                                      if (isTicketSale) {
-                                        setProgress(progress + 15)
-                                      } else {
-                                        setProgress(progress + 40)
-                                      }
-                                      setCont3(false)
-                                      setCont4(true)
-                                    } else if (cont4 && isTicketSale) {
-                                      setCont4(false)
-                                      setCont5(true)
-                                    } else if (cont4 && !isTicketSale) {
 
-                                    }
-                                    else if (cont5) {
-                                      handleAddEvent()
-                                    }
-                                  }}>
-                                  <div className='flex flex-row'>
-
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21045 20.2104C6.21045 19.8062 6.36413 19.4019 6.67255 19.0935L13.9778 11.7893L6.67255 4.48508C6.05676 3.86824 6.05676 2.86824 6.67255 2.25139C7.2894 1.6356 8.2894 1.6356 8.90624 2.25139L17.3273 10.6725C17.9431 11.2893 17.9431 12.2893 17.3273 12.9061L8.90624 21.3272C8.2894 21.943 7.2894 21.943 6.67255 21.3272C6.36413 21.0188 6.21045 20.6146 6.21045 20.2104Z" fill="black" />
-                                    </svg>
-                                    <div></div>
-                                  </div>
-                                </Button>
                               </Tooltip>
                             </div>
                             {(cont4 && !isTicketSale) &&
@@ -613,11 +891,7 @@ const CraftingTable = () => {
                                       צעד 4 - זמן
                                     </div>
                                     <div className='flex flex-col  text-right' style={{ width: '100%' }}>
-                                      <DateRangePicker variant='underlined' color='primary' label='תאריכי האירוע'
-                                        value={dateRange !== '' &&
-                                          parseDateRange(dateRange)
-                                        }
-                                        onChange={handleDateRange} />
+
                                     </div>
                                     <div className='flex flex-row gap-4 text-right' style={{
                                       width: '100%', direction: "ltr",
@@ -625,8 +899,7 @@ const CraftingTable = () => {
                                       , paddingRight: "50px", gap: "40px"
                                     }}>
 
-                                      <TimeInput color='primary' hourCycle={24} label='שעת התחלה' onChange={handleStartTime} />
-                                      <TimeInput color='primary' hourCycle={24} label='שעת סיום' onChange={handleEndTime} />
+
                                     </div>
 
                                   </div>
@@ -688,46 +961,7 @@ const CraftingTable = () => {
                             }
 
 
-                            {!cont &&
-                              <div className='h-full justify-center flex items-center'>
-                                <Tooltip isOpen placement='top' content='חזור'>
-
-                                  <Button variant='ll' isIconOnly className='bg-white'
-                                    style={{
-                                      width: "60px", height: "60px", borderRadius: "100px",
-                                      boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
-                                    }} onPress={() => {
-                                      if (cont2) {
-                                        setCont1(true)
-                                        setCont2(false)
-                                        setProgress(progress - 25)
-                                      } else if (cont3) {
-                                        setProgress(progress - 25)
-                                        setCont2(true)
-                                        setCont3(false)
-                                      } else if (cont4) {
-                                        if (isTicketSale) {
-                                          setProgress(progress - 15)
-                                        } else {
-                                          setProgress(progress - 40)
-                                        }
-                                        setCont3(true)
-                                        setCont4(false)
-                                      } else if (cont5) {
-                                        setCont4(true)
-                                        setCont5(false)
-                                      } else if (cont6) {
-                                        setCont5(true)
-                                        setCont6(false)
-                                      }
-                                    }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M15.9999 21.5001C15.6025 21.4987 15.2216 21.3406 14.9399 21.0601L6.93993 13.0601C6.65656 12.7802 6.49707 12.3984 6.49707 12.0001C6.49707 11.6018 6.65656 11.22 6.93993 10.9401L14.9399 2.9401C15.3139 2.5388 15.877 2.37361 16.4085 2.50933C16.94 2.64506 17.355 3.06006 17.4907 3.59153C17.6264 4.12299 17.4612 4.68616 17.0599 5.0601L10.1199 12.0001L17.0599 18.9401C17.3433 19.22 17.5028 19.6018 17.5028 20.0001C17.5028 20.3984 17.3433 20.7802 17.0599 21.0601C16.7783 21.3406 16.3974 21.4987 15.9999 21.5001Z" fill="black" />
-                                    </svg>
-                                  </Button>
-                                </Tooltip>
-                              </div>
-                            }
+                 
 
 
                           </div>
