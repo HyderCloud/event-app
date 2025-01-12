@@ -1,1 +1,1 @@
-from .missions import Missions
+from .missions import route_blueprint

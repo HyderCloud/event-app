@@ -204,23 +204,6 @@ class Events:
             return None
         return documents_list
 
-    def get_mission_by_id(self, id):
-        documents_list = missionCollection.find_one({"_id": ObjectId(id)})
-        if documents_list is None:
-            return None
-        documents_list["_id"] = str(documents_list["_id"])
-        return documents_list
-
-    def get_events_by_connection(self, key):
-        documents_cursor = connectionsCollection.find({"connection": key})
-        documents_list = []
-        for document in documents_cursor:
-            document["_id"] = str(document["_id"])  # Convert _id to a string
-            documents_list.append(document)
-        if not documents_list:
-            return None
-        return documents_list
-
 
 class Store:
     def __init__(self):
@@ -364,7 +347,6 @@ class Store:
         documents_list["_id"] = str(documents_list["_id"])
         return documents_list
 
-
 class Users:
     def __init__(self):
         pass
@@ -418,7 +400,6 @@ class Users:
             return True
         else:
             print("No document found with the given email.")
-
 
 class Team:
     def __init__(self):
@@ -567,9 +548,3 @@ class Team:
             return None
         return documents_list
 
-    def delete_request_by_id(collection, document_id):
-        result = requestCollection.delete_one({"_id": ObjectId(document_id)})
-        if result.deleted_count > 0:
-            return True
-        else:
-            False

@@ -1,5 +1,5 @@
 
-
+from .settings import *
 from .calendar import *
 from .chat import *
 from .events import *

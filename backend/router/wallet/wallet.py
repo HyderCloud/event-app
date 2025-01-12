@@ -1,5 +1,5 @@
+from flask import Blueprint, render_template, request
+import controller.wallet
 
-
-class Wallet:
-    def __init__(self):
-        pass
+route_blueprint = Blueprint("wallet", __name__)
+wallet_api = controller.wallet.Wallet()

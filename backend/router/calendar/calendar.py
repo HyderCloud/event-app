@@ -1,5 +1,5 @@
+from flask import Blueprint, render_template, request
+import controller.calendar
 
-
-class Calendar:
-    def __init__(self):
-        pass
+route_blueprint = Blueprint("calendar", __name__)
+calendar_api = controller.calendar.Calendar()

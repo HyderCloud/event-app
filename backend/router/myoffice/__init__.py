@@ -1,1 +1,1 @@
-from .myoffice import My_Office
+from .myoffice import route_blueprint

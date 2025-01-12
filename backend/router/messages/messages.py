@@ -1,5 +1,5 @@
+from flask import Blueprint, render_template, request
+import controller.messages
 
-
-class Message:
-    def __init__(self):
-        pass
+route_blueprint = Blueprint("messages", __name__)
+messages_api = controller.messages.Message()

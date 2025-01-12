@@ -1,1 +1,1 @@
-from .emails import Emails 
+from .emails import route_blueprint 

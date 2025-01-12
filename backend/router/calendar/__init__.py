@@ -1,2 +1,1 @@
-
-from .calendar import Calendar
+from .calendar import route_blueprint

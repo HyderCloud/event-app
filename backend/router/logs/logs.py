@@ -1,5 +1,5 @@
+from flask import Blueprint, render_template, request
+import controller.logs
 
-
-class Logs:
-    def __init__(self):
-        pass
+route_blueprint = Blueprint("logs", __name__)
+logs_api = controller.logs.Logs()

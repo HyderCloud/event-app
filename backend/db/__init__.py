@@ -9,17 +9,6 @@ from .plugins import *
 from .team import *
 from .users import *
 from .wallet import *
-import pymongo
-
-
-
-# Select a collection
-mission_collection = db.missions
-myoffice_collection = db.stores
-users_collection = db.users
-
-request_collection = db.request
-connections_collection = db.connections
-chat_collection = db.chat
-office_collection= db.myoffice
+from .search import *
+from .settings import *
 

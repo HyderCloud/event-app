@@ -1,5 +1,5 @@
+from flask import Blueprint, render_template, request
+import controller.plugins
 
-
-class Plugins:
-    def __init__(self):
-        pass
+route_blueprint = Blueprint("plugins", __name__)
+plugins_api = controller.plugins.Plugins()

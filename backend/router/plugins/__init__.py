@@ -1,1 +1,1 @@
-from .plugins import Plugins
+from .plugins import route_blueprint

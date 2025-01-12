@@ -1,1 +1,1 @@
-from .chat import Chat
+from .chat import route_blueprint

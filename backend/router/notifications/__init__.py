@@ -1,1 +1,1 @@
-from .notifications import Notifications
+from .notifications import route_blueprint

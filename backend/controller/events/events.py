@@ -1,13 +1,16 @@
 from traceback import print_exc
-from models.mongo import Users, Store, EventsDB
+import db
 from flask import jsonify
 import bcrypt
 import jwt
 import datetime
+import db.myoffice
+import db.events
 
 SECRET_KEY = "267545f00571a7a7c4b36ec3256ddad5b0bf957dcc32dc2e9fd515a4738c2ba5"
-api_events = EventsDB()
-api_store = Store()
+
+api_events = db.events.Events()
+api_store = db.myoffice.My_Office()
 
 
 class Events:
@@ -269,22 +272,3 @@ class Events:
         except Exception as e:
             return jsonify({"message": "error-" + str(e)}), 501
 
-    def get_events_by_connection(self, id):
-        try:
-            result = api_events.get_events_by_connection(id)
-            if result == None:
-                return jsonify({"events": []}), 200
-            else:
-                return jsonify({"events": result}), 200
-        except Exception as e:
-            return jsonify({"message": "error-" + str(e)}), 501
-
-    def get_mission_by_id(self, key):
-        try:
-            result = api_events.get_mission_by_id(key)
-            if result == None:
-                return jsonify({"mission": []}), 200
-            else:
-                return jsonify({"mission": result}), 200
-        except Exception as e:
-            return jsonify({"message": "error-" + str(e)}), 501
